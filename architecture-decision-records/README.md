@@ -8,10 +8,9 @@ Hvis du vil oprette en ADR: [ADR dokumentation](https://github.com/test-jppoliti
 
 ## Indhold
 
-0. ✅  [Regstrering af beslutninger](000-registrering-af-beslutninger.md)
+0. ✅  [Regstrering af beslutninger i GitHub](000-registrering-af-beslutninger.md)
 0. ✅  [Brug Entra SSO som identity provider](001-identity-provider.md)
 0. ✅  [AWS som foretrukken cloud leverandør](002-primary-cloud-vendor.md)
-0. 🤔  [Valg af cloud partner](003-cloud-partner.md)
 0. ✅  [GitHub Enterprise Cloud som fælles kode repository](004-shared-code-repository.md)
 0. 🤔  [Kubernets som container orkestrering](006-container-orkestrering.md)
 0. 🤔  [Brug TOFU som Infrastructure as Code](007-infrastructure-as-code-tool.md)
@@ -40,7 +39,8 @@ Hvis du vil oprette en ADR: [ADR dokumentation](https://github.com/test-jppoliti
 - [Byg eller køb IDP](005-byg-eller-køb-idp-platform.md)
 - [Support & ansvarsfordeling](011-support-og-kommunikation.md)
 - [Backup strategi](012-backup-strategi.md)
-  
+- [Valg af cloud partner](003-cloud-partner.md)
+    
 ## Status
 
 - ✅ Godkendt
