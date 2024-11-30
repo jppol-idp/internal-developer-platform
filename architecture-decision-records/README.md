@@ -4,7 +4,7 @@ Dette er IDP teamets Architecture Decisions log, sådan som [Michael Nygaard](ht
 
 Forklaring på hvorfor vi registrerer beslutninger og hvordan vi gør: [ADR-000](000-registrering-af-beslutninger.md)
 
-Hvis du vil oprette en ADR: [ADR dokumentation](https://github.com/test-jppolitikenshus/internal-developer-platform/wiki/Architect-Decision-Records)
+Hvis du vil oprette en ADR: [ADR forklaring](https://github.com/jppol-idp/internal-developer-platform/wiki/Architect-Decision-Records)
 
 ## Indhold
 
