@@ -2,7 +2,7 @@
 
 
 # 013-adgang.md
-Dato: 2024-12-022
+Dato: 2024-12-22
 
 ## Status
 
@@ -11,7 +11,7 @@ Forslag
 ##  Kontekst
 
 For at sikre den mest smidige og sikre udviklingsprocess skal vi vurdere hvordan adgang og tilladelser, herunder password rotation, 
-complexity, mfa, re-authentication, roller mv. håndteres i IDP'en.
+password kompleksitet, mfa, re-authentication, roller mv. håndteres i IDP'en.
 
 Som beskrevet i tidligere [ADR](https://github.com/jppol-idp/internal-developer-platform/blob/main/architecture-decision-records/001-identity-provider.md) 
 skal adgang til alle systemer administreres via Entra.
