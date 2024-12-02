@@ -26,7 +26,7 @@ Brug EKS (AWS managed Kubernetes) som containeradministration og samtidig potent
 
 Kubernetes er således en mere omfattende og fleksibel løsning til vores projekt.
 
-Kubernetes understøtter samtidig vores ideal beskrevet i vores [Manifest](https://github.com/test-jppolitikenshus/internal-developer-platform/wiki/Manifest) hvor hurtig onboarding og fokus på developer experience er central, ved at kunne stille et så komplet som muligt udviklingsmiljø til rådighed for udviklerne.
+Kubernetes understøtter vores [manifest](https://github.com/jppol-idp/internal-developer-platform/wiki/manifest) hvor hurtig onboarding og fokus på developer experience er central, ved at kunne stille et så komplet som muligt udviklingsmiljø til rådighed for udviklerne.
 
 ## Konsekvenser
 
@@ -40,9 +40,9 @@ Kubernetes understøtter samtidig vores ideal beskrevet i vores [Manifest](https
 
 Vores tilgang til administration og ejerskab af infrastruktur i DUT, herunder EB, JP, Politiken, Bold, Holdet samt Koncernens fællesfunktioner, har udviklet sig over tid og ført til følgende:
 
-- Ineffektiv brug af infrastruktur pga. historisk uenighed om teknologivalg og manglende fælles retningslinjer (trods en vis standardisering på Docker-containere)
+- Ineffektiv brug af infrastruktur pga. historisk uenighed om teknologivalg og manglende fælles retningslinjer
 - Betydelig variation i deployment, overvågning og administration af lifecycle på tværs af produkter
-- Legacy infrastruktur og teknisk gæld tynger eksisterende teams, forhindrer innovation og hurtigere time-to-market
+- Legacy infrastruktur og teknisk gæld tynger eksisterende teams, forhindrer innovation og produktivitet
 
 Givet det nuværende teknologilandskab inden for DUT, ønsker vi en containeradministrationsplatform, der på sigt kan understøtte en bred vifte af applikationer, fra "moderne" cloud-native [12-faktor applikationer](https://12factor.net) til "legacy" stateful monolitiske applikationer, potentielt omfattende både Linux- og Windows-baserede applikationer.
 

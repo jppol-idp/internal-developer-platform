@@ -15,8 +15,9 @@ Hvis du vil oprette en ADR: [ADR forklaring](https://github.com/jppol-idp/intern
 0. 🤔  [Brug Kubernets(EKS) som container orkestrering](006-container-orkestrering.md)
 0. 🤔  [Brug ECR som fælles artifact repository](010-shared-artifact-repository.md)
 0. 🤔  [Brug TOFU til Infrastructure as Code](007-infrastructure-as-code-tool.md)
-0. 🤔  [Kubernetes multicluster](009-multicluster-vs-multitenancy.md)
-0. 🤔  [Adgangs krav til IDP](011-access-restrictions.md)
+0. 🤔  [Kubernetes som infrastructure provider](008-kubernetes-as-infrastructure-provider.md)    
+0. 🤔  [Kubernetes multicluster vs multitenancy](009-multicluster-vs-multitenancy.md)
+0. 🤔  [Adgang til IDP](013-adgang.md)
 
 
 
@@ -42,7 +43,6 @@ Hvis du vil oprette en ADR: [ADR forklaring](https://github.com/jppol-idp/intern
 - [Support & ansvarsfordeling](011-support-og-kommunikation.md)
 - [Backup strategi](012-backup-strategi.md)
 - [Valg af cloud partner](003-cloud-partner.md)
-- [Kubernetes som infrastructure provider](008-kubernetes-as-infrastructure-provider.md)    
 ## Status
 
 - ✅ Godkendt

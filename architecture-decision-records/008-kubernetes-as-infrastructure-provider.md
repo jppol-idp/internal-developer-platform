@@ -28,7 +28,7 @@ Vi skal vælge i hvor høj grad vi ønsker at levere vores infrastruktur service
 
 ## Hybrid Løsning
 
-En hybrid løsning kan måske realiseres ved at kombinere de bedste elementer fra begge verdener - fx via produkter som localstack, eller infrastruktur kode kan skrives til at forholde sig til miljøet.
+En hybrid løsning kan måske realiseres ved at kombinere de bedste elementer fra begge verdener - fx via produkter som localstack, score, eller infrastruktur kode kan skrives til at forholde sig til miljøet.
    
 ## Opsummering
 

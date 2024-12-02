@@ -12,11 +12,12 @@ Godkendt
 
 ## Kontekst
 
-Vi har brug for en Git-platform til at hoste, versionere og samarbejde om vores softwareprojekter i IDP og i DUT som helhed. 
+Vi har brug for en git-platform til at hoste, versionere og samarbejde om vores softwareprojekter i IDP og i DUT som helhed. 
 
 ## Beslutning
 
-Vi vælger en github enterprise cloud model som kan samle alle eksisterende github organisationer, teams og repositories under èn konto. 
+Vi vælger en github enterprise cloud model som kan samle alle eksisterende github organisationer, teams og repositories under èn konto.  
+Implementations detaljer her: https://jira-jppol.atlassian.net/browse/IDP-67
 
 ## Konsekvenser
 
@@ -31,12 +32,12 @@ Flere muligheder blev overvejet, herunder GitHub, GitLab, AWS CodeCommit, Bitbuc
 - Eksisterende organisationer og teams kan flyttes til enterprise konto med eksisterende konfiguration/rettigheder
 - Eksisterende enterprise server kan blive, eller migreres til cloud med Enterprise Importer uden ekstra kost
 - Decentral administration kan ske på organisations niveau (eller repos niveau)
-- Commit name er personlig github konto, som er godt ifølge [Michael](https://www.michaelnygard.com/blog/2015/04/people-dont-belong-to-organizations/)
+- Commit name er personlig github konto, som er godt ifølge [michael nygard](https://www.michaelnygard.com/blog/2015/04/people-dont-belong-to-organizations/)
 - Github EMEA flytter hosting til sverige i efteråret
 - 50.000 CI/CD minutes/mdr + brugerens egne 2000 min, hvorfor vi sansynligvis ikke behøver self-hosted runners.
 - Adgang til Advanced Security Scanning, som kan forhindre at sensitive data bliver commitet, samt kode scanning
 
-Yderligere fordele ved Github vs:
+Yderligere fordele ved Github:
 
 - 95% af vores repositories ligger allerede i github
 - Den største og mest kendte platform, betragtet som industri-standard

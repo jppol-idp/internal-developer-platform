@@ -12,7 +12,7 @@ Forslag
 
 ## Kontekst
 
-Vi skal vælge det bedste kommunikationsværktøj til vores IDP Team. Vi skal evaluere fordele og ulemper ved både Slack og Teams inden vi træffer en beslutning. Slack anslås at koste ca. 40.000 kr. pr. måned i DUT regi.
+Vi skal vælge det bedste kommunikationsværktøj til vores IDP Team. Vi skal evaluere fordele og ulemper ved både Slack og Teams inden vi træffer en beslutning. Slack anslås at koste ca. 40.000 kr. pr. måned i DUT.
 
 ## Beslutning
 
@@ -46,9 +46,6 @@ Indtil da har vi en mail addresse (idp@jppol.dk)
 - Problemer med at paste kode ind (Linux).
 - Notifikationer kan ikke customizes i sammen omfang som Slack
 - Man kan ikke søge kanaler/chats frem, selv om de er åbne, så man kan ikke joine fx incident kanal uden at være inviteret. 
-
-
-
 
 
 ## Alternativer

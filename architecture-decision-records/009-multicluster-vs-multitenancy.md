@@ -14,6 +14,11 @@ Forslag
 
 Vi skal beslutte om vi skal implementere Kubernetes med multicluster eller multitenancy strategi. Dette valg vil påvirke vores cloud-arkitektur, risici, omkostninger og driftsprocesser. Måske 15 prod og 15 test clusters ?
 
+## Beslutning
+
+(Detaljer om den endelige beslutning, når denne er truffet)
+
+
 ## Kubernetes Multicluster
    - Bedre **isolation** mellem miljøer, hvilket reducerer risikoen for "noisy neighbor" problemer.
    - Højere **sikkerhed** og enklere overholdelse af compliance.
@@ -32,10 +37,6 @@ Vi skal beslutte om vi skal implementere Kubernetes med multicluster eller multi
    - **Støj og performance**: Risiko for "noisy neighbor" problemer, hvor én tenant kan påvirke andre tenants ydeevne.
    - **Kompleksitet i isolation**: Sværere at opnå fuldstændig isolation mellem tenants.
    - **Omkostningsproblem**: Udfordrende at allokere ressourcer og omkostninger præcist mellem forskellige tenants, hvilket kan føre til ineffektiv omkostningsstyring.
-
-## Beslutning
-
-(Detaljer om den endelige beslutning, når denne er truffet)
 
 ## Alternativer
 
