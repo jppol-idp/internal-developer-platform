@@ -21,11 +21,14 @@ Entra SSO adgang sættes op via Enterprise apps, som kan have forskellige beting
 ##  Beslutning
 
 Vi ønsker at alle IDP brugere betinges af:
-1. 3 Måneders password rotation, reuse og complexity default fra Entra.
+1. 3 Måneders password rotation, reuse og complexity (default fra Entra).
 1. Password auntificering med 24 timers TTL 
 1. MFA med 1 mdrs TTL uanset lokation.
 1. Device state med Trend monitoreret.
 
+VPN beskytter potentielt mod trojaner og mitm, ved at filtrere udgående trafik og isolere vores devices på usikre netværk.
+Desuden kan VPN gøre det lettere at tilgå private services, der dermed ikke behøver offentlig tilstedeværelse.
+Vi har allerede en VPN struktur der ville gøre det nemt at indføre VPN krav, tilgengæld vil vi så være afhængige af at VPN virker.
 
 Undtagelser:
 1. AWS role-chaining max 8 timer TTL
