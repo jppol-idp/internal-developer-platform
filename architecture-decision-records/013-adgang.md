@@ -65,6 +65,7 @@ Typer af autentificering
 
 IDP relaterede services:
 1. AWS
+1. EKS API
 1. GitHub
 1. Argo
 1. Grafana
