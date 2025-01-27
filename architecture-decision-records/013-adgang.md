@@ -10,25 +10,24 @@ Forslag
 
 ##  Kontekst
 
-For at sikre den mest smidige og sikre udviklingsprocess skal vi vurdere hvordan adgang og tilladelser, herunder password rotation, 
-password kompleksitet, mfa, re-authentication, roller mv. håndteres i IDP'en.
+For at sikre den bedste og sikreste DevEx skal vi vurdere hvordan adgang og tilladelser håndteres i IDP'en, herunder: 
+- password rotation, 
+- password kompleksitet, 
+- mfa, 
+- session timeouts og re-authentication, 
+- roller, 
+- lokation
 
-Som beskrevet i tidligere [ADR](https://github.com/jppol-idp/internal-developer-platform/blob/main/architecture-decision-records/001-identity-provider.md) 
-skal adgang til alle systemer administreres via Entra.
-
-Entra SSO adgang sættes op via Enterprise apps, som kan have forskellige betingelser for autentificering.
+Som beskrevet [tidligere](https://github.com/jppol-idp/internal-developer-platform/blob/main/architecture-decision-records/001-identity-provider.md) 
+skal brugerstyring, og gerne adgang, administreres via EntraID.
 
 ##  Beslutning
 
 Vi ønsker at alle IDP brugere betinges af:
 1. 3 Måneders password rotation, reuse og complexity (default fra Entra).
-1. Password auntificering med 24 timers TTL 
+1. SAML autentificering med 24 timers TTL (uden browser re-authentication som i githubs tilfelde)
 1. MFA med 1 mdrs TTL uanset lokation.
 1. Device state med Trend monitoreret.
-
-VPN beskytter potentielt mod trojaner og mitm, ved at filtrere udgående trafik og isolere vores devices på usikre netværk.
-Desuden kan VPN gøre det lettere at tilgå private services, der dermed ikke behøver offentlig tilstedeværelse.
-Vi har allerede en VPN struktur der ville gøre det nemt at indføre VPN krav, tilgengæld vil vi så være afhængige af at VPN virker.
 
 Undtagelser:
 1. AWS role-chaining max 8 timer TTL
@@ -71,3 +70,6 @@ IDP relaterede services:
 1. Grafana
 
 
+VPN beskytter potentielt mod trojaner og mitm, ved at filtrere udgående trafik og isolere vores devices på usikre netværk.
+Desuden kan VPN gøre det lettere at tilgå private services, der dermed ikke behøver offentlig tilstedeværelse.
+Vi har allerede en VPN struktur der ville gøre det nemt at indføre VPN krav, tilgengæld vil vi så være afhængige af at VPN virker.
