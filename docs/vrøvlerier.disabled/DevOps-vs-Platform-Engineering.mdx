@@ -1,0 +1,180 @@
+## DevOps principper 
+
+Siden 2007 har IT Operations handlet om DevOps:
+
+ - Collaboration
+ - Automation
+ - Customer-centric
+ - Continuous improvement
+ - Breakdown silos
+ - "You Build It, You Run It"
+
+Alle disse principper sigter mod at spare tid og penge, men det koster stadigvæk:
+
+![Screenshot 2024-08-29 at 12 48 07](https://github.com/user-attachments/assets/17a3fbe6-f672-498f-88e8-1b3f2495a4d6)
+
+Hvordan kan vi give udviklere autonomi og **selvbetjening**, sikre en **effektiv** og tilfredsstillende **udvikleroplevelse**, samtidig med at vi **definerer standarder**, sikrer **hensigtsmæssige løsninger** og **optimerer infrastrukturen** ?
+
+## Platform Engineering
+
+Platform engineering er en **disciplin**, der bygger **produkter** til interne **kunder**.
+
+**Disciplin**:
+Design, vedligehold og foren teknologi gennem samarbejde og produkt-/kundecentreret tænkning
+
+**Produkt**:
+En intern udviklerplatform (IDP), som tilbyder et katalog af "golden-paths" til selvbetjening.
+
+**Kunder**:
+Alle udviklingsteams i organisationen.
+
+## IDP Komponenter
+
+### Brugerinterface
+
+Web-baseret, API eller SDK – en måde at opdage, forstå og forbruge kapabiliteter til deployment på kundens egen stack.
+
+![Screenshot 2024-08-29 at 12 57 59](https://github.com/user-attachments/assets/0748eafe-9737-4b73-a080-f10c6ddaaed3) 
+
+### Template katalog
+
+Udstiller et udvalg af kapabiliteter og tjenester, abstraherer og automatiserer kedelige indtastninger, og kan tilpasses eller udvides inden for et veldefineret frihedsrum, samtidig med at governance opretholdes og best practices sikres.
+
+![Screenshot 2024-08-29 at 12 57 43](https://github.com/user-attachments/assets/142304dd-5674-4e59-8cd5-f0c62fd722a7)
+
+### Integrationer
+
+Leverer synlighed og en konsolideret udvikleroplevelse, der binder flere systemer sammen i et centralt udviklerorienteret overblik.
+
+![Screenshot 2024-08-29 at 12 59 13](https://github.com/user-attachments/assets/6b33915a-b07c-47ac-a7d8-7a650a07e5f6)
+
+### Templates og Automatisering
+
+Etablering af et servicekatalog, som integrerer og leverer omfattende sæt af kapabiliteter, kræver normalt mindst nogle af følgende teknologier, sammensat til specifikke formål:
+
+![Screenshot 2024-08-29 at 13 00 23](https://github.com/user-attachments/assets/825c3c55-3a6c-424c-8eb3-a47dc5b66b40)
+
+Kort sagt udstiller et servicekatalog i en IDP abstraherede sammensætninger af ressourcer, defineret ved hjælp af IaC.
+
+### Alt handler om Developer Experience 
+
+- **Platform engineering** søger at løse dette problem ved at abstrahere kompleksitet og muliggøre selvbetjening, så teams kan bygge og implementere løsninger, der følger en gylden vej.
+- **Infrastruktur som kode** (IaC) er kernen af udviklerplatformen og er nøgleproduktet i, hvad platform engineering leverer.
+- Udvikleren skal i centrum og vi skal levere værdi til forretningen.
+
+![Screenshot 2024-08-29 at 13 02 00](https://github.com/user-attachments/assets/f7126d26-7674-48bd-9a0a-83a1636966ba)
+
+## Selvbetjeningens Nøgleprincipper
+
+- **Kend din kunde:** Reducer friktion med abstraktioner
+- **Standarder, bedst praksis, gyldne stier**
+- **Sikkerhedsguider og veldesignet arkitektur moduler**
+- **Balancer fleksibilitet og pre-defineret design**
+- **Meningsfuld DevSecOps-praksis**
+
+## Hvem laver hvad ?
+
+- **Feature Teams:** bygger features, fixer bugs
+- **App ops:** SLA/SLI/SLO
+- **Platform Team:** omkostninger, sikkerhed, ydeevne, pålidelighed, operations excellence
+
+
+## Platform Team Ansvarsområder
+
+- **Platform Engineer:** Platformarkitektur design
+- **DevOps Engineer:** CICD, container orkestrering
+- **SRE Engineer:** Observabilitet, stabilitet vs innovation, driftssikkerhed og ydeevne
+- **Security Engineer:** Overholdelse af regler og hændelsesrespons
+- **Platform Product Manager:** Samarbejde, kommunikation, facilitator for autonom harmoni
+- **Software Engineer:** Katalog, Backstage
+- **Distribuerede Arkitekturroller:** Teknisk, løsning, data, sikkerhed, netværk
+
+## Interessenter
+
+- **Security Team**
+- **Network Team**
+- **Ops Team**
+- **FinOps**
+- **Jura**
+
+
+### Vision
+
+Platform Engineerings primære formål er at hjælpe udviklere til at levere produkter hurtigt og samtidig imødekomme krav fra koncernens interessenter.
+
+
+### Opgaver
+
+- Standardisere tilgangen til cloud og hybrid infrastruktur.
+- Arbejde tværfagligt i DUT
+- Kunden er udvikler.
+- Definere tekniske strategier og etablere buy-in ved at understøtte samarbejde på tværs af interessenter (CCOE).
+- Centralisere og vedligeholde “best practices” via JP/Politikens Hus' AWS organisation, herunder sikkerhedstjenester og overvågning med henblik på organisatorisk audit, compliance, sikkerhed og kostoptimering.
+- Understøtte produktteams med at levere og effektivisere værdi til forretningen.
+- Udvikle, bygge, vedligeholde og supportere den underliggende infrastruktur, der muliggør udviklernes mulighed for at være selvhjulpne og levere hurtigere.
+- Tillade teams, der benytter platformen, at vælge den arkitektur og tilgang, de har lyst til, og integrere de værktøjer, som passer bedst - men med ensartede metoder på tværs af produkter (fx levering af kode eller containere).
+
+
+### Produkt Mindset
+
+- Opbygning af et produkt mindset.
+- Etablering af feedback loops med brugerne for at bygge systemer, der løser de rigtige problemer.
+- Markedsføring, kommunikation, COE, onboarding - I DUT og medierne
+- Sikkerhed, omkostninger, observabilitet og livscyklus som Key Performance Indicators.
+
+
+### Inspiration
+
+- [What is Platform-as-a-Product: Clues from Team Topologies](https://teamtopologies.com/videos-slides/what-is-platform-as-a-product-clues-from-team-topologies)
+- [Platform Engineering Product Teams - Thoughtworks](https://www.thoughtworks.com/radar/techniques/platform-engineering-product-teams)
+- [Platform Engineering Roles and Responsibilities: Building Scalable, Reliable, and Secure Platform](https://loft.sh/blog/platform-engineering-roles-and-responsibilities-building-scalable-reliable-and-secure-platform/)
+- [Platform Engineering - Thoughtworks](https://www.thoughtworks.com/insights/articles/platform-engineering-help-developers-deliver-more-value-at-a-lower-cost)
+
+
+### Forskellige Kundebehov
+
+Som en del af vores strategi skal platformteamet løbende indhente input, identificere painpoints og indsamle ønsker fra udviklingsteams. Deres feedback skal prioriteres og implementeres i en succesfuld platform, som balancerer mellem standardisering og tilpasning.
+
+**Visuel introduktion:**
+![Platform Feedback Cyklus](https://github.com/user-attachments/assets/50d78753-6622-4070-aec0-c8adb997cba8 "Platform Feedback Cyklus")
+
+Vi vil starte med at fokusere på områder med sammenlignelig infrastruktur, da dette vil give os den bedste og hurtigste feedback. Inddragelsen af relevante teams, indbygning af nødudgange og etablere et robust fundament vil være essentielt i denne proces.
+
+Det er dog uundgåeligt, at der vil være behov, som ikke passer til den nuværende platform, og som vil kræve andre abstraktionsniveauer, ansvarsfordelinger eller kapaciteter end dem, vi aktuelt tilbyder. Vi vil præsentere vores roadmap åbent og være transparente omkring fremtidige prioriteringer.
+
+
+## Fælles tjenester
+
+Derudover skal vi facilitere en række fælles services, herunder repositories og en developer portal. Nogle af hovedområderne er:
+
+- **Konsensus om mål, teknologi og værktøjer**
+- **Facilitering af CCOE og/eller tech-frokost**
+
+### Identifikation af Teknologier
+
+- **Workload Isolering**
+- **Network, mesh**
+- **Network, ingress**
+- **Network, egress**
+- **Compute**
+- **Skalering**
+- **Endpoint secuirty**
+- **Omkostningsanalyse**
+- **SSO Adgang**
+- **Fælles Portal**
+- **Fælles GitHub Repository**
+- **Fælles Artifact Repository**
+- **Fælles CI Security** 
+- **Fælles Observability**
+
+### Identifikation af kandidater
+
+- AI
+- KOA
+- Bold
+- Holdet
+
+
+Ved at etablere og vedligeholde disse tjeneseter og processer, går vi målrettet efter at skabe en robust, fleksibel og responsiv platform, der imødekommer behov fra hele organisationen.
+
+Kort sagt: _You build it you run it, using our golden and silver paths_
