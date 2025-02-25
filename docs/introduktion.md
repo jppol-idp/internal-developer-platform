@@ -1,3 +1,9 @@
+---
+title: introduktion
+nav_order: 2
+---
+
+
 ## Hvad er en IDP ?
 En intern udvikler platform hjælper udviklere med infrastruktur, teknologivalg, og processer ved at fjerne unødig kompleksitet, og dermed at øge produktivitet og fremme innovation
 
@@ -5,10 +11,10 @@ En intern udvikler platform hjælper udviklere med infrastruktur, teknologivalg,
 For at gøre livet lettere for udviklerne
 
 ## Hvorfor det ?
-For at opnå **digital bæredygtighed** (aka **nordstjernen** eller **1 mio abonementer**)
+For at opnå **digital bæredygtighed** (eller **nordstjernen** eller **1 mio abonementer**)
 
 ## Hvordan kan en IDP hjælpe udviklere og samtidig understøtte digital bæredygtighed ?
-- **Faster to market** (Iterationshastighed er innovationshastighed)
+- **Faster to market** (Iterationshastighed = innovationshastighed)
 - **Rekruttering og fastholdelse** (Fokus på developer experience, empowerment, autonomi)
 - **Digitalt omdømme** (Oppetid, responstid, incident response, observability)
 - **Sikkerhed og compliance** (Nedsat kompleksitet og driftsansvar)
