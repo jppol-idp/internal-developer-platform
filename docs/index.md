@@ -1,3 +1,9 @@
+---
+title: Home
+layout: home
+---
+
+
 <details open markdown="block">
   <summary>
     Table of contents

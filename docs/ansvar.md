@@ -1,3 +1,8 @@
+---
+title: Ansvarsområder
+layout: home
+---
+
 # Ansvarsområder
 
 IDP team bør vedligholde tydelig ansvars fordeling. 
