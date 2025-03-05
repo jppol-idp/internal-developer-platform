@@ -1,0 +1,158 @@
+<img width="150" src="https://github.com/user-attachments/assets/60e0b9d6-8e64-4f80-93c5-6a86f57d69fe">
+
+## Hvad er en IDP i JP/Politikens Hus ?
+
+En udviklers gribende indgangsportal til bagscenens rampelys - eller en intern udviklings platform til digitale produkt teams.
+
+## Hvorfor en IDP ?
+
+Mere tid til udvikling, mindre kognitiv load.
+
+## Hvordan hjælper en IDP med det ?
+
+Ved at tilbyde standarder og værktøjer til infrastruktur, samt selvbetjening, onboarding og support.
+
+## Er IDP kun til bestemte services og værktøjer ?
+
+Konceptuelt kan IDP håndtere alle slags services, men til at starte med fokuseres på Kubernetes clusters og Container drift i AWS.  
+Se vores [tech-radar](https://test-jppolitikenshus.github.io/techradar/) for overblik over services vi benytter.  
+Du kan endda også læse vores arkitektur beslutnings referater [her](https://github.com/test-jppolitikenshus/internal-developer-platform/tree/main/architecture-decision-records) 
+
+## Hvad kan jeg forvente af en IDP på kort sigt?
+
+Slut 2024 kan vi leverer EKS Clusters, og Container drift i start 2025, specifikt:
+
+Q3-Q4 2024: IDP POC Analyse og **Cluster-as-a-Service** med AI Team  
+Q1-Q2 2025: **Container-as-a-Service** til Dev+Prod Miljø hos KOA Team  
+Q3-Q4 2025: Advanced Security, Servicemesh & Selvbetjening  
+
+_se også [roadmap](https://github.com/test-jppolitikenshus/internal-developer-platform/wiki/Tidslinje)_
+
+## Hvem kan bruge **Cluster-as-a-service** ?
+
+Platform teams med kendskab til Kubernetes.
+
+## Hvem kan bruge **Container-as-a-service** ?
+
+Platform- og Produkt Teams med kendskab til Containers.
+
+## Hvad er forskellen på et Platform Team og et Produkt Team ?
+
+Platforme Teams servicerer interne brugere, Produkt teams betjener slut brugere - se nærmere [her](https://github.com/test-jppolitikenshus/internal-developer-platform/wiki/Hvad-er-en-Platform) 
+
+## Hvordan får man adgang til IDP ?
+
+Man logger på [IDP Portalen](https://idp.jppol.dk) med sin email.
+
+## Hvordan registrerer man sit Team eller Projekt i IDP ?
+
+Man trykker enten "Opret EKS Cluster" eller "Tilmeld eksisterede EKS Cluster", og får et deployment repository tildelt.
+
+## Hvordan registrerer jeg en applikation ?
+
+Man skal registerer sit GitHub repository i portalen, eller bestille et nyt, og udfylde relevant [metadata](https://backstage.io/docs/features/software-catalog/#updating-component-metadata)
+
+## Hvordan bygger jeg et container image ?
+
+Vi stiller [GitHub Actions](https://test-jppolitikenshus.github.io/blabla) til rådighed - alternativt kan du manuelt uploade til GitHub Container Registry.
+
+## Hvordan deployes mit image til Kubernetes ?
+
+I [ArgoCD](https://argocd) har dit team fået adgang til et ArgoCD Projekt - her kan du oprette en ny kubernetes applikation (ArgoCD App)
+
+## Hvordan konfigurerer jeg en ArgoCD App ?
+
+Giv den et navn og peg den på dit deployment repository - eller måske eksisterer den allerede som pre-udfyldt template baseret på ovenstående metadata.
+
+## Hvad gør jeg med secrets ?
+
+Brug AWS Secrets manager, som både GitHub og ArgoCD kan tilgå. Eller måske burde vi bruge Vault.
+
+## Hvad med sikkerheds scanning af mine repositories ?
+
+Vi scanner ikke noget specifikt, men undersøger brugen af GitHub Advanced Security og https://www.coana.tech/
+
+## Hvad med scanning af mine containeres ?
+
+GitHub Container Registry scanner ikke, men ECR gør...
+
+## Hvordan indsamler I logs og metrics ?
+
+Vi opsamler logs, traces og metrikker, som CPU, Memory, Disk, Network og Uptime med OpenTelemetry Collector.  
+(Eller Datadog)  
+
+## Hvordan laver jeg custom metrics ?
+
+Jeg ved det ikke, men jeg tror ikke det er et problem.
+
+## Hvordan ser jeg logs og metrics ?
+
+Vi bruger Grafana oven på Loki (logs), Tempo (traces), Mimir (prometheus).  
+(Eller Datadog)  
+
+## Hvordan sætter jeg alarmer op ?
+
+Vi bruger Grafana, PagerDuty og eller AWS incident manager.
+(Eller Datadog)  
+
+## Hvordan opdaterer jeg mine container ?
+
+Jeg vil tro du bygger den med et nyt tag, som ArgoCD deployer automatisk eller manuelt ?
+
+## Hvordan undgår jeg nedetid i forbindelse med ny version ?
+
+Det ved jeg faktisk ikke.
+
+## Hvad med redundans ?
+
+Indstil Replica i dit deployment til mere end èn, så vil Kubernetes sørge for at fordele workloads i forskellige availability zones, dog i samme region. 
+
+## Hvordan med skalering ?
+
+Pod skalering kan konfigureres i deployment repository med VerticalPodAutoscaler og HorizontalPodAutoscaler.  
+Node skalering sker ved hjælp af Karpenter eller Cluster Autoscaler.
+
+## Kan jeg styre min loadbalancer ?
+
+Ja, hvordan skulle du ellers kunne vælge health check endpoints, timeout settings, loadbalancer algoritme, ssl certifikat ? 
+
+## Kan jeg se min udgående ip addresse ?
+
+Ja, det skal du helt klart kunne
+
+## Hvad med Backup og Business Continuity ?
+
+IDP teamet benytter AWS Backup Vault, placeret i Stockholm, og gemmer daglige snapshots i 18 måneder - 5 dage, 5 mandage samt 18 1ste dag i måneden.
+
+## Hvad med Restore ?
+
+IDP teamet laver årlige stikprøver.
+
+## Hvad skal der til for min applikation er IDP-ready ?
+
+Et nedkog af [dette](https://12factor.net) samt beskrivelse af krav til custom metrics og tracing     
+
+## Hvad med AWS services som SQS, SNS osv ?
+
+Vi bruger Crossplane til at provisionere og administrere både Kubernetes og services uden for Kubernetes. Se Techradar for hvad vi understøtter.
+
+## Hvad med databaser ?
+
+Til at starte med understøtter vi PostgreSQL. 
+
+## Kan jeg bruge ting som kubectl, k9s eller Lens fra min laptop ?
+
+Ja, det kan du godt.
+
+## IDP for djøf'er
+
+IDP er for JP/Politikens Hus hvad NATO er for EU - dens formål omfatter samarbejds- og sikkerhedsinitiativer, kollektivt forsvar mod angreb og trusler, koordinering af infrastruktur og etablering af dialog og konventioner, der skal sikre medlemmernes selvstændighed og sammenhørighed.
+
+## Hvad hedder IDP'en rigtigt ?
+
+Det ved vi ikke [endnu](https://github.com/test-jppolitikenshus/internal-developer-platform/wiki/Platformens-navn)
+
+## Hvad koster det ?
+
+Kost rapportering bliver tilgængelig i portalen, og baseres på enten AWS konti, tags, eller Kubecost multi-tenancy kubernetes.
+

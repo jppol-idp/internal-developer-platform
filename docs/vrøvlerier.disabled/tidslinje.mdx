@@ -1,0 +1,64 @@
+## Tidslinje
+
+Vores roadmap fokuserer på AI og KOA Teams behov for ny infrastruktur:  
+
+**Q3-Q4 2024:** IDP POC Analyse og Cluster-as-a-Service med **AI Team**  
+**Q1-Q2 2025:** Container-as-a-Service til Dev+Prod Miljø hos **KOA Team**   
+**Q3-Q4 2025:** Advanced Security, Servicemesh & Selvbetjening   
+
+
+***
+
+
+### Q3-Q4 2024: POC Analyse og Cluster-as-a-Service med AI Team
+- **POC Analyse:** Parallelt med de tekniske leverancer igangsættes initiativer for at analysere, kortlægge og dokumentere epics og features efterhånden som vi skrider frem.
+- **Cluster-as-a-Service POC:**  
+  - **Version 1 Teknologier:**
+    - Argo CD: [Argo CD Helm Chart](https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd)
+    - Crossplane: [Crossplane Install Guide](https://docs.crossplane.io/latest/software/install/)
+    - Crossplane Provider AWS: [Provider AWS](https://marketplace.upbound.io/providers/upbound/provider-family-aws/v1.8.0)
+    - Crossplane Provider AWS EKS: [Provider AWS EKS](https://marketplace.upbound.io/providers/upbound/provider-aws-eks/v1.8.0)
+    - Backstage: [Backstage Helm Chart](https://github.com/backstage/charts)
+
+### Q1-Q2 2025: Container-as-a-Service til Dev+Prod Miljø hos KOA Team
+- **Version 2 Teknologier:**
+  - Grafana: [Grafana Helm Chart](https://github.com/grafana/helm-charts)
+  - OpenTelemetry: [OpenTelemetry Helm Chart](https://github.com/open-telemetry/opentelemetry-helm-charts)
+  - Falco: [Falco Helm Chart](https://github.com/falcosecurity/charts)
+  - Trivy: [Trivy CLI Scanning](https://aquasecurity.github.io/trivy/v0.28.1/docs/kubernetes/cli/scanning/)
+  - Kyverno: [Kyverno Documentation](https://kyverno.github.io/kyverno/)
+
+### Q3-Q4 2025: Advanced Security, Servicemesh & Selvbetjening
+- **Version 3 Teknologier:**
+  - SPIRE / SPIFFE: [SPIRE Helm Chart](https://spiffe.io/docs/latest/spire-helm-charts-hardened-about/installation/)
+  - Cilium: [Cilium Installation](https://docs.cilium.io/en/stable/installation/k8s-install-helm/)
+  - Istio: [Istio Installation](https://istio.io/latest/docs/setup/install/helm/)
+  - Karpenter: [Karpenter Getting Started](https://karpenter.sh/v0.37/getting-started/getting-started-with-karpenter/)
+
+## Resultater
+
+**Følgende outcomes prioriteres:**
+- **Kompetenceforankring i Platform Teamet ved alle leverancer**  
+  Sikrer, at teamet har de nødvendige færdigheder og viden til at vedligeholde og udvikle platformen.
+
+- **Managed Clusters**  
+  Vores team garanterer driften af clusters, mens udviklere leverer containers.
+
+- **Self-Service Features**  
+  Til- og frakobling af features som self-service, hvilket øger udviklerens autonomi.
+  
+- **Indbygget Sikkerhed og Observability**  
+  Inkluderer logs, metrics og traces, som kan integreres med eksisterende løsninger for fuld synlighed.
+
+- **Etablering af Feedback Loops**  
+  Samarbejde med feature teams for at identificere IDP-ambassadører og oprette tværgående CCOE og IDP fællesskaber.
+
+- **Developer Support & Tooling**  
+  Tilbyder værktøjer som golden-paths, tech-radar, CLI, GitOps, og et konsistent udviklingsmiljø.
+
+## Teknologi Prioritering
+Teknologierne listet ovenfor er grundlæggende komponenter i implementeringen af vores **Cluster as a Service**-løsning. De er valgt for at muliggøre effektiv levering, monitorering, sikkerhed og skalerbarhed af vores IDP-platform. Teknologierne kan potentielt prioriteres løbende baseret på projektets behov og udvikling.
+
+##Kunder i DUT 
+
+[kunder.md](kunder)
