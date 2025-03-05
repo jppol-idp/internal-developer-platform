@@ -2,7 +2,7 @@
 title: Indhold
 #layout: default
 nav_order: 0
-description: "I am Index.md"
+description: "I am index - bow for me !"
 permalink: /
 ---
 
