@@ -106,9 +106,10 @@ Enterprise inkluderer:
 - Create and manage collections of documentation, called knowledge bases, to use as a context for chatting with Copilot
 
 GitHub Copilot lever op til følgende organisatoriske krav, og er dermed tilladt for udviklere:
-- GDPR - “Yes. GitHub and customers can enter a [DPA](https://github.com/customer-terms/github-data-protection-agreement) that supports compliance with the GDPR and similar legislation. [copilot](https://github.com/features/copilot#faq)(tryk FAQ → Privacy) **TODO: eller dækker vores nuværende microsoft agreement?**
+- GDPR - “Yes. GitHub and customers can enter a [DPA](https://github.com/customer-terms/github-data-protection-agreement) that supports compliance with the GDPR and similar legislation. 
+[Copilot](https://github.com/features/copilot#faq)(tryk FAQ → Privacy) **TODO: eller dækker vores nuværende microsoft agreement?**
 - Model træning - vi benytter Copilot Business: “GitHub does not use either Copilot Business or Enterprise data to train its models.“
-- 3. part - der må ikke uploades 3. parts software. (se ovenfor)
+- tredje part - der må ikke uploades 3. parts software. (se ovenfor)
 - **TODO: afvent Tanja/Nanna afklaring og gennemsyn**
 
 ## Billing og rapportering
