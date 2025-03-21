@@ -29,7 +29,9 @@ Kort sagt:
 ## Fakturering:
 Betaling for GitHub licenser (21USD/month) og relaterede services (actions, advanced security, mv) via Azure subscription ID: cd441771-16a2-4166-a6c8-d6aca36129f0 (JPPOL EA - GITHUB)
 - Via API kan man tilknytte brugere til et kostcenter og opdele kost i månedlig rapport, ex: 
-```gh api   --method POST -H "Accept: application/vnd.github+json"   -H "X-GitHub-Api-Version: 2022-11-28"   /enterprises/jp-politikens-hus/settings/billing/cost-centers/17e71f8d-fbd7-42dd-8cdb-9c2558c72bd7/resource    -f "users[]=plexdk"```
+```bash 
+gh api   --method POST -H "Accept: application/vnd.github+json"   -H "X-GitHub-Api-Version: 2022-11-28"   /enterprises/jp-politikens-hus/settings/billing/cost-centers/17e71f8d-fbd7-42dd-8cdb-9c2558c72bd7/resource    -f "users[]=plexdk"
+```
 
 Der findes 2 slags brugere, Medlemmer og Outside Collaborators:
 
@@ -70,14 +72,14 @@ kan enterprise admin fjerne dem. Rapport over brugere findes under compliance ra
 users=$(gh api --paginate /enterprises/YOUR_ENTERPRISE/members | jq -r '.[].login')
 
 # Send invitations to all users
-<code>
+```yaml
 for user in $users; do
   gh api --method PUT -H "Accept: application/vnd.github+json" \
     /orgs/YOUR_ORG/memberships/$user
 done
-</code>
+```
 herefter kan der løbende inviteres nye brugere: 
-<code>
+```yaml
 name: Invite Enterprise Users
 on:
   schedule:
@@ -96,7 +98,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_ADMIN_TOKEN }}  # Use a PAT with admin:org scope
 </code>
- 
+``` 
 ## Copilot
 Organisations admin kan bevillige copilot licens til medlemmer i enten business (19USD/month) eller enterprise (39USD/month) version
 Enterprise inkluderer:
