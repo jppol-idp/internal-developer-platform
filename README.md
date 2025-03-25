@@ -3,4 +3,4 @@
 
 Dette repo indeholder ADRs [her](https://github.com/jppol-idp/internal-developer-platform/tree/main/architecture-decision-records) 
 og IDP dokumentation [her](https://jppol-idp.github.io/internal-developer-platform/)
-
+i **public** branchen
