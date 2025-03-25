@@ -7,6 +7,17 @@ nav_order: 2
 
 Status på onboarding af eksisterende GitHub Organisationer til vores nye GitHub Enterprise Cloud [her](https://jira-jppol.atlassian.net/browse/IDP-103)
 
+# Konsekvenser ved at flytte til GitHub Enterprise Cloud:
+- Efter GitHub organisation er flyttet, bliver brugere automatisk bedt om SAML authentication ved første login - herefter skal authentication bekræftes hver 24. time.
+- Brugere skal godkende deres personlige SSH nøgle(r) og PAT(s) til SSO, evt. efterfulgt af `gh auth login` for at kunne tilgå/skrive til repos med SSH (og Visual Studio mv). 
+- External collaborators uden MFA bliver fjernet.
+- Brugere uden SAML ID kan konverteres til external collaborators men beholder kun rettigheder defineret via et team - hvis brugeren er tildelt adgang direkte fra et repository, mistes adgangen.
+- Jeg kan ikke se hvordan i authenticater terraform til github idag - en app ?
+
+
+
+
+
 ## Github Enterprise Cloud Indstillinger:
 Alle settings er default, dog:
 
@@ -37,10 +48,16 @@ Der findes 2 slags brugere, Medlemmer og Outside Collaborators:
 
 ## Onboarding af Medlemmer
 - Medlemmer uden MFA bliver bedt om at aktivere MFA på deres personlige konto.
-- Når brugeren forsøger at opnå adgang til organisationens repositories, bliver der forwarderdet til SAML authenticate via EntreID. Hvis brugeren ikke har adgang, skal der forespørges om adgang til ad gruppen kit-roodom-dk som alle i DUT er blevet medlem af(TODO: denne bør omdøbes til noget meningsfuldt, fx github-members hos ServiceDesk - det bliver den ikke da denne gruppe også bruges til andre ting, men så bør der oprettes en ny, ifb IDM projekt v. Kenneth). Ved succesfuld authentication, bliver brugerens SAML identitet tilknyttet brugerens GitHub handle. 
+- Når brugeren forsøger at opnå adgang til organisationens repositories, bliver der forwarderdet til SAML authenticate via EntreID. 
+Hvis brugeren ikke har adgang, skal der forespørges om adgang til ad gruppen **kit-roodom-dk** som alle i DUT er blevet medlem af
+(TODO: denne bør omdøbes til noget meningsfuldt, fx github-members hos ServiceDesk - det bliver den ikke da denne gruppe også bruges 
+til andre ting, men så bør der oprettes en ny, ifb IDM projekt v. Kenneth). Ved succesfuld authentication, bliver brugerens SAML 
+identitet tilknyttet brugerens GitHub handle. 
 - Brugeren skal herefter godkende evt. SSH nøgler eller Personal Access Tokens til den pågældende organisation, herefter køres ‘gh auth login’.
 - Public repositories vil fortsat være synlige for alle.
 - Hvis brugeren vil afkoble deres GitHub handle fra deres SAML identitet, kan Organisation Admin ophæve tilknytningen.
+- Medlemmer uden SAML identitet kan konverteres til Outside Collaborator, men bibeholder i så fald kun adgang til private repositores 
+defineret via et Team. Dvs. hvis adgang er givet direkte til repositories, skal brugeren inviteres igen.
 
 ## Onboarding af Outside collaborators
 - Outside Collaborators uden MFA bliver fjernet fra organisationen og modtager en mail herom.
@@ -48,7 +65,6 @@ Der findes 2 slags brugere, Medlemmer og Outside Collaborators:
 - Outside Collaborators kan tilføjes direkte til 1 eller flere repos, men kan ikke være med i et Team, eller en organisation.
 - Koster en licens ved adgang til mindst èt privat repos (21USD/month)
 - Organisation admins kan deaktivere muligheden for outside collaborators
-- Medlemmer uden SAML identitet kan konverteres til Outside Collaborator, men bibeholder i så fald kun adgang til private repositores defineret via et Team. Dvs. hvis adgang er givet direkte til repositories, skal brugeren inviteres igen.
 
 ## Offboarding 
 - Medlemmer: Team sync will not remove users from an organization when they are removed from a team, this must be done by admin. 

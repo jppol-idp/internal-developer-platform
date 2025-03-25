@@ -11,10 +11,11 @@ remote_theme: just-the-docs/just-the-docs
 url: https://karthago.com
 
 aux_links:
-  GitHub Repository: https://github.com/jppol-idp/internal-development-platform
+  GitHub: https://github.com/jppol-idp/internal-development-platform
+  Slack: https://ekstrabladet.slack.com/archives/C07TZPBHFUL
 
 #logo: https://github.com/user-attachments/assets/fb6cfda7-7660-477f-8a7a-41e7a6977f47
-#logo: karthago.png
+#logo: assets/karthago.png
 
 mermaid:
   # Version of mermaid library
@@ -23,6 +24,8 @@ mermaid:
 
 plugins:
   - jekyll-default-layout
+  
+favicon_ico: "/assets/karthago.png"
 
   # Define Jekyll collections
 #collections:
