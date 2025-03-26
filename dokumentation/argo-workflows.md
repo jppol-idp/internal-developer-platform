@@ -184,9 +184,9 @@ that makes a call to list sqs queues in AWS. That means the workflow needs
 additional IAM permissions, which we are including via the provisioning of an
 IAM role and the addition of an annotation.
 
-{{important}} As in the following example, the IAM role will need permission to
-assume IAM roles, so that it can return to the default role used by
-argo-workflows to interact with the S3 bucket.{{end}}
+> **Important:** As in the following example, the IAM role will need permission
+> to assume IAM roles, so that it can return to the default role used by
+> argo-workflows to interact with the S3 bucket.
 
 Note that this example includes hardcoded AWS account ids and an OIDC provider
 identifier, which you would need to replace with your own values.
