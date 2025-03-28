@@ -77,7 +77,7 @@ The `Deployment` is simply creating a pod with a single container running
 `busybox-pvc` claim, which means the EBS volume will be mounted at `/data` in
 the container.
 
-## Disaster reocvery
+## Disaster recovery
 
 Now let's imagine this application is completely lost. Maybe it is accidentally
 deleted from Argo CD or the cluster is completely lost. In this case, because we
