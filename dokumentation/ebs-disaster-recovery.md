@@ -23,7 +23,7 @@ implodes.
 
 Let's imagine we have a setup like this:
 
-```
+```yaml
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -88,7 +88,7 @@ In order to be able to recover the application, we need to now statically define
 the volume and pass it a reference to the volume on AWS. Let's take a look at
 these manifests that build upon our previous example:
 
-```
+```yaml
 apiVersion: v1
 kind: PersistentVolume
 metadata:
