@@ -1,3 +1,8 @@
+---
+title: EBS Disaster Recovery
+parent: Dokumentation
+---
+
 # EBS Disaster Recovery
 
 This guide details how to take an existing EBS volume in AWS and connect it to
