@@ -75,8 +75,8 @@ jobs:
     steps:
       - name: Checkout Private Repo
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+        #with:
+        #  fetch-depth: 0
 
       - name: Set up Git
         run: |
@@ -100,13 +100,14 @@ jobs:
             --exclude referater \
             --exclude one-mans-trash \
             --exclude .git \
+            --exclude public_repo \
           ./ public_repo/
-          cp ./_config.yml.public public_repo/_config.yml  # Ensure Just the Docs config is copied
-          cp ./README.md.public public_repo/README.md  # Ensure also the README is proper
 
       - name: Commit and Push Changes
         run: |
           cd public_repo
+          mv _config.yml.public _config.yml  # Ensure Just the Docs config is copied
+          mv README.md.public README.md  # Ensure also the README is proper
           if [[ -n "$(git status --porcelain)" ]]; then
             git add .
             git commit -m "Sync public docs - $(date)"
