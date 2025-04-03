@@ -1,0 +1,75 @@
+title: IDP docs
+description: A starter template for a Jeykll site using the Just the Docs theme!
+#layout: default
+#theme: just-the-docs
+#theme: "just-the-docs"
+#remote_theme: pmarsceill/just-the-docs
+theme: just-the-docs
+remote_theme: just-the-docs/just-the-docs
+
+
+url: https://karthago.com
+
+aux_links:
+  GitHub: https://github.com/jppol-idp/docs
+  Public: https://github.com/jppol-idp/internal-developer-platform
+  Slack: https://ekstrabladet.slack.com/archives/C07TZPBHFUL
+
+
+#logo: https://github.com/user-attachments/assets/fb6cfda7-7660-477f-8a7a-41e7a6977f47
+#logo: assets/karthago.png
+
+mermaid:
+  # Version of mermaid library
+  # Pick an available version from https://cdn.jsdelivr.net/npm/mermaid/
+  version: "9.1.3"
+
+plugins:
+  - jekyll-default-layout
+  
+favicon_ico: "/assets/karthago.png"
+
+  # Define Jekyll collections
+#collections:
+#  # Define a collection named "tests", its documents reside in the "_tests" directory
+#  referater:
+#    permalink: "/:collection/:path/"
+#    output: true
+#
+#just_the_docs:
+#  # Define which collections are used in just-the-docs
+#  collections:
+#    # Reference the "tests" collection
+#    referater:
+#      # Give the collection a name
+#      name: Mødereferater
+#      # Exclude the collection from the navigation
+#      # Supports true or false (default)
+#      nav_exclude: false
+#      # Fold the collection in the navigation
+#      # Supports true or false (default)
+#      nav_fold: true  # note: this option is new in v0.4
+#      # Exclude the collection from the search
+#      # Supports true or false (default)
+#      # search_exclude: true
+#
+# External navigation links
+nav_external_links:
+  - title: Jira Roadmap
+    url: https://jira-jppol.atlassian.net/jira/plans/96/scenarios/96/timeline?vid=1048
+  - title: Tech-Radar
+    url: https://jppol-idp.github.io/tech-radar/
+
+# Footer content
+footer_content: "Copyright &copy; 2025 Karthago." 
+last_edit_timestamp: true # show or hide edit time - page must have `last_modified_date` defined in the frontmatter
+last_edit_time_format: "%b %e %Y at %I:%M %p" # uses ruby's time format: https://ruby-doc.org/stdlib-2.7.0/libdoc/time/rdoc/Time.html
+
+# Footer "Edit this page on GitHub" link text
+gh_edit_link: true # show or hide edit this page link
+gh_edit_link_text: "Edit this page on GitHub."
+gh_edit_repository: "https://github.com/jppol-idp/docs" # the github URL for your repo
+gh_edit_branch: "main" # the branch that your docs is served from
+gh_edit_source: docs # the source that your files originate from
+gh_edit_view_mode: "tree" # "tree" or "edit" if you want the user to jump into the editor immediately
+
