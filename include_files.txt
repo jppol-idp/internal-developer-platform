@@ -1,0 +1,17 @@
+./Gemfile
+./LICENSE
+./assets/karthago_transparent.png
+./assets/metrics.png
+./assets/karthago.png
+./Gemfile.lock
+./include_files.txt
+./README.md.public
+./_config.yml
+./_config.yml.public
+./_includes/footer_custom.html
+./.gitignore
+./.github/workflows/gh-pages.yml
+./karthago.png
+./architecture-decision-records/img/idp_diagram.png
+./introduktion.md
+./index.md

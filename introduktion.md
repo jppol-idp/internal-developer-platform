@@ -1,6 +1,7 @@
 ---
 title: Introduktion
 nav_order: 1
+domain: public
 ---
 
 ## Hvad er en IDP ?

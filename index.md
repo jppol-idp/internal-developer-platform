@@ -4,6 +4,7 @@ title: Indhold
 nav_order: 0
 description: "Bow for me for I am index"
 permalink: /
+domain: public
 ---
 
 <picture>

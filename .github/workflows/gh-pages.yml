@@ -96,11 +96,18 @@ jobs:
 
       - name: Sync Public Docs (Exclude Private Files)
         run: |
+          # Get all files except .md files and specific directories
+          find . -type f ! -name "*.md" \
+            ! -path "./referater/*" \
+            ! -path "./one-mans-trash/*" \
+            ! -path "./.git/*" \
+            ! -path "./public_repo/*" > include_files.txt
+          # Add .md files that contain 'domain: public'
+          grep -rl 'domain: public' --include="*.md" . \
+          | grep -vE '^\.\/(referater|one-mans-trash|\.git|public_repo)' >> include_files.txt
+          # synchronize
           rsync -av --delete \
-            --exclude referater \
-            --exclude one-mans-trash \
-            --exclude .git \
-            --exclude public_repo \
+            --files-from=include_files.txt \
           ./ public_repo/
 
       - name: Commit and Push Changes
