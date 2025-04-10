@@ -15,4 +15,6 @@
 ./architecture-decision-records/img/idp_diagram.png
 ./introduktion.md
 ./index.md
+./baggrund/index.md
+./baggrund/adr.md
 ./baggrund/manifest.md
