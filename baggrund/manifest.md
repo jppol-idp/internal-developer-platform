@@ -1,7 +1,7 @@
 ---
 title: Manifest
 nav_order: 2
-parent: baggrund
+parent: Baggrund
 domain: public
 ---
 

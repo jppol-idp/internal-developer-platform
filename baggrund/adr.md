@@ -1,7 +1,7 @@
 ---
 title: Architect Decision Records
 nav_order: 7
-parent: baggrund
+parent: Baggrund
 domain: public
 ---
 
