@@ -11,10 +11,12 @@
 ./_includes/footer_custom.html
 ./.gitignore
 ./.github/workflows/gh-pages.yml
-./karthago.png
 ./architecture-decision-records/img/idp_diagram.png
-./introduktion.md
 ./index.md
+./baggrund/introduktion.md
 ./baggrund/index.md
+./baggrund/principper.md
 ./baggrund/adr.md
 ./baggrund/manifest.md
+./template.md
+./administration/adgang.md
