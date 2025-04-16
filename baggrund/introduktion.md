@@ -3,6 +3,7 @@ title: Introduktion
 nav_order: 1
 domain: public
 parent: Baggrund
+permalink: /introduktion
 ---
 
 ## Hvad er en IDP ?

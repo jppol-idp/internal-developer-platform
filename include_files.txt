@@ -1,12 +1,15 @@
 ./Gemfile
 ./LICENSE
 ./assets/karthago_transparent.png
+./assets/idp_dark.png
 ./assets/metrics.png
 ./assets/karthago.png
+./assets/idp_light.png
 ./Gemfile.lock
 ./include_files.txt
 ./README.md.public
 ./_config.yml
+./template
 ./_config.yml.public
 ./_includes/footer_custom.html
 ./.gitignore
@@ -18,5 +21,7 @@
 ./baggrund/principper.md
 ./baggrund/adr.md
 ./baggrund/manifest.md
-./template.md
+./onboarding/index.md
+./onboarding/idp-ready-checklist.md
 ./administration/adgang.md
+./produkter/index.md

@@ -9,13 +9,13 @@ review_in: 6 months
 ---
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://github.com/user-attachments/assets/fb6cfda7-7660-477f-8a7a-41e7a6977f47">
-  <img alt="Text changing depending on mode. Light: 'So light!' Dark: 'So dark!'" src="https://github.com/user-attachments/assets/54befc36-d2c6-4059-9b1e-864086c65b7d">
+  <source media="(prefers-color-scheme: dark)" srcset="/assets/idp_dark.png">
+  <img alt="Text changing depending on mode. Light: 'So light!' Dark: 'So dark!'" src="assets/idp_light.png">
 </picture>
 
 ## **Guides og Dokumentation**
 
-1. **Intro til IDP** - Kort [introduktion](introduktion) til IDP
+1. **Intro til IDP** - Kort [introduktion](introduktion) til udvikler platformen
 1. **Roadmap** - Vores roadmap i [Jira](https://jira-jppol.atlassian.net/jira/plans/96/scenarios/96/timeline?vid=1048)
 1. **Deep-dive** - Hvis du vil vide mere om IDP [deep-dive](deep-dive)
 1. **Tech-radar** - IDP fremtid [radar](https://jppol-idp.github.io/tech-radar/)
