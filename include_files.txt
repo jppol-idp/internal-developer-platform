@@ -2,6 +2,7 @@
 ./LICENSE
 ./assets/karthago_transparent.png
 ./assets/idp_dark.png
+./assets/shipit.png
 ./assets/metrics.png
 ./assets/karthago.png
 ./assets/idp_light.png
