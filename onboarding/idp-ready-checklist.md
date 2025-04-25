@@ -9,7 +9,7 @@ parent: Onboarding
 
 # IDP Ready Checklist
 
-> Denne tjekliste sikrer, at dine containere er klar til at blive onboardet og opereret effektivt i IDP-platformen (baseret på EKS, ArgoCD, Argo Workflows, Loki, Tempo, Mimir, Prometheus, OpenTelemetry, Falco, Kyverno, SPIRE m.fl.).
+> Formáìet med denne tjekliste er at sikre, at du og dine dine containers fár maksimalt udbytte af IDP-platformen 
 
 ---
 
