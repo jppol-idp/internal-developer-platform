@@ -1,4 +1,3 @@
-./onboarding/fra-kode-til-deploy-på-30-minutter.md.backup
 ./include_files.txt
 ./.github/workflows/gh-pages.yml
 ./LICENSE
