@@ -7,9 +7,9 @@ domain: public
 
 # Architect Decision Records (ADR)
 
-**[ADR arkiv](https://github.com/test-jppolitikenshus/internal-developer-platform/tree/main/architecture-decision-records)**
+**[ADR arkiv](https://github.com/jppol-idp/docs/blob/main/architecture-decision-records/README.md)**
 
-Beslutninger registreres som Architect Descision Records (ADRs) og opbevares offentligt tilgængeligt i [git](https://github.com/test-jppolitikenshus/internal-developer-platform/tree/main/architecture-decision-records)
+Beslutninger registreres som Architect Descision Records (ADRs) og opbevares offentligt tilgængeligt i [git](https://github.com/jppol-idp/docs/blob/main/architecture-decision-records)
 
 Beslutningsprocessen er beskrevet herunder:
 
@@ -47,10 +47,10 @@ ADR-udvalget består af IDP teamet, som mødes når der er behov, og følger en 
 
 ![image](https://github.com/user-attachments/assets/fb38dae1-41fc-462b-836f-d2fb77862f5b)
 
-Beslutningsprocessen er vedtaget her [000-registrering-af-beslutninger.md](https://github.com/test-jppolitikenshus/internal-developer-platform/blob/main/architecture-decision-records/000-registrering-af-beslutninger.md)
+Beslutningsprocessen er vedtaget her [000-registrering-af-beslutninger.md](https://github.com/jppol-idp/docs/blob/main/architecture-decision-records/000-registrering-af-beslutninger.md)
 
 Referencer:   
-https://www.cognitect.com/blog/2011/11/15/documenting-architecture-decisions    
-https://agiledojo.de/2023-03-06-how-to-write-a-good-adr/   
-https://www.thoughtworks.com/en-us/radar/techniques/lightweight-architecture-decision-records   
-https://ieeexplore.ieee.org/ielx7/52/9801712/09801811.pdf?tp=&arnumber=9801811&isnumber=9801712&ref=aHR0cHM6Ly9hZHIuZ2l0aHViLmlvLw==   
+(https://www.cognitect.com/blog/2011/11/15/documenting-architecture-decisions)
+(https://agiledojo.de/2023-03-06-how-to-write-a-good-adr/)
+(https://www.thoughtworks.com/en-us/radar/techniques/lightweight-architecture-decision-records)
+(https://ieeexplore.ieee.org/ielx7/52/9801712/09801811.pdf?tp=&arnumber=9801811&isnumber=9801712&ref=aHR0cHM6Ly9hZHIuZ2l0aHViLmlvLw==)
