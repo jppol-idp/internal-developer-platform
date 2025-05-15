@@ -23,4 +23,3 @@ jobs:
           atlassianUserName: kristoffer.egefelt@jppol.dk
           atlassianApiToken: ${{ secrets.ATLASSIAN_API_TOKEN }}
           folderToPublish: .
-          configFile: .markdown-confluence.json
