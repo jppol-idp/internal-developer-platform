@@ -9,7 +9,7 @@ jobs:
         uses: actions/checkout@v2
       
       - name: Publish Markdown to Confluence
-        uses: markdown-confluence/publish@v5
+        uses: markdown-confluence/publish-action@7767a0a7f438bb1497ee7ffd7d3d685b81dfe700
         with:
           confluenceBaseUrl: https://jira-jppol.atlassian.net
           confluenceParentId: 3699408953
