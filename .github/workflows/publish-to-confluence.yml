@@ -1,0 +1,19 @@
+name: Publish to Confluence
+on: push
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Publish Markdown to Confluence
+        uses: markdown-confluence/publish@7767a0a7f438bb1497ee7ffd7d3d685b81dfe700
+        with:
+          confluenceBaseUrl: https://jira-jppol.atlassian.net
+          confluenceParentId: 3699408953
+          atlassianUserName: "kristoffer.egefelt@jppol.dk"
+          atlassianApiToken: ${{ secrets.ATLASSIAN_API_TOKEN }}
+          folderToPublish: architecture-decision-records
+          contentRoot: /architecture-decision-records
