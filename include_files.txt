@@ -1,3 +1,4 @@
+./.markdown-confluence.json
 ./_config.yml.public
 ./Gemfile.lock
 ./template
