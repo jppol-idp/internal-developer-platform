@@ -16,4 +16,3 @@ jobs:
           atlassianUserName: "kristoffer.egefelt@jppol.dk"
           atlassianApiToken: ${{ secrets.ATLASSIAN_API_TOKEN }}
           folderToPublish: architecture-decision-records
-          contentRoot: /architecture-decision-records
