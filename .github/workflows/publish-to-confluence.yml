@@ -13,6 +13,6 @@ jobs:
         with:
           confluenceBaseUrl: https://jira-jppol.atlassian.net
           confluenceParentId: 3699408953
-          atlassianUserName: "kristoffer.egefelt@jppol.dk"
+          atlassianUserName: kristoffer.egefelt@jppol.dk
           atlassianApiToken: ${{ secrets.ATLASSIAN_API_TOKEN }}
           folderToPublish: architecture-decision-records
