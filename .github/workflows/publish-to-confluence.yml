@@ -11,7 +11,8 @@ jobs:
       - name: Remove excluded content
         run: |
           echo "Removing directories not meant for publishing..."
-          rm -rf _* Gemfile* LICENSE README.md.public README.md index.md
+          rm -rf _* Gemfile* LICENSE README.md 
+          find . -type f -name 'index.md' -exec rm -f {} +
           echo "Remaining structure:"
           tree -L 2 || ls -R
       
