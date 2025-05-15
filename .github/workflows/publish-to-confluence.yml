@@ -11,7 +11,7 @@ jobs:
       - name: Remove excluded content
         run: |
           echo "Removing directories not meant for publishing..."
-          rm -rf _* Gemfile* LICENSE README.md
+          rm -rf _* Gemfile* LICENSE README.md.public
           echo "Remaining structure:"
           tree -L 2 || ls -R
       
@@ -23,3 +23,4 @@ jobs:
           atlassianUserName: kristoffer.egefelt@jppol.dk
           atlassianApiToken: ${{ secrets.ATLASSIAN_API_TOKEN }}
           folderToPublish: .
+          firstHeadingPageTitle: true
