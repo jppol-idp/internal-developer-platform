@@ -10,9 +10,7 @@ permalink: /adr
 
 **[ADR arkiv](https://github.com/jppol-idp/docs/blob/main/architecture-decision-records/README.md)**
 
-Beslutninger registreres som Architect Descision Records (ADRs) og opbevares offentligt tilgængeligt i [git](https://github.com/jppol-idp/docs/blob/main/architecture-decision-records)
-
-Beslutningsprocessen er beskrevet herunder:
+Beslutninger registreres som Architect Descision Records (ADRs) og opbevares på [GitHub](https://github.com/jppol-idp/docs/blob/main/architecture-decision-records)
 
 ### **Formål**
 
@@ -28,22 +26,21 @@ Brugen af ADR skal sikre:
 ### **Hvordan bruger vi ADR**
 
 Enhver ny eller ændret beslutning bør følges af en ADR, der dokumenterer beslutningsprocessen.
-ADR-arkivet er åbent, alle kan bidrage med feedback eller input til eksisterende ADR'er - nye ADR'er kan oprettes i repositoriet. 
+ADR-arkivet er åbent, alle kan bidrage med feedback eller input til eksisterende ADR'er - nye ADR'er oprettes i repositoriet. 
 
 ### **Hvordan er ADR processen** 
 
-ADR-udvalget består af IDP teamet, som mødes når der er behov, og følger en process der kan inspireres af denne: 
+ADR-udvalget består af IDP teamet, som mødes når der er behov, og følger typisk denne process: 
 
-- **Trigger:** En beslutning om en ny teknisk løsning, en ændring af eksisterende arkitektur, eller en vigtig afvejning for eller imod bestemte teknologier.
-- **Ansvarlig:** Alle kan identificere et behov og foreslå en ADR.
-- **Indledende evaluering:** Kan være teammedlemmer i platformteamet.
-- **Møde:** Produktmanageren indkalder til et ADR evaluerings møde på baggrund af foreliggende udkast.
+- **Trigger:** En beslutning om en teknisk løsning, en ændring af eksisterende arkitektur, eller en vigtig afvejning for eller imod bestemte teknologier.
+- **Ansvarlig:** Alle kan identificere og foreslå en ADR.
+- **Møde:** Produktmanageren indkalder til et ADR evaluerings møde. 
 - **Feedback:** Reviewers læser udkast og kommer med kommentarer og forslag.
 - **Diskussion:** I mødet diskuteres feedback åbent med fokus på fordele, ulemper og mulige forbedringer.
 - **Godkendelse:** Hvis ADR’en accepteres efter review, opdateres den sidste version af ADR’en og en beslutningsstatus tilføjes.
 - **Implementering:** Beslutningen dokumenteret i den godkendte ADR implementeres af teamet som planlagt.
 - **Overvågning:** Platformteamet følger løbende op for at sikre, at implementeringen følger den beslutning, der er dokumenteret i ADR’en, og overvåger effekterne.
-- **Reevaluering:** ADR'er bør periodisk reevalueres for at vurdere deres fortsatte relevans og nøjagtighed.
+- **Evaluering:** ADR'er bør periodisk reevalueres for at vurdere deres fortsatte relevans og nøjagtighed.
 - **Opdatering:** Ved behov opdateres ADR'er med nye data og indsigt, eller beslutningen kan ændres, hvis nye informationer eller teknologiudviklinger gør det muligt.
 
 ![image](https://github.com/user-attachments/assets/fb38dae1-41fc-462b-836f-d2fb77862f5b)
