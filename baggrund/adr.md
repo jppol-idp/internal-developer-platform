@@ -3,6 +3,7 @@ title: Architect Decision Records
 nav_order: 7
 parent: Baggrund
 domain: public
+permalink: /adr
 ---
 
 # Architect Decision Records (ADR)

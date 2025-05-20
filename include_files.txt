@@ -26,5 +26,5 @@
 ./baggrund/index.md
 ./administration/adgang.md
 ./onboarding/idp-ready-checklist.md
-./onboarding/index.md
+./onboarding/fra-kode-til-deploy-på-30-minutter.md
 ./index.md

@@ -10,7 +10,7 @@ nav_exclude: true
 
 # IDP Ready Checklist
 
-> Formáìet med denne tjekliste er at sikre, at du og dine dine containers fár maksimalt udbytte af IDP-platformen 
+> Formålet med denne tjekliste er at sikre, at du og dine dine containers får maksimalt udbytte af IDP-platformen 
 
 ---
 

@@ -3,6 +3,7 @@ title: Principper
 nav_order: 4
 parent: Baggrund
 domain: public
+permalink: /principper
 ---
 
 
