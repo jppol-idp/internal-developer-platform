@@ -18,7 +18,6 @@
 ./README.md.public
 ./_includes/footer_custom.html
 ./_config.yml
-./produkter/index.md
 ./baggrund/adr.md
 ./baggrund/manifest.md
 ./baggrund/principper.md
