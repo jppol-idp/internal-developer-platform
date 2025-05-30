@@ -26,3 +26,4 @@
 ./baggrund/principper.md
 ./baggrund/manifest.md
 ./baggrund/index.md
+./testing.md
