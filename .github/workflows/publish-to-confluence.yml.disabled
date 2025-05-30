@@ -1,0 +1,26 @@
+name: Publish to Confluence
+on: push
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+
+      - name: Remove excluded content
+        run: |
+          echo "Removing directories not meant for publishing..."
+          rm -rf _* Gemfile* LICENSE README.md 
+          find . -type f -name 'index.md' -exec rm -f {} +
+          echo "Remaining structure:"
+          tree -L 2 || ls -R
+      
+      - name: Publish Markdown to Confluence
+        uses: markdown-confluence/publish-action@7767a0a7f438bb1497ee7ffd7d3d685b81dfe700  # v5.something.something
+        with:
+          confluenceBaseUrl: https://jira-jppol.atlassian.net
+          confluenceParentId: 3699408953
+          atlassianUserName: kristoffer.egefelt@jppol.dk
+          atlassianApiToken: ${{ secrets.ATLASSIAN_API_TOKEN }}
+          folderToPublish: .
