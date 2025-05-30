@@ -94,7 +94,7 @@ jobs:
         run: |
           git clone https://x-access-token:${{ steps.app-token.outputs.token }}@github.com/jppol-idp/internal-developer-platform.git public_repo
 
-      - name: Sync Public Docs (Exclude Private Files)
+      - name: Sync Public Docs 
         run: |
           # Get all files except .md files and specific directories
           find . -type f ! -name "*.md" \
@@ -115,6 +115,7 @@ jobs:
           cd public_repo
           mv _config.yml.public _config.yml  # Ensure Just the Docs config is copied
           mv README.md.public README.md  # Ensure also the README is proper
+          mv index.md.public index.md
           if [[ -n "$(git status --porcelain)" ]]; then
             git add .
             git commit -m "Sync public docs - $(date)"

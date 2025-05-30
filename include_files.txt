@@ -17,6 +17,7 @@
 ./Gemfile.lock
 ./architecture-decision-records/img/idp_diagram.png
 ./architecture-decision-records/img/tgw.png
+./index.md.public
 ./LICENSE
 ./onboarding/idp-ready-checklist.md
 ./onboarding/fra-kode-til-deploy-på-30-minutter.md
@@ -25,4 +26,3 @@
 ./baggrund/principper.md
 ./baggrund/manifest.md
 ./baggrund/index.md
-./index.md
