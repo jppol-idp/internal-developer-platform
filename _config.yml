@@ -53,11 +53,11 @@ favicon_ico: "/assets/shipit.png"
 #      # search_exclude: true
 #
 # External navigation links
-nav_external_links:
-  - title: Jira Roadmap
-    url: https://jira-jppol.atlassian.net/jira/plans/96/scenarios/96/timeline?vid=1048
-  - title: Tech-Radar
-    url: https://jppol-idp.github.io/tech-radar/
+# nav_external_links:
+#  - title: Jira Roadmap
+#    url: https://jira-jppol.atlassian.net/jira/plans/96/scenarios/96/timeline?vid=1048
+#  - title: Tech-Radar
+#    url: https://jppol-idp.github.io/tech-radar/
 
 # Footer content
 footer_content: "Copyright &copy; 2025 Karthago." 
