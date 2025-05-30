@@ -27,4 +27,3 @@
 ./baggrund/adr.md
 ./baggrund/index.md
 ./index.md
-./index_intern.md
