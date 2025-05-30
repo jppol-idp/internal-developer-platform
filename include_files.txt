@@ -1,7 +1,7 @@
 ./README.md.public
 ./template
 ./.github/workflows/gh-pages.yml
-./.github/workflows/publish-to-confluence.yml
+./.github/workflows/publish-to-confluence.yml.disabled
 ./_config.yml.public
 ./_includes/footer_custom.html
 ./Gemfile
