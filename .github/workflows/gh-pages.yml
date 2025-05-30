@@ -106,6 +106,9 @@ jobs:
           grep -rl 'domain: public' --include="*.md" . \
           | grep -vE '^\.\/(referater|one-mans-trash|\.git|public_repo)' >> include_files.txt
           # synchronize
+          rm -r public_repo/*
+          rm -r public_repo/.github
+          rm -r public_repo/.gitignore
           rsync -av --delete \
             --files-from=include_files.txt \
           ./ public_repo/
