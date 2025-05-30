@@ -105,10 +105,14 @@ jobs:
           # Add .md files that contain 'domain: public'
           grep -rl 'domain: public' --include="*.md" . \
           | grep -vE '^\.\/(referater|one-mans-trash|\.git|public_repo)' >> include_files.txt
-          # synchronize
+          # Add the only two files withtout metadata
+          echo "./README.public.md" >> include_files.txt
+          echo "./README.md" >> include_files.txt
+          # make it clean
           rm -r public_repo/*
           rm -r public_repo/.github
           rm -r public_repo/.gitignore
+          # synchronize
           rsync -av --delete \
             --files-from=include_files.txt \
           ./ public_repo/
@@ -116,9 +120,9 @@ jobs:
       - name: Commit and Push Changes
         run: |
           cd public_repo
-          mv _config.yml.public _config.yml  # Ensure Just the Docs config is copied
-          mv README.md.public README.md  # Ensure also the README is proper
-          mv index.md.public index.md
+          mv _config.public.yml _config.yml  # Ensure Just the Docs config is copied
+          mv README.public.md README.md  # Ensure also the README is proper
+          mv index.public.md index.md
           if [[ -n "$(git status --porcelain)" ]]; then
             git add .
             git commit -m "Sync public docs - $(date)"
