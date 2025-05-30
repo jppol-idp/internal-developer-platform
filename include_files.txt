@@ -24,6 +24,5 @@
 ./baggrund/introduktion.md
 ./baggrund/principper.md
 ./baggrund/manifest.md
-./baggrund/adr.md
 ./baggrund/index.md
 ./index.md
