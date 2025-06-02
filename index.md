@@ -12,15 +12,18 @@ review_in: 6 months
   <img alt="Text changing depending on mode. Light: 'So light!' Dark: 'So dark!'" src="assets/idp_light.png">
 </picture>
 
-## **Guides og Dokumentation**
+## **Intro**
 
 1. **Intro til IDP** - Kort [introduktion](introduktion) til udvikler platformen
 1. **Manifest** - IDP [manifesto](manifest) og [principper](principper)
-1. **IDP-checklist** - Introduktion til [container udvikling](https://docs.idp.jppol.dk/onboarding/fra-kode-til-deploy-p%C3%A5-30-minutter) og production-ready checklist
 
-## **Kontakt**
 
-1. **Support** - Vi svarer hurtigst i **#idp-support** på [Slack](https://jppol-online.slack.com/archives/C3VL8FBM5)
+## **Dokumentation**
+1. **Onboarding til IDP** - Introduktion til [container udvikling](https://docs.idp.jppol.dk/onboarding/fra-kode-til-deploy-p%C3%A5-30-minutter) og production-ready checklist
+   
+
+## **Support**
+Vi svarer hurtigst i **#idp-support** på [Slack](https://jppol-online.slack.com/archives/C3VL8FBM5)
 
 ----
 
