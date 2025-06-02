@@ -1,7 +1,6 @@
 ./template
 ./.github/workflows/gh-pages.yml
 ./.github/workflows/publish-to-confluence.yml.disabled
-./onboarding/faq
 ./_includes/footer_custom.html
 ./Gemfile
 ./_config.yml
