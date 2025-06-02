@@ -4,8 +4,8 @@ title: IDP docs
 #theme: just-the-docs
 #theme: "just-the-docs"
 #remote_theme: pmarsceill/just-the-docs
-#theme: just-the-docs
-#remote_theme: just-the-docs/just-the-docs
+theme: just-the-docs
+remote_theme: just-the-docs/just-the-docs
 
 
 #url: https://karthago.com
@@ -17,13 +17,13 @@ aux_links:
 #logo: https://github.com/user-attachments/assets/fb6cfda7-7660-477f-8a7a-41e7a6977f47
 #logo: assets/karthago.png
 
-#mermaid:
+mermaid:
   # Version of mermaid library
   # Pick an available version from https://cdn.jsdelivr.net/npm/mermaid/
-#  version: "9.1.3"
+  version: "9.1.3"
 
-#plugins:
-#  - jekyll-default-layout
+plugins:
+  - jekyll-default-layout
   
 favicon_ico: "/assets/shipit.png"
 
