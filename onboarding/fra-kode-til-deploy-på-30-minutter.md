@@ -141,21 +141,23 @@ image:
 
 Authenticate til din AWS konto med aws cli `brew install awscli`
 
-Hvis du allerede har sat SSO login op, 
+Hvis du allerede har sat SSO login op: 
 
-aws sts get-caller-identity [--profile session]
-aws configure export-credentials [--profile koa-dev]
-aws eks list-clusters --region eu-west-1 --profile koa-dev
-
-
-
-> Nogen vælger at bruge aws-sso `brew install aws-sso-cli` fordi man ikke behøver at vedligeholde sine roller manuelt i ~/.aws/config - men nu anbefales det fra AWS at bruge deres eget tool, sjovt nok. Det er måske også ok, nu hvor det understøtter sso, men det er da stadig irriterende at bøvle med manuel konfiguration. Da de fleste dog kun har et par konti, og at ventetiden på aws-cli sync'er stiger med antallet af konti, overgiver jeg mig.
-
-```bash
-aws configure sso
 ```
-answer truthfully - note, if you call it default, it will be default - maybe you already have that.
+aws sso login --profile pol-test
+aws sts get-caller-identity [--profile session]
+aws configure export-credentials [--profile pol-test]
+aws eks list-clusters --region eu-west-1 --profile pol-test
+```
 
+> Maske bruger du aws-sso `brew install aws-sso-cli` fordi man ikke behøver at vedligeholde sine roller 
+manuelt i ~/.aws/config - men AWS anbefaler at bruge deres eget tool. 
+
+Hvis du ikke 
+
+`aws configure sso`
+
+```
 SSO session name (Recommended): `default`    # <-- this is the sso session
 SSO start URL [None]:  `https://jppol-sso.awsapps.com/start#/`
 SSO region [None]: `eu-west-1`
@@ -165,11 +167,12 @@ There are 2 roles available to you. `vælg rollen idp-customer-access`
 Default client Region [None]: `eu-west-1`
 CLI default output format (json if not specified) [None]:
 Profile name [blabla]: `idp-dev`
+```
 
-If you need to add another account run
+For at tilfoje en anden konto:
 
-```bash
-aws configure sso
+`aws configure sso`
+
 ```
 SSO session name [default]:
 Using the account ID 01234566788
@@ -177,37 +180,90 @@ Using the role name "AWSAdministratorAccess"
 Default client Region [eu-west-1]:
 CLI default output format (json if not specified) [None]:
 Profile name [accountname-and-number]: `idp-prod`
+```
 
-eller du kan bare rette det direkte i ~/.aws/config
+eller ret det direkte i ~/.aws/config
 
 
 __find navnet på dit cluster__
 
-aws eks list-clusters --profile koa-dev
+
+`aws eks list-clusters --region eu-west-1 --profile pol-test`
 
 tilføj dit cluster til ~/.kube/config
 
-aws eks update-kubeconfig --name prod-cluster --region eu-west-1 profile --koa-dev
+`aws eks update-kubeconfig --name pol-test --region eu-west-1 profile --pol-test`
 
 
-adgang til k9s
+### adgang til k9s
 
-k9s læser default config fra (~/.kube/config)
+`brew install k9s`
 
-check selv med `kubectl config current-context` 
+k9s læser default config fra `~/.kube/config)` - check med `kubectl config current-context` 
 
-skift evt cluster context med `:ctx` og tryk Enter
+> skift evt cluster context med `:ctx` og tryk Enter
 
-Get terminal
+### Fejlsogning
 
-kubectl get pods --namespace koa-test
+`kubectl get pods --namespace pol-test`
 
-kubectl exec -it b2b-offer-api-net-koa-dev-84fbbff795-5sjbr -n koa-dev -- /bin/bash
-kubectl get pod b2b-offer-api-net-koa-dev-84fbbff795-5sjbr -n koa-dev -o jsonpath='{.spec.containers[*].name}'
+get terminal:
 
-logs
+`kubectl exec -it net-utils-pol-test-55749f75f-ct5lw -n koa-dev -- /bin/bash`
 
-k logs -n crossplane-system 
+get all containers in pod:
+
+`kubectl get pod net-utils-pol-test-55749f75f-ct5lw -n pol-test -o jsonpath='{.spec.containers[*].name}'`
+
+get logs:
+
+`k logs -n pol-test net-utils-pol-test-55749f75f-ct5lw`
+`k logs -n pol-test net-utils-pol-test-55749f75f-ct5lw --previous`
+
+get events:
+
+`k describe pod net-utils-pol-test-55749f75f-ct5lw -n pol-test`
+
+get deployment:
+
+`kubectl get pod net-utils-pol-test-55749f75f-ct5lw -n pol-test -o jsonpath='{.metadata.ownerReferences[*].name}'`
+
+get deployment state:
+
+`k describe deployment net-utils-pol-test -n pol-test`
+
+get deployment manifest
+
+`k get deployment -n pol-test net-utils-pol-test -o yaml`
+
+### get argocd sync state
+
+`brew install argocd`
+
+find argo via port forward indtil videre (transit gateway)
+
+`kubectl port-forward svc/argocd-server -n argocd 8080:443`
+
+login i argocd
+
+`argocd login localhost:8080 --sso --insecure`
+
+hvem er jeg for argo:
+
+`argocd account get-user-info`
+
+get argo sync state
+
+`argocd app list`
+
+get app state:
+
+`argocd app get argocd/net-utils-pol-test`
+
+
+
+
+
 
 ## 🏁 Klar på 30 minutter
 
@@ -228,6 +284,7 @@ Du er nu i gang! 💪
 - Tilføj resource limits
 - Scan dit image med Trivy i CI
 - Valider mod Kyverno policies
+- Adgang til kubernetes med k9s
 
 ---
 *Sidst opdateret: 2025-04-23*
