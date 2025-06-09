@@ -192,7 +192,7 @@ __find navnet på dit cluster__
 
 tilføj dit cluster til ~/.kube/config
 
-`aws eks update-kubeconfig --name pol-test --region eu-west-1 profile --pol-test`
+`aws eks update-kubeconfig --name pol-test --region eu-west-1 --profile pol-test`
 
 
 ### adgang til k9s
