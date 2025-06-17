@@ -20,8 +20,8 @@ review_in: 6 months
 
 ## **Dokumentation**
 1. **Onboarding til IDP** - Introduktion til [container udvikling](https://docs.idp.jppol.dk/onboarding/fra-kode-til-deploy-p%C3%A5-30-minutter) og production-ready checklist
-1. **FAQ** - Dyk ned og [få svar på dine spørgsmål](https://docs.idp.jppol.dk/onboarding/faq.html)
-1. **SLA** - Få en oversigt over [vores SLA med jer ](https://jira-jppol.atlassian.net/wiki/spaces/IDP/folder/3680632849?atlOrigin=eyJpIjoiNzU2YjYxNjkzZWJiNDFlMjlkZDI5YTE4OWM0YjNlM2UiLCJwIjoiYyJ9)
+1. **Få svar på dine spørgsmål** - [Dyk ned i vores FAQ](https://docs.idp.jppol.dk/onboarding/faq.html)
+1. **Service Level Agreement** - Få en oversigt over [vores SLA med jer](https://jira-jppol.atlassian.net/wiki/spaces/IDP/folder/3680632849?atlOrigin=eyJpIjoiNzU2YjYxNjkzZWJiNDFlMjlkZDI5YTE4OWM0YjNlM2UiLCJwIjoiYyJ9)
    
 
 ## **Support**
