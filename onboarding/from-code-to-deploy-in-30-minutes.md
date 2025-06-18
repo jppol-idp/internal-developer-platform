@@ -5,16 +5,16 @@ parent: Onboarding
 domain: public
 ---
 
-# Fra kode til deploy på 30 minutter 🚀
+# Fra kode til deploy til overvågning på 30 minutter 🚀
 
 > Denne playbook hjælper dig med hurtigt at få din første applikation deployet til udviklerplatformen.
 
-Du vil opnå:
+Du vil efter denne session have opnået at:
 
 - [x] Din kode er pakket som en container
 - [x] Den er deployet via GitOps
 - [x] Den er overvåget via Prometheus, logget via Loki og du kan visualisere med Grafana
-- [x] Du overholder platformens sikkerhedskrav
+- [x] Du overholder platformens og dermed JPPOLs sikkerhedskrav
 
 ---
 
@@ -139,139 +139,10 @@ image:
 ---
 
 - Tjek i ArgoCD UI om `myapp` er synkroniseret.
-- Bekræft log output i Grafana
 - Metrics eksponeres automatisk og er synlige i Prometheus & Grafana.
-- Hvis du bruger tracing (OpenTelemetry), vil spans dukke op i Tempo.
-
+- Bekræft log output i Grafana
+- 
 ---
-
-### 5. Adgang til Kubernetes
-
-Authenticate til din AWS konto med aws cli `brew install awscli`
-
-Hvis du allerede har sat SSO login op: 
-
-```
-aws sso login --profile pol-test
-aws sts get-caller-identity [--profile session]
-aws configure export-credentials [--profile pol-test]
-aws eks list-clusters --region eu-west-1 --profile pol-test
-```
-
-> Maske bruger du aws-sso `brew install aws-sso-cli` fordi man ikke behøver at vedligeholde sine roller 
-manuelt i ~/.aws/config - men AWS anbefaler at bruge deres eget tool. 
-
-Hvis du ikke 
-
-`aws configure sso`
-
-```
-SSO session name (Recommended): `default`    # <-- this is the sso session
-SSO start URL [None]:  `https://jppol-sso.awsapps.com/start#/`
-SSO region [None]: `eu-west-1`
-SSO registration scopes [sso:account:access]:
-There are 78 AWS accounts available to you. `vælg din konto`
-There are 2 roles available to you. `vælg rollen idp-customer-access`
-Default client Region [None]: `eu-west-1`
-CLI default output format (json if not specified) [None]:
-Profile name [blabla]: `idp-dev`
-```
-
-For at tilfoje en anden konto:
-
-`aws configure sso`
-
-```
-SSO session name [default]:
-Using the account ID 01234566788
-Using the role name "AWSAdministratorAccess"
-Default client Region [eu-west-1]:
-CLI default output format (json if not specified) [None]:
-Profile name [accountname-and-number]: `idp-prod`
-```
-
-eller ret det direkte i ~/.aws/config
-
-
-__find navnet på dit cluster__
-
-
-`aws eks list-clusters --region eu-west-1 --profile pol-test`
-
-tilføj dit cluster til ~/.kube/config
-
-`aws eks update-kubeconfig --name pol-test --region eu-west-1 --profile pol-test`
-
-
-### adgang til k9s
-
-`brew install k9s`
-
-k9s læser default config fra `~/.kube/config)` - check med `kubectl config current-context` 
-
-> skift evt cluster context med `:ctx` og tryk Enter
-
-### Fejlsogning
-
-`kubectl get pods --namespace pol-test`
-
-get terminal:
-
-`kubectl exec -it net-utils-pol-test-55749f75f-ct5lw -n koa-dev -- /bin/bash`
-
-get all containers in pod:
-
-`kubectl get pod net-utils-pol-test-55749f75f-ct5lw -n pol-test -o jsonpath='{.spec.containers[*].name}'`
-
-get logs:
-
-`k logs -n pol-test net-utils-pol-test-55749f75f-ct5lw`
-`k logs -n pol-test net-utils-pol-test-55749f75f-ct5lw --previous`
-
-get events:
-
-`k describe pod net-utils-pol-test-55749f75f-ct5lw -n pol-test`
-
-get deployment:
-
-`kubectl get pod net-utils-pol-test-55749f75f-ct5lw -n pol-test -o jsonpath='{.metadata.ownerReferences[*].name}'`
-
-get deployment state:
-
-`k describe deployment net-utils-pol-test -n pol-test`
-
-get deployment manifest
-
-`k get deployment -n pol-test net-utils-pol-test -o yaml`
-
-### get argocd sync state
-
-`brew install argocd`
-
-find argo via port forward indtil videre (transit gateway)
-
-`kubectl port-forward svc/argocd-server -n argocd 8080:443`
-
-login i argocd
-
-`argocd login localhost:8080 --sso --insecure`
-
-hvem er jeg for argo:
-
-`argocd account get-user-info`
-
-get argo sync state
-
-`argocd app list`
-
-get app state:
-
-`argocd app get argocd/net-utils-pol-test`
-
-
-
-
-
 
 ## 🏁 Tillykke
 
