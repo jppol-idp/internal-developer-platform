@@ -15,7 +15,6 @@
 ./Gemfile.lock
 ./architecture-decision-records/img/idp_diagram.png
 ./architecture-decision-records/img/tgw.png
-./onboarding/from-code-to-deploy-in-30-minutes
 ./_includes/footer_custom.html
 ./.gitignore
 ./administration/adgang.md
