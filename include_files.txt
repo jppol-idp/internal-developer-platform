@@ -26,6 +26,5 @@
 ./onboarding/from-code-to-deploy-in-30-minutes.md
 ./onboarding/fra-kode-til-deploy-på-30-minutter.md
 ./onboarding/idp-ready-checklist.md
-./onboarding/helm-chart-values.md
 ./README.public.md
 ./README.md
