@@ -122,7 +122,7 @@ image:
 > [README.md](https://github.com/jppol-idp/helm-idp-advanced/blob/main/README.md) beskriver hvilke values der kan defineres
 ---
 
-### 4. 📦 Commit og push til GitOps repo
+### 5. 📦 Commit og push til GitOps repo
 
 ---
 
