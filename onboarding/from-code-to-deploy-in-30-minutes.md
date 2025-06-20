@@ -5,7 +5,10 @@ parent: Onboarding
 domain: public
 ---
 
-# Fra kode til deploy til overvågning på 30 minutter 🚀
+# From code to deploy in 30 minutes 🚀
+> [!IMPORTANT]
+> Examples are in the context of Politiken - change Politiken/POL variables in links to your own domain.
+
 
 > Denne playbook hjælper dig med hurtigt at få din første applikation deployet til udviklerplatformen.
 
