@@ -1,13 +1,13 @@
 ---
-title: Fra kode til deploy på 30 min
+title: From code to deploy to observability in 30 minutes 
 nav_order: 0 
 parent: Onboarding
 domain: public
 ---
 
-# From code to deploy in 30 minutes 🚀
+# From code to deploy to observability in 30 minutes 🚀
 > [!IMPORTANT]
-> Examples are in the context of Politiken - change Politiken/POL variables in links to your own domain.
+> Examples shown are in the context of `Politiken` - change link variables to your own domain.
 
 
 > Denne playbook hjælper dig med hurtigt at få din første applikation deployet til udviklerplatformen.
@@ -17,7 +17,7 @@ Du vil efter denne session have opnået:
 
 - [x] Adgang til IDP
 - [x] Din kode er pakket som en container
-- [x] Den er deployet via GitOps
+- [x] Du har deployet via GitOps og du har overblik i ArgoCD
 - [x] Den er overvåget via Prometheus, logget via Loki og visualiseret via Grafana
 - [x] Du overholder platformens og dermed JPPOLs sikkerhedskrav
 
@@ -84,7 +84,7 @@ Vores ECR repository tillader at actions i Politikens github organisation må up
 
 > Du kan checke om dit image er uploadet korrekt, ved at vælge `IDP-client-read-access` rollen i AWS konto [aws-jppol-idp-shared](https://jppol-sso.awsapps.com/start#/)
 
-__Automatisk deploy__
+__Automatic deploy__
 
 Efter image er uploaded, kan deployment trigges direkte fra jeres kode repository. Disse github secrets er oprettet i Politikens org, og kan bruges til at trigge deployment i IDP repository jppol-idp/pol-apps 
 
@@ -102,7 +102,7 @@ Efter image er uploaded, kan deployment trigges direkte fra jeres kode repositor
 
 > GitHub app'en befinder sig her [https://github.com/organizations/jppol-idp/settings/installations/61380040](https://github.com/organizations/jppol-idp/settings/installations/61380040)
 
-### 4. Opret deployment konfiguration
+### 4. Create deployment configuration
 
 Forbered helm chart i deploy repo [https://github.com/jppol-idp/apps-pol](https://github.com/jppol-idp/apps-pol)
 
@@ -140,30 +140,36 @@ image:
 ---
 
 ### 5. 📦 Commit and push to your GitOps repo and see deployment in ArgoCD
+After committing your chart.yaml and values.yaml files to your "apps-pol" github repository deployment will start.
 
-- Tjek i ArgoCD UI om `myapp` er synkroniseret.
-- We use [ArgoCD for deployment](https://argocd.pol-test.idp.jppol.dk)
+Check in ArgoCD if your app has been synchronised and deployed and a certificate been issued.  
+
+Go to ArgoCD for deployment [https://argocd.pol-test.idp.jppol.dk](https://argocd.pol-test.idp.jppol.dk)
 
 ---
 
 ### 6. Confirm log output in Grafana
-Metrics eksponeres automatisk og er synlige i Prometheus & Grafana.
+Metrics are automatically exposed with Prometheus and Loki and are visible in Grafana.
 
-[Grafana for monitoring](https://grafana.pol-test.idp.jppol.dk)
+Go to Grafana for monitoring
+[(https://grafana.pol-test.idp.jppol.dk)](https://grafana.pol-test.idp.jppol.dk)
 
-Go to drilldown area and filter your logs out
-![image](https://github.com/user-attachments/assets/fd9d5f9c-de13-4a09-880a-24a0e159b218)
+Go to drilldown to see your Prometheus stats
+![image](https://github.com/user-attachments/assets/a634da84-ff6c-4497-a39f-e22a15ee60fb)
+
+Go and drilldown and filter your logs with Loki
+![image](https://github.com/user-attachments/assets/e22fed76-be65-4c54-8f11-61e784c09bf0)
 
 
-
----
-
-## 🏁 Tillykke
-
-Du er nu i gang! 💪
 
 ---
 
+## 🏁 Congratulations
+
+You're now up and running! 💪
 
 ---
-*Sidst opdateret: 2025-04-23*
+
+
+---
+*Last updated: 2025-06-23*
