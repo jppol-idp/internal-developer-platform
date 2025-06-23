@@ -13,7 +13,6 @@ review_in: 6 months
 </picture>
 
 ## **Intro**
-1. **Intro til IDP** - Kort [introduktion](introduktion) til udvikler platformen
 1. **Manifest** - IDP [manifesto](manifest) og [principper](principper) 
 1. **Service Level Agreement** - Få en oversigt over [vores SLA med jer](https://jira-jppol.atlassian.net/wiki/spaces/IDP/folder/3680632849?atlOrigin=eyJpIjoiNzU2YjYxNjkzZWJiNDFlMjlkZDI5YTE4OWM0YjNlM2UiLCJwIjoiYyJ9)
 
