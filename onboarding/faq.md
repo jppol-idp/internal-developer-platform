@@ -28,7 +28,7 @@ Is your team not yet set up in the IDP? Reach out to us – we’ll have a chat.
 - Github Enterprise
 - ArgoCD
 - Argo Workflows
-- Graphana, Prometheus, Loki
+- Grafana (data via Prometheus and Loki)
 - PagerDuty
 
 You can find an overview with direct links in the root README file:
@@ -37,7 +37,7 @@ https://github.com/jppol-idp/apps-pol/tree/main/apps/pol-dev
 ---
 ### 3. 🛠️ What values can I set in my Helm chart?
 
-You can find the [described values](https://github.com/jppol-idp/helm-idp-advanced/blob/main/README.md)(login required) 
+You can find the [described values](https://github.com/jppol-idp/helm-idp-advanced/blob/main/README.md) (login required - it's auto-generated in our internal docs) 
 Scroll to the right to see the comments for each variable:
 
 ---
