@@ -139,14 +139,23 @@ image:
 > [README.md](https://github.com/jppol-idp/helm-idp-advanced/blob/main/README.md) beskriver hvilke values der kan defineres
 ---
 
-### 5. 📦 Commit og push til GitOps repo
+### 5. 📦 Commit and push to your GitOps repo and see deployment in ArgoCD
+
+- Tjek i ArgoCD UI om `myapp` er synkroniseret.
+- We use [ArgoCD for deployment](https://argocd.pol-test.idp.jppol.dk)
 
 ---
 
-- Tjek i ArgoCD UI om `myapp` er synkroniseret.
-- Metrics eksponeres automatisk og er synlige i Prometheus & Grafana.
-- Bekræft log output i Grafana
-- 
+### 6. Confirm log output in Grafana
+Metrics eksponeres automatisk og er synlige i Prometheus & Grafana.
+
+[Grafana for monitoring](https://grafana.pol-test.idp.jppol.dk)
+
+Go to drilldown area and filter your logs out
+![image](https://github.com/user-attachments/assets/fd9d5f9c-de13-4a09-880a-24a0e159b218)
+
+
+
 ---
 
 ## 🏁 Tillykke
