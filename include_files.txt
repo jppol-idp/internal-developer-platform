@@ -23,6 +23,7 @@
 ./index.public.md
 ./baggrund/manifest.md
 ./baggrund/index.md
+./baggrund/manifest-idp.md
 ./baggrund/principper.md
 ./onboarding/from-code-to-deploy-in-30-minutes.md
 ./onboarding/index.md
