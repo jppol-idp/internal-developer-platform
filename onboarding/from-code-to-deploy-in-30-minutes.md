@@ -171,6 +171,10 @@ Go and drilldown and filter your logs with Loki
 ![image](https://github.com/user-attachments/assets/e22fed76-be65-4c54-8f11-61e784c09bf0)
 
 
+![Screenshot of a comment on a GitHub issue showing an image, added in the Markdown, of an Octocat smiling and raising a tentacle.](https://myoctocat.com/assets/images/base-octocat.svg)
+
+![image](https://public.docs.idp.jppol.dk/assets/shipit.png)
+
 
 ---
 
