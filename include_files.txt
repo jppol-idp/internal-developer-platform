@@ -27,5 +27,6 @@
 ./baggrund/principper.md
 ./onboarding/from-code-to-deploy-in-30-minutes.md
 ./onboarding/idp-ready-checklist.md
+./onboarding/faq.md
 ./README.public.md
 ./README.md
