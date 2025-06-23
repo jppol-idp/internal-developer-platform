@@ -84,7 +84,21 @@ Vores ECR repository tillader at actions i Politikens github organisation må up
 
 > Du kan checke om dit image er uploadet korrekt, ved at vælge `IDP-client-read-access` rollen i AWS konto [aws-jppol-idp-shared](https://jppol-sso.awsapps.com/start#/)
 
+__Automatisk deploy__
 
+Efter image er uploaded, kan deployment trigges direkte fra jeres kode repository. Disse github secrets er oprettet i Politikens org, og kan bruges til at trigge deployment i IDP repository jppol-idp/pol-apps 
+
+- IDP_DEPLOY_APP_ID
+- IDP_DEPLOY_APP_KEY
+
+```yaml
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.IDP_DEPLOY_APP_ID }}
+          private-key: ${{ secrets.IDP_DEPLOY_APP_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: apps-pol
+```
 
 > GitHub app'en befinder sig her [https://github.com/organizations/jppol-idp/settings/installations/61380040](https://github.com/organizations/jppol-idp/settings/installations/61380040)
 
