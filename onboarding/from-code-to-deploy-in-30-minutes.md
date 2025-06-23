@@ -1,11 +1,12 @@
 ---
-title: From code to deploy to observability in 30 minutes 
+title: From code to deploy in 30 minutes
 nav_order: 0 
 parent: Onboarding
 domain: public
 ---
 
-# From code to deploy to observability in 30 minutes 🚀
+
+# From code to deploy in 30 minutes 🚀
 > This playbook helps you quickly deploy your first application to the developer platform.
 
 ---
