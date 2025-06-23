@@ -1,8 +1,10 @@
 ---
 title: FAQ
-nav_order: 0 
+nav_order: 2 
 parent: Onboarding
 domain: public
+permalink: /faq
+
 ---
 
 # FAQ - IDP 🚀
