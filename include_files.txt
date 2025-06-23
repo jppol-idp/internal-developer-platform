@@ -4,10 +4,12 @@
 ./Gemfile
 ./_config.yml
 ./LICENSE
+./assets/onboarding-grafana-drilldown-logs.png
 ./assets/metrics.png
 ./assets/karthago.png
 ./assets/idp_light.png
 ./assets/shipit.png
+./assets/onboarding-grafana-drilldown-metrics.png
 ./assets/idp_dark.png
 ./assets/karthago_transparent.png
 ./template
