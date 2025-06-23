@@ -40,12 +40,13 @@ https://github.com/jppol-idp/apps-pol/tree/main/apps/pol-dev
 You can find the [described values](https://github.com/jppol-idp/helm-idp-advanced/blob/main/README.md)(login required) 
 Scroll to the right to see the comments for each variable:
 
+---
+### 4. 🪣 How do I spin up an S3 bucket?
+We have this repository: https://github.com/jppol-idp/helm-idp-s3-bucket/blob/main/charts/idp-s3-bucket/values.yaml
 
-### 4. 🪣 Hvordan spinner jeg en S3 bucket op?
-Vi har dette repo: https://github.com/jppol-idp/helm-idp-s3-bucket/blob/main/charts/idp-s3-bucket/values.yaml
-Lav en folder i stil med de øvrige I har i jeres apps-cluster.
+Create a folder similar with other folders in your app cluster.
 
-I application.yaml skal du have noget i stil med:
+In your application.yaml file you need something like:
 
 ```yaml
 apiVersion: v2
@@ -58,8 +59,10 @@ helm:
   chart: helm/idp-s3-bucket
   chartVersion: "0.1.0"
 ```
-(så du refererer et andet chart)
-Values kan tage udgangspunkt i repo-linket.
+(This is where you reference another chart.)
+
+You can base your values on the examples in the repo.  
+
 
 ```yaml
 # -- Default values for helm-idp-s3-bucket.
@@ -82,16 +85,19 @@ buckets:
 #  - name: "jppol-idp-tjallo-tjalde"
 ```
 
-Væsentligst er at skifte bucket-name.
+The most important thing is to change the `bucket-name`.
 
-Du kan tilføjet flere buckets af gange i filen, hvis det ønskes.
+You can define multiple buckets in the file if needed.
 
-Du skal i applikationens values-fil give adgang via irsa, for de enkelte applikationer.
+You must grant access via IRSA in the application's `values.yaml` file for each application.
+
 
 ---
 
-### 5. 🤫 Hvordan bør vi håndtere config og secrets?
-Vi anbefaler at konfiguration ligger som environmentvariable, der kan defineres i values-filen:
+### 5. 🤫 How should we handle config and secrets
+
+We recommend placing configuration as environment variables, which can be defined in the `values.yaml` file:
+
 ```yaml
 env:
   - name: ASPNETCORE_ENVIRONMENT
@@ -108,9 +114,9 @@ env:
     value: "8080"
 ```
 
-Secrets bør ligge i secretsmanager. 
+Secrets should be stored in Secrets Manager.
 
-I skal sætte secrets via nogle actions i jeres app-repository og få værdierne eksponeret til applikationen som environmentparametre, ved at tilføje en blok til values-filen af formatet:
+You should set secrets via actions in your app repository and expose the values to the application as environment parameters by adding a block like this to your values.yaml file:
 
 ```yaml
 external_secrets:
@@ -120,58 +126,61 @@ external_secrets:
     secretsmanager_name: medielogin_client_secret
 ```
 
-Applicationen vil derefter have følgende environment-variable tilgængelige VALUE_FOR_ENVIRONMENT1 og MEDIELOGIN_CLIENT_SECRET
+The application will then have the following environment variables available: VALUE_FOR_ENVIRONMENT1 and MEDIELOGIN_CLIENT_SECRET.
 
-Kubernetes henter værdierne fra secretsmanager, så man behøver ikke have applikationskode til at foretage det opslag.
+Kubernetes fetches the values from Secrets Manager, so the application code does not need to perform the lookup itself.
 
-Der står lidt mere om det i apps-repo under hvert namespace. Eksempel her: https://github.com/jppol-idp/apps-[jeres-team]/blob/main/apps/[jeres-team]-test/secrets.md
+You can find more details in the apps repository under each namespace. Example:     https://github.com/jppol-idp/apps-[jeres-team]/blob/main/apps/[jeres-team]-test/secrets.md
 
 
 ---
 
-### 6. 🖇️ Hvordan giver vi vores IDP containere adgang til vores managed service uden for IDP?
+### 6. 🖇️ How do we give our IDP containers access to our managed service outside of IDP?
 
-I kan se IP-adresser i README. Eksempel:
+You can find the IP addresses in the README. Example:  
 https://github.com/jppol-idp/apps-xxxx/blob/main/apps/xxxx-dev/README.md
 
-IP'erne afhænger lidt af hvordan servicen fungerer.
+The IPs depend on how the service is set up.
 
-Skal I bruge eksterne IP'er, så er det NAT-gatewayen, der er interessant.
+If you need external IPs, the NAT gateway is what matters.
 
-Det er ikke et range, men specifikke addresser (altså et /32 "range")
+Note: It’s not a range, but specific addresses (i.e., a /32 "range").
 
 ---
 
-### 7. 🧁 Hvordan laver vi custom domains?
+### 7. 🧁 How do we set up custom domains?
 
-I binder domæner via fqdn-feltet i values-filen.
+You bind domains using the `fqdn` field in your `values.yaml` file.
 
-Der er dog en begrænsning i forhold til hvilke domæner, der er tilgængelige i de enkelte konti. Dem kan I se i readme-filen ovre i apps-repositoriet (under de enkelte namespaces).
+However, there are limitations regarding which domains are available in each account.  
+You can find them listed in the README file in the apps repository (under each namespace).
 
-For pol-dev ligger den her: https://github.com/jppol-idp/apps-pol/blob/main/apps/pol-dev/README.md
+For `pol-dev`, the list is here:  
+https://github.com/jppol-idp/apps-pol/blob/main/apps/pol-dev/README.md
 
 Available domains
 pol-test.idp.jppol.dk
 pol-dev.idp.jppol.dk
 
-Det er "default-domænerne", som godt kan udvides.
-Det kræver noget konfiguration hos os.
+These are the default domains, but they can be extended.  
+This requires some configuration on our side.
 
-Når et domæne først er tilgængeligt kan I vælge sub-domæner på de anviste domæner i fqdn for de enkelte applikationer. 
-Når der tilføjes elementer bliver der lavet dns-records automatisk. Samtidig udstedes der et certifikat til det konkrete domæne.
+Once a domain is available, you can choose subdomains under the listed domains in the `fqdn` field for each application.  
+When elements are added, DNS records are created automatically, and a certificate is issued for the specific domain.
 
-Hvis I ønsker records på andre domæner, end dem, der er tilgængelige i kontoen, så kan det også lade sig gøre. Det er dog betragteligt mere besværligt.
+If you want records on other domains than those available in the account, that’s also possible – but significantly more complex.
 
-Hvis domænet hostes i en anden konto skal man finde dem der ejer hoveddomænet og lave en A-record til de load-balancer-adresser, der står i README. 
-Når den er på plads kan man tilføje adressen i values-filen, og derefter fungerer certifikatudstedelse automatisk.
+If the domain is hosted in another account, you need to contact the owner of the root domain and create an A-record pointing to the load balancer addresses listed in the README.  
+Once that’s in place, you can add the address in the `values.yaml` file, and certificate issuance will then work automatically.
+
 
 ---
 
-### 8. 🔐 Hvordan lukker vi for ekstern adgang til vores API endpoints?
+### 8. 🔐 How do we restrict external access to our API endpoints?
 
-Hvis servicen kun skal kunne nås internt i _clusteret_ skal I slå public nginx fra så den kun er tilgængelig på private nginx. 
+If the service should only be accessible internally within the _cluster_, you should disable public NGINX so it’s only available via private NGINX.
 
-Hvis den skal være public men begrænset kan I lave IP-whitelisting i values-filen.
+If it needs to be public but restricted, you can configure IP whitelisting in the `values.yaml` file:
 
 ```yaml
    nginx:
@@ -188,15 +197,16 @@ Hvis den skal være public men begrænset kan I lave IP-whitelisting i values-fi
       enabled: true
       annotations: {} 
 ```
-Ovenstående er et eksempel på whitelisting.
+The example above shows how to whitelist IPs.
 
-Der er også sat et par andre indstillinger med bufferstørrelser. Den relevante annotation er
+It also includes a few other settings related to buffer sizes.
+The key annotation for whitelisting is:
 `nginx.ingress.kubernetes.io/whitelist-source-range: 91.214.20.0/24,54.220.9.41/32,52.50.24.11/32`
 
-Det er også her I kan vælge at sætte nginx.public.enabled til false, hvis man slet ikke vil have servicen offentligt eksponeret.
+You can also set nginx.public.enabled to false if you don’t want the service to be publicly exposed at all.
 
 > [!NOTE]
-> På et senere tidspunkt bliver det også muligt at give adgang fra andre AWS-konti via en transit gateway.
+> In the future, it will also be possible to grant access from other AWS accounts via a transit gateway.
 
 ---
 
