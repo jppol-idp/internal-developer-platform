@@ -19,8 +19,8 @@ review_in: 6 months
 
 
 ## **Documentation [In English]**
-1. **Getting Started with IDP** - [An Introduction to IDP and your first deployment](https://docs.idp.jppol.dk/onboarding/from-code-to-deploy-in-30-minutes)
-1. **Get answers to your questions** - [dive into our FAQ](https://docs.idp.jppol.dk/onboarding/faq.html)
+1. **Getting Started with IDP** - [From code to deploy in 30 minutes](https://docs.idp.jppol.dk/onboarding/from-code-to-deploy-in-30-minutes)
+1. **Get answers to your questions** - [Visit our FAQ](https://docs.idp.jppol.dk/onboarding/faq.html)
 
    
 
