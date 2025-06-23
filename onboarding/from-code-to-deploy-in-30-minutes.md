@@ -24,6 +24,7 @@ domain: public
 - [x] Deployed via GitOps with visibility in ArgoCD
 - [x] Monitoring via Prometheus, logging via Loki, and visualization in Grafana
 - [x] You comply with the platform’s — and thus JPPOL’s — security requirements
+- [x] You are ready to use IDP in your daily work
 
 ---
 
@@ -60,6 +61,8 @@ WORKDIR /app
 COPY app.py .
 CMD ["python", "app.py"]
 ```
+
+---
 
 ### 2. 🐳 Build and optionally test your image locally
 
@@ -172,9 +175,13 @@ Go and drilldown and filter your logs with Loki
 
 ---
 
-## 🏁 Congratulations
+### 7. 🏁 Congratulations
 
 You're now up and running! 💪
+
+You are **always** very welcome to ask questions in [Slack](https://ekstrabladet.slack.com/archives/C08HWLGQCTE) - we're happy to help!
+
+Also, feel free to explore our (IDP documentation)[https://docs.idp.jppol.dk/onboarding/faq.html] for answers to frequently asked questions and onboarding guidance.
 
 ---
 
