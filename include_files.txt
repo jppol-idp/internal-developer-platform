@@ -21,7 +21,6 @@
 ./.gitignore
 ./administration/adgang.md
 ./index.public.md
-./baggrund/introduktion.md
 ./baggrund/manifest.md
 ./baggrund/index.md
 ./baggrund/principper.md
