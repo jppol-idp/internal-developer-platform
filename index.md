@@ -13,16 +13,15 @@ review_in: 6 months
 </picture>
 
 ## **Intro**
-
 1. **Intro til IDP** - Kort [introduktion](introduktion) til udvikler platformen
 1. **Manifest** - IDP [manifesto](manifest) og [principper](principper) 
-
-
-## **Dokumentation**
-1. **Onboarding til IDP** - Introduktion til [container udvikling](https://docs.idp.jppol.dk/onboarding/fra-kode-til-deploy-p%C3%A5-30-minutter) og production-ready checklist
-1.  **Onboarding til IDP (beta)** - Introduktion til [container udvikling og deployment til IDP](https://docs.idp.jppol.dk/onboarding/from-code-to-deploy-in-30-minutes)
-1. **Få svar på dine spørgsmål** - [Dyk ned i vores FAQ](https://docs.idp.jppol.dk/onboarding/faq.html)
 1. **Service Level Agreement** - Få en oversigt over [vores SLA med jer](https://jira-jppol.atlassian.net/wiki/spaces/IDP/folder/3680632849?atlOrigin=eyJpIjoiNzU2YjYxNjkzZWJiNDFlMjlkZDI5YTE4OWM0YjNlM2UiLCJwIjoiYyJ9)
+
+
+## **Dokumentation [In English]**
+1. **Onboarding to IDP** - Introduction to [IDP deployments](https://docs.idp.jppol.dk/onboarding/from-code-to-deploy-in-30-minutes)
+1. **Get answers to your questions** - [dive into our FAQ](https://docs.idp.jppol.dk/onboarding/faq.html)
+
    
 
 ## **Support**
