@@ -18,8 +18,8 @@ review_in: 6 months
 1. **Service Level Agreement** - Få en oversigt over [vores SLA med jer](https://jira-jppol.atlassian.net/wiki/spaces/IDP/folder/3680632849?atlOrigin=eyJpIjoiNzU2YjYxNjkzZWJiNDFlMjlkZDI5YTE4OWM0YjNlM2UiLCJwIjoiYyJ9)
 
 
-## **Dokumentation [In English]**
-1. **Onboarding to IDP** - Introduction to [IDP deployments](https://docs.idp.jppol.dk/onboarding/from-code-to-deploy-in-30-minutes)
+## **Documentation [In English]**
+1. **Getting Started with IDP** - [An Introduction to IDP and your first deployment](https://docs.idp.jppol.dk/onboarding/from-code-to-deploy-in-30-minutes)
 1. **Get answers to your questions** - [dive into our FAQ](https://docs.idp.jppol.dk/onboarding/faq.html)
 
    
