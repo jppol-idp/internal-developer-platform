@@ -74,8 +74,8 @@ docker run app.py:0.1.0
 
 > 🚨 You typically don’t have permission to upload images directly — but Politiken’s GitHub organization does.
 
-Denne [GitHub Action](https://github.com/Politiken/idp-test/blob/master/.github/workflows/build-push-deploy.yaml) bygger, 
-tagger og uploader dit image til ECR i vores idp-shared konto: 354918371398
+This GitHub Action builds, tags, and uploads your image to ECR in our idp-shared account: 354918371398
+[https://github.com/Politiken/idp-test/blob/master/.github/workflows/build-push-deploy.yaml](https://github.com/Politiken/idp-test/blob/master/.github/workflows/build-push-deploy.yaml)
 
 
 ```yaml
@@ -84,14 +84,14 @@ namespace: pol
 image_tags: ${{ github.run_number }}
 ```
 
-Vores ECR repository tillader at actions i Politikens github organisation må uploade images hertil
-`arn:aws:ecr:eu-west-1:354918371398:repository/pol/*`
+The ECR repository allows GitHub Actions from Politiken’s organization to upload images here:
+arn:aws:ecr:eu-west-1:354918371398:repository/pol/*
 
-> Du kan checke om dit image er uploadet korrekt, ved at vælge `IDP-client-read-access` rollen i AWS konto [aws-jppol-idp-shared](https://jppol-sso.awsapps.com/start#/)
+> You can verify the image upload by assuming the IDP-client-read-access role in the AWS account aws-jppol-idp-shared [aws-jppol-idp-shared](https://jppol-sso.awsapps.com/start#/)
 
-__Automatic deploy__
+__Automatic deployment__
 
-Efter image er uploaded, kan deployment trigges direkte fra jeres kode repository. Disse github secrets er oprettet i Politikens org, og kan bruges til at trigge deployment i IDP repository jppol-idp/pol-apps 
+Once the image is uploaded, deployment can be triggered directly from your code repository using GitHub secrets configured in Politiken’s org:
 
 - IDP_DEPLOY_APP_ID
 - IDP_DEPLOY_APP_KEY
@@ -105,11 +105,12 @@ Efter image er uploaded, kan deployment trigges direkte fra jeres kode repositor
           repositories: apps-pol
 ```
 
-> GitHub app'en befinder sig her [https://github.com/organizations/jppol-idp/settings/installations/61380040](https://github.com/organizations/jppol-idp/settings/installations/61380040)
+> GitHub app installation link [https://github.com/organizations/jppol-idp/settings/installations/61380040](https://github.com/organizations/jppol-idp/settings/installations/61380040)
 
+---
 ### 4. Create deployment configuration
 
-Forbered helm chart i deploy repo [https://github.com/jppol-idp/apps-pol](https://github.com/jppol-idp/apps-pol)
+Prepare a Helm chart in the deploy repo: [https://github.com/jppol-idp/apps-pol](https://github.com/jppol-idp/apps-pol)
 
 ```bash
 git clone https://github.com/jppol-idp/apps-pol.git
@@ -117,8 +118,8 @@ cd apps-pol/apps/pol-test
 mkdir app
 ```
 
-**Et deployment består typisk af 2 filer**
-`application.yaml` beskriver helm chart 
+**A deployment typically consists of two files:**
+`application.yaml` - describes the Helm chart:
 
 ```yaml
 apiVersion: v2
@@ -131,9 +132,9 @@ helm:
   chartVersion: "0.1.14"    # <-- version af helm chart
 ```
 
-> chart: `helm/idp-advanced` henviser til [jppol-idp/helm-idp-advanced](https://github.com/jppol-idp/helm-idp-advanced/tree/main/charts/idp-advanced/Chart.yaml) hvor detaljer om vardier er beskrevet
+> The chart helm/idp-advanced refers to [jppol-idp/helm-idp-advanced](https://github.com/jppol-idp/helm-idp-advanced/tree/main/charts/idp-advanced/Chart.yaml)
 
-`values.yaml` beskriver variabler specifikke for dette deployment, fx
+`values.yaml`- defines deployment-specific variables:
 
 ```yaml
 image:
@@ -141,7 +142,9 @@ image:
   pullPolicy: IfNotPresent
   tag: "0.1.0"
 ```
-> [README.md](https://github.com/jppol-idp/helm-idp-advanced/blob/main/README.md) beskriver hvilke values der kan defineres
+
+[You can find a list of all configurable values here.](https://github.com/jppol-idp/helm-idp-advanced/blob/main/README.md)
+
 ---
 
 ### 5. 📦 Commit and push to your GitOps repo and see deployment in ArgoCD
