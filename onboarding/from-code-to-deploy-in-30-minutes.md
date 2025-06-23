@@ -6,48 +6,53 @@ domain: public
 ---
 
 # From code to deploy to observability in 30 minutes 🚀
+> This playbook helps you quickly deploy your first application to the developer platform.
+
+
 > [!IMPORTANT]
-> Examples shown are in the context of `Politiken` - change link variables to your own domain.
+> The examples use `Politiken`-specific domains and variables.  
+> Make sure to **replace all values** with values relevant to your own organization.
+> 
+> Example: `https://github.com/jppol-idp/apps-pol` → `https://github.com/jppol-idp/apps-yourdomain`
 
-
-> Denne playbook hjælper dig med hurtigt at få din første applikation deployet til udviklerplatformen.
 
 ---
-Du vil efter denne session have opnået:
+**By the end of this session, you will have:**
 
-- [x] Adgang til IDP
-- [x] Din kode er pakket som en container
-- [x] Du har deployet via GitOps og du har overblik i ArgoCD
-- [x] Den er overvåget via Prometheus, logget via Loki og visualiseret via Grafana
-- [x] Du overholder platformens og dermed JPPOLs sikkerhedskrav
-
----
-
-
-## ⏱️ Forudsætninger
-
-Før du starter, skal du have følgende på plads:
-
-- [ ] Adgang til dit kode repo: fx [https://github.com/Politiken](https://github.com/Politiken)
-- [ ] Adgang til dit deploy repo: fx [https://github.com/jppol-idp/apps-pol](https://github.com/jppol-idp/apps-pol) ([adgangstyring](https://github.com/orgs/jppol-idp/teams/apps-pol/members))
-- [ ] Adgang til #idp-support på [Slack](https://ekstrabladet.slack.com/archives/C08HWLGQCTE)
-- [ ] Adgang til IDP tools: fx [https://pol-test.idp.jppol.dk/](https://pol-test.idp.jppol.dk/)
-- [ ] Adgang til rollen `idp-customer-access` i din AWS konto [aws-jppol-pol-test](https://jppol-sso.awsapps.com/start#/)
-- [ ] Adgang til rollen `IDP-client-read-access` i vores ECR AWS konto [aws-jppol-idp-shared](https://jppol-sso.awsapps.com/start#/)
-- [ ] Docker eller lign. installeret (brew install --cask docker)
+- [x] Access to the IDP
+- [x] Your code packaged as a container
+- [x] Deployed via GitOps with visibility in ArgoCD
+- [x] Monitoring via Prometheus, logging via Loki, and visualization in Grafana
+- [x] You comply with the platform’s — and thus JPPOL’s — security requirements
 
 ---
 
-## 🪛 Trin-for-trin: Deploy din første workload
 
-### 1. 📁 Opret app i dit kode repository (se evt [https://github.com/Politiken/idp-test](https://github.com/Politiken/idp-test)
+## ⏱️ Prerequisites
+
+Before you begin, make sure you have the following in place:
+
+- [ ] Access to your code repository, e.g., [https://github.com/Politiken](https://github.com/Politiken)
+- [ ] Access to your deployment repository, e.g., [https://github.com/jppol-idp/apps-pol](https://github.com/jppol-idp/apps-pol) ([access management](https://github.com/orgs/jppol-idp/teams/apps-pol/members))
+- [ ] Access to #idp-support on [Slack](https://ekstrabladet.slack.com/archives/C08HWLGQCTE)
+- [ ] Access to IDP tools, e.g., [https://pol-test.idp.jppol.dk/](https://pol-test.idp.jppol.dk/)
+- [ ] Access to the role idp-customer-access in your AWS account aws-jppol-pol-test [aws-jppol-pol-test](https://jppol-sso.awsapps.com/start#/)
+- [ ] Access to the role IDP-client-read-access in our ECR AWS account aws-jppol-idp-shared [aws-jppol-idp-shared](https://jppol-sso.awsapps.com/start#/)
+- [ ] Docker or similar installed
+
+---
+
+## 🪛 Step-by-Step: Deploy Your First Workload
+
+### 1. 📁 Create an app in your code repository (se example [https://github.com/Politiken/idp-test](https://github.com/Politiken/idp-test))
+Name the app after yourself to make it easy to identify.
 
 ```bash
 mkdir app && cd app
 echo 'print("Hello, IDP!")' > app.py
 ```
 
-Tilføj en `Dockerfile`:
+Add a Dockerfile:
 
 ```Dockerfile
 FROM python:3.11-slim
@@ -56,7 +61,7 @@ COPY app.py .
 CMD ["python", "app.py"]
 ```
 
-### 2. 🐳 Byg og test evt dit image lokalt
+### 2. 🐳 Build and optionally test your image locally
 
 ```bash
 docker build . -t app.py:0.1.0
@@ -65,9 +70,9 @@ docker run app.py:0.1.0
 
 ---
 
-### 3. Upload dit image til IDPs ECR repository
+### 3. Upload your image to the IDP ECR repository
 
-> 🚨 Du har som udgangspunkt ikke lov til at uploade dit image direkte, men det har Politikens GitHub organisation.
+> 🚨 You typically don’t have permission to upload images directly — but Politiken’s GitHub organization does.
 
 Denne [GitHub Action](https://github.com/Politiken/idp-test/blob/master/.github/workflows/build-push-deploy.yaml) bygger, 
 tagger og uploader dit image til ECR i vores idp-shared konto: 354918371398
