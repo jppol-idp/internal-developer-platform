@@ -13,33 +13,32 @@ permalink: /faq
 
 
 
-### 1. 🔑 Hvordan får jeg adgang til IDP?
-For at få adgang skal din teamlead gøre følgende: 
-- Tilføje dig via jeres servicenow formular, så du får tilføjet de korrekte AD-gruppe-rettigheder. 
-- Give dig adgang til jeres Github Enterprise repo under vores jppol-idp organisation.
+### 1. 🔑 How do I get access to the IDP?
+To gain access, your team lead needs to do the following:  
+- Add you via your ServiceNow form so you are granted the correct AD group permissions.  
+- Grant you access to your GitHub Enterprise repository under our `jppol-idp` organization.
 
-Hvis du eller dit team har spørgsmål eller oplever problemer, så smid altid bare en [Slack til os](https://ekstrabladet.slack.com/archives/C07TZPBHFUL). 
+If you or your team have any questions or run into issues, feel free to send us a [Slack message](https://ekstrabladet.slack.com/archives/C07TZPBHFUL). 
 
-Er jeres team endnu ikke oprettet i IDP? Så tag fat i os – så tager vi en snak.
+Is your team not yet set up in the IDP? Reach out to us – we’ll have a chat.
 
 ---
 
-### 2. 🛠️ Hvilke værktøjer får jeg med IDP?
+### 2. 🛠️ What tools do I get with the IDP?
 - Github Enterprise
 - ArgoCD
 - Argo Workflows
 - Graphana, Prometheus, Loki
 - PagerDuty
 
-Du finder en oversigt over direkte links i readme-filen i roden.
+You can find an overview with direct links in the root README file:
 https://github.com/jppol-idp/apps-pol/tree/main/apps/pol-dev
 
 ---
-### 3. 🛠️ Hvilke værdier kan jeg sætte i mit helm chart?
+### 3. 🛠️ What values can I set in my Helm chart?
 
-Her finder du (copied) [værdierne beskrevet](https://docs.idp.jppol.dk/onboarding/helm-chart-values). 
-
-Her finder du [værdierne beskrevet](https://github.com/jppol-idp/helm-idp-advanced/blob/main/README.md). 
+You can find the [described values](https://github.com/jppol-idp/helm-idp-advanced/blob/main/README.md)(login required) 
+Scroll to the right to see the comments for each variable:
 
 
 ### 4. 🪣 Hvordan spinner jeg en S3 bucket op?
@@ -200,24 +199,5 @@ Det er også her I kan vælge at sætte nginx.public.enabled til false, hvis man
 > På et senere tidspunkt bliver det også muligt at give adgang fra andre AWS-konti via en transit gateway.
 
 ---
-### 9. Hvordan laver vi automatisk deployment til ECR fra vores kode repository
 
-
-
-Efter image er uploaded, kan deployment trigges direkte fra jeres kode repository. Disse github secrets er oprettet i Politikens org, og kan bruges til at trigge deployment i IDP repository jppol-idp/pol-apps 
-
-- IDP_DEPLOY_APP_ID
-- IDP_DEPLOY_APP_KEY
-
-```yaml
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ vars.IDP_DEPLOY_APP_ID }}
-          private-key: ${{ secrets.IDP_DEPLOY_APP_KEY }}
-          owner: ${{ github.repository_owner }}
-          repositories: apps-pol
-```
-
-
----
 *Sidst opdateret: 17-juni-2025*
