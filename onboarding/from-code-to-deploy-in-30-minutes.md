@@ -8,14 +8,6 @@ domain: public
 # From code to deploy to observability in 30 minutes 🚀
 > This playbook helps you quickly deploy your first application to the developer platform.
 
-
-> [!IMPORTANT]
-> The examples use `Politiken`-specific domains and variables.  
-> Make sure to **replace all values** with values relevant to your own organization.
-> 
-> Example: `https://github.com/jppol-idp/apps-pol` → `https://github.com/jppol-idp/apps-yourdomain`
-
-
 ---
 **By the end of this session, you will have:**
 
@@ -25,6 +17,13 @@ domain: public
 - [x] Monitoring via Prometheus, logging via Loki, and visualization in Grafana
 - [x] You comply with the platform’s — and thus JPPOL’s — security requirements
 - [x] You are ready to use IDP in your daily work
+
+---
+
+> 🚨 The examples use `Politiken`-specific domains and variables.  
+> Make sure to **replace all values** with values relevant to your own organization.
+> 
+> Example: `https://github.com/jppol-idp/apps-pol` → `https://github.com/jppol-idp/apps-yourdomain`
 
 ---
 
@@ -146,7 +145,7 @@ image:
   tag: "0.1.0"
 ```
 
-[You can find a list of all configurable values here.](https://github.com/jppol-idp/helm-idp-advanced/blob/main/README.md)
+[Find a list of all configurable values](https://github.com/jppol-idp/helm-idp-advanced/blob/main/README.md)
 
 ---
 
@@ -181,7 +180,7 @@ You're now up and running! 💪
 
 You are **always** very welcome to ask questions in [Slack](https://ekstrabladet.slack.com/archives/C08HWLGQCTE) - we're happy to help!
 
-Also, feel free to explore our (IDP documentation)[https://docs.idp.jppol.dk/onboarding/faq.html] for answers to frequently asked questions and onboarding guidance.
+Also, feel free to explore our [IDP documentation](https://docs.idp.jppol.dk/onboarding/faq.html) for answers to frequently asked questions and onboarding guidance.
 
 ---
 
