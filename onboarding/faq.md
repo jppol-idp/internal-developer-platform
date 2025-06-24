@@ -32,7 +32,7 @@ Is your team not yet set up in the IDP? Reach out to us – we’ll have a chat.
 - PagerDuty
 
 ---
-### 3. 🛠️ What values can I set in my Helm chart?
+### 3. 🧩 What values can I set in my Helm chart?
 
 You can find the [list of configurable variables](https://github.com/jppol-idp/helm-idp-advanced/blob/main/README.md) (login required - it's auto-generated in our internal docs) 
 Scroll to the right to see the comments for each value and its variables:
@@ -134,7 +134,7 @@ For `pol-dev`, the list is here: 
 
 ---
 
-### 6. 🖇️ How do we give our IDP containers access to our managed service outside of IDP?
+### 6. 🔗 How do we give our IDP containers access to our managed service outside of IDP?
 
 You can find the IP addresses in the README. For `pol-dev`, the list is here:  
 [https://github.com/jppol-idp/apps-pol/blob/main/apps/pol-dev/README.md](https://github.com/jppol-idp/apps-pol/blob/main/apps/pol-dev/README.md)
@@ -147,7 +147,7 @@ Note: It’s not a range, but specific addresses (i.e., a /32 "range").
 
 ---
 
-### 7. 🧁 How do we set up custom domains?
+### 7. 🌐 How do we set up custom domains?
 
 You bind domains using the `fqdn` field in your `values.yaml` file.
 
