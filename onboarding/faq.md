@@ -40,6 +40,7 @@ Scroll to the right to see the comments for each value and its variables:
 ---
 ### 4. 🪣 How do I spin up an S3 bucket?
 We have this repository: [https://github.com/jppol-idp/helm-idp-s3-bucket/blob/main/charts/idp-s3-bucket/values.yaml](https://github.com/jppol-idp/helm-idp-s3-bucket/blob/main/charts/idp-s3-bucket/values.yaml)
+
 Create a folder similar with other folders in your app cluster.
 
 In your application.yaml file you need something like:
