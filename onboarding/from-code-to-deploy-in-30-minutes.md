@@ -13,11 +13,11 @@ permalink: /codetodeploy
 ---
 **By the end of this session, you will have:**
 
-- [x] Access to the IDP
+- [x] Access to IDP
 - [x] Your code packaged as a container
 - [x] Deployed via GitOps with visibility in ArgoCD
 - [x] Monitoring via Prometheus, logging via Loki, and visualization in Grafana
-- [x] You comply with the platform’s — and thus JPPOL’s — security requirements
+- [x] You comply with the platform’s security requirements
 - [x] You are ready to use IDP in your daily work
 
 ---
@@ -37,7 +37,7 @@ Before you begin, make sure you have the following in place:
 - [ ] Access to your code repository, e.g., [https://github.com/Politiken](https://github.com/Politiken)
 - [ ] Access to your deployment repository, e.g., [https://github.com/jppol-idp/apps-pol](https://github.com/jppol-idp/apps-pol) ([access management](https://github.com/orgs/jppol-idp/teams/apps-pol/members))
 - [ ] Access to #idp-support on [Slack](https://ekstrabladet.slack.com/archives/C08HWLGQCTE)
-- [ ] Access to IDP tools, e.g., [https://pol-test.idp.jppol.dk/](https://pol-test.idp.jppol.dk/)
+- [ ] Access to IDP tools, e.g., [https://argocd.pol-test.idp.jppol.dk](https://argocd.pol-test.idp.jppol.dk), [https://grafana.pol-test.idp.jppol.dk](https://grafana.pol-test.idp.jppol.dk)
 - [ ] Access to the role idp-customer-access in your AWS account aws-jppol-pol-test [aws-jppol-pol-test](https://jppol-sso.awsapps.com/start#/)
 - [ ] Access to the role IDP-client-read-access in our ECR AWS account aws-jppol-idp-shared [aws-jppol-idp-shared](https://jppol-sso.awsapps.com/start#/)
 - [ ] Docker or similar installed
@@ -47,20 +47,20 @@ Before you begin, make sure you have the following in place:
 ## 🪛 Step-by-Step: Deploy Your First Workload
 
 ### 1. 📁 Create an app in your code repository (se example [https://github.com/Politiken/idp-test](https://github.com/Politiken/idp-test))
-Name the app after yourself to make it easy to identify.
+Tip: Name the app after yourself to make it easy to identify.
 
 ```bash
-mkdir app && cd app
-echo 'print("Hello, IDP!")' > app.py
+mkdir app-name && cd app-name
+echo 'print("Hello, IDP!")' > app-name.py
 ```
 
 Add a Dockerfile:
 
 ```Dockerfile
 FROM python:3.11-slim
-WORKDIR /app
-COPY app.py .
-CMD ["python", "app.py"]
+WORKDIR /app-name
+COPY app-name.py .
+CMD ["python", "app-name.py"]
 ```
 
 ---
@@ -68,8 +68,8 @@ CMD ["python", "app.py"]
 ### 2. 🐳 Build and optionally test your image locally
 
 ```bash
-docker build . -t app.py:0.1.0
-docker run app.py:0.1.0
+docker build . -t app-name.py:0.1.0
+docker run app-name.py:0.1.0
 ```
 
 ---
@@ -119,7 +119,7 @@ Prepare a Helm chart in the deploy repo: [https://github.com/jppol-idp/apps-pol]
 ```bash
 git clone https://github.com/jppol-idp/apps-pol.git
 cd apps-pol/apps/pol-test
-mkdir app
+mkdir app-name
 ```
 
 **A deployment typically consists of two files:**
@@ -127,7 +127,7 @@ mkdir app
 
 ```yaml
 apiVersion: v2
-name: app
+name: app-name
 description: app 
 version: 0.1.0    # <-- version af deployment definition
 
