@@ -23,7 +23,7 @@ At skabe en platform, som udviklere elsker at bruge – der frigør tid til inno
 - **Sikkerhed fra starten** frem for efterfølgende patching  
 - **Datadrevet indsigt** frem for mavefornemmelser  
 - **Åbenhed og transparens** frem for lukkethed og siloer  
-- **Leverandøruafhængighed** frem for teknologilåsning  
+- **Leverandøruafhængighed** frem for at være låst til specifikke teknologier  
 - **Fælles ansvar for drift** frem for overlevering mellem teams  
 
 ---
