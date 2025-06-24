@@ -39,8 +39,7 @@ Scroll to the right to see the comments for each value and its variables:
 
 ---
 ### 4. 🪣 How do I spin up an S3 bucket?
-We have this repository: https://github.com/jppol-idp/helm-idp-s3-bucket/blob/main/charts/idp-s3-bucket/values.yaml
-
+We have this repository: [https://github.com/jppol-idp/helm-idp-s3-bucket/blob/main/charts/idp-s3-bucket/values.yaml](https://github.com/jppol-idp/helm-idp-s3-bucket/blob/main/charts/idp-s3-bucket/values.yaml)
 Create a folder similar with other folders in your app cluster.
 
 In your application.yaml file you need something like:
@@ -127,15 +126,18 @@ The application will then have the following environment variables available: VA
 
 Kubernetes fetches the values from Secrets Manager, so the application code does not need to perform the lookup itself.
 
-You can find more details in the apps repository under each namespace. Example:     https://github.com/jppol-idp/apps-[jeres-team]/blob/main/apps/[jeres-team]-test/secrets.md
+You can find more details in the apps repository under each namespace. 
 
+For `pol-dev`, the list is here:  
+https://github.com/jppol-idp/apps-pol/blob/main/apps/pol-dev/secrets.md
 
 ---
 
 ### 6. 🖇️ How do we give our IDP containers access to our managed service outside of IDP?
 
 You can find the IP addresses in the README. Example:  
-https://github.com/jppol-idp/apps-xxxx/blob/main/apps/xxxx-dev/README.md
+For `pol-dev`, the list is here:  
+https://github.com/jppol-idp/apps-pol/blob/main/apps/pol-dev/README.md
 
 The IPs depend on how the service is set up.
 
@@ -175,7 +177,7 @@ Once that’s in place, you can add the address in the `values.yaml` file, and c
 
 ### 8. 🔐 How do we restrict external access to our API endpoints?
 
-If the service should only be accessible internally within the _cluster_, you should disable public NGINX so it’s only available via private NGINX.
+If the service should only be accessible internally within the _cluster_, you should disable public Nginx so it’s only available via private Nginx.
 
 If it needs to be public but restricted, you can configure IP whitelisting in the `values.yaml` file:
 
@@ -202,8 +204,7 @@ The key annotation for whitelisting is:
 
 You can also set nginx.public.enabled to false if you don’t want the service to be publicly exposed at all.
 
-> [!NOTE]
-> In the future, it will also be possible to grant access from other AWS accounts via a transit gateway.
+> 🚨 In the future, it will also be possible to grant access from other AWS accounts via a transit gateway.
 
 ---
 
