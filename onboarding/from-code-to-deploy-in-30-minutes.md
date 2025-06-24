@@ -35,7 +35,7 @@ permalink: /codetodeploy
 Before you begin, make sure you have the following in place:
 
 - [ ] Access to your code repository, e.g., [https://github.com/Politiken](https://github.com/Politiken)
-- [ ] Access to your deployment repository, e.g., [https://github.com/jppol-idp/apps-pol](https://github.com/jppol-idp/apps-pol) ([access management](https://github.com/orgs/jppol-idp/teams/apps-pol/members))
+- [ ] Access to your IDP deployment repository, e.g., [https://github.com/jppol-idp/apps-pol](https://github.com/jppol-idp/apps-pol) ([access management](https://github.com/orgs/jppol-idp/teams/apps-pol/members))
 - [ ] Access to #idp-support on [Slack](https://ekstrabladet.slack.com/archives/C08HWLGQCTE)
 - [ ] Access to IDP tools, e.g., [https://argocd.pol-test.idp.jppol.dk](https://argocd.pol-test.idp.jppol.dk), [https://grafana.pol-test.idp.jppol.dk](https://grafana.pol-test.idp.jppol.dk)
 - [ ] Access to the role idp-customer-access in your AWS account aws-jppol-pol-test [aws-jppol-pol-test](https://jppol-sso.awsapps.com/start#/)
@@ -123,6 +123,7 @@ mkdir app-name
 ```
 
 **A deployment typically consists of two files:**
+
 `application.yaml` - describes the Helm chart:
 
 ```yaml
@@ -147,7 +148,7 @@ image:
   tag: "0.1.0"
 ```
 
-[Find a list of all configurable variables](https://github.com/jppol-idp/helm-idp-advanced/blob/main/README.md)
+> You can go here and [find a list of all configurable variables](https://github.com/jppol-idp/helm-idp-advanced/blob/main/README.md)
 
 ---
 
@@ -182,7 +183,7 @@ You're now up and running! 💪
 
 You are **always** very welcome to ask questions in [Slack](https://ekstrabladet.slack.com/archives/C08HWLGQCTE) - we're happy to help!
 
-Also, feel free to explore our [FAQ](/faq) for answers to frequently asked questions and onboarding guidance.
+Also, feel free to explore our [FAQ](faq) for answers to frequently asked questions and onboarding guidance.
 
 ---
 
