@@ -182,7 +182,7 @@ You're now up and running! 💪
 
 You are **always** very welcome to ask questions in [Slack](https://ekstrabladet.slack.com/archives/C08HWLGQCTE) - we're happy to help!
 
-Also, feel free to explore our [IDP documentation](https://docs.idp.jppol.dk/onboarding/faq.html) for answers to frequently asked questions and onboarding guidance.
+Also, feel free to explore our [FAQ](/faq) for answers to frequently asked questions and onboarding guidance.
 
 ---
 
