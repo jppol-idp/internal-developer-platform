@@ -8,7 +8,7 @@ permalink: /faq
 ---
 
 # FAQ - IDP 🚀
-
+> Please share improvements with us in [Slack message](https://ekstrabladet.slack.com/archives/C07TZPBHFUL). 
 ---
 
 
@@ -136,8 +136,7 @@ For `pol-dev`, the list is here: 
 
 ### 6. 🖇️ How do we give our IDP containers access to our managed service outside of IDP?
 
-You can find the IP addresses in the README. Example:  
-For `pol-dev`, the list is here:  
+You can find the IP addresses in the README. For `pol-dev`, the list is here:  
 [https://github.com/jppol-idp/apps-pol/blob/main/apps/pol-dev/README.md](https://github.com/jppol-idp/apps-pol/blob/main/apps/pol-dev/README.md)
 
 The IPs depend on how the service is set up.
