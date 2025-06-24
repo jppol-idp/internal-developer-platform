@@ -130,7 +130,7 @@ Kubernetes fetches the values from Secrets Manager, so the application code does
 You can find more details in the apps repository under each namespace. 
 
 For `pol-dev`, the list is here:  
-https://github.com/jppol-idp/apps-pol/blob/main/apps/pol-dev/secrets.md
+[https://github.com/jppol-idp/apps-pol/blob/main/apps/pol-dev/secrets.md](https://github.com/jppol-idp/apps-pol/blob/main/apps/pol-dev/secrets.md)
 
 ---
 
@@ -138,7 +138,7 @@ https://github.com/jppol-idp/apps-pol/blob/main/apps/pol-dev/secrets.md
 
 You can find the IP addresses in the README. Example:  
 For `pol-dev`, the list is here:  
-https://github.com/jppol-idp/apps-pol/blob/main/apps/pol-dev/README.md
+[https://github.com/jppol-idp/apps-pol/blob/main/apps/pol-dev/README.md](https://github.com/jppol-idp/apps-pol/blob/main/apps/pol-dev/README.md)
 
 The IPs depend on how the service is set up.
 
@@ -156,7 +156,7 @@ However, there are limitations regarding which domains are available in each acc
 You can find them listed in the README file in the apps repository (under each namespace).
 
 For `pol-dev`, the list is here:  
-https://github.com/jppol-idp/apps-pol/blob/main/apps/pol-dev/README.md
+[https://github.com/jppol-idp/apps-pol/blob/main/apps/pol-dev/README.md](https://github.com/jppol-idp/apps-pol/blob/main/apps/pol-dev/README.md)
 
 Available domains
 pol-test.idp.jppol.dk
