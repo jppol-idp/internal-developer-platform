@@ -13,7 +13,7 @@ permalink: /faq
 
 
 
-### 1. 🔑 How do I get access to the IDP?
+### 1. 🔑 How do I get access to IDP?
 To gain access, your team lead needs to do the following:  
 - Add you via your ServiceNow form so you are granted the correct AD group permissions.  
 - Grant you access to your GitHub Enterprise repository under our `jppol-idp` organization.
@@ -31,14 +31,11 @@ Is your team not yet set up in the IDP? Reach out to us – we’ll have a chat.
 - Grafana (data via Prometheus and Loki)
 - PagerDuty
 
-You can find an overview with direct links in the root README file:
-https://github.com/jppol-idp/apps-pol/tree/main/apps/pol-dev
-
 ---
 ### 3. 🛠️ What values can I set in my Helm chart?
 
-You can find the [described values](https://github.com/jppol-idp/helm-idp-advanced/blob/main/README.md) (login required - it's auto-generated in our internal docs) 
-Scroll to the right to see the comments for each variable:
+You can find the [list of configurable variables](https://github.com/jppol-idp/helm-idp-advanced/blob/main/README.md) (login required - it's auto-generated in our internal docs) 
+Scroll to the right to see the comments for each value and its variables:
 
 ---
 ### 4. 🪣 How do I spin up an S3 bucket?
