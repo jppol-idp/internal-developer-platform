@@ -128,7 +128,7 @@ mkdir app-name
 ```yaml
 apiVersion: v2
 name: app-name
-description: app 
+description: my first idp app
 version: 0.1.0    # <-- version af deployment definition
 
 helm:
@@ -147,7 +147,7 @@ image:
   tag: "0.1.0"
 ```
 
-[Find a list of all configurable values](https://github.com/jppol-idp/helm-idp-advanced/blob/main/README.md)
+[Find a list of all configurable variables](https://github.com/jppol-idp/helm-idp-advanced/blob/main/README.md)
 
 ---
 
