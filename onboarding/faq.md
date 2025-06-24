@@ -9,8 +9,6 @@ permalink: /faq
 
 # FAQ - IDP 🚀
 
-> Please [share improvements with us in Slack](https://ekstrabladet.slack.com/archives/C07TZPBHFUL). 
-
 ---
 
 
@@ -210,4 +208,7 @@ You can also set nginx.public.enabled to false if you don’t want the service t
 
 ---
 
+> Please [share improvements with us in Slack](https://ekstrabladet.slack.com/archives/C07TZPBHFUL). 
+
+---
 *Sidst opdateret: 17-juni-2025*
