@@ -8,7 +8,9 @@ permalink: /faq
 ---
 
 # FAQ - IDP 🚀
-> Please share improvements with us in [Slack message](https://ekstrabladet.slack.com/archives/C07TZPBHFUL). 
+
+> Please [share improvements with us in Slack](https://ekstrabladet.slack.com/archives/C07TZPBHFUL). 
+
 ---
 
 
