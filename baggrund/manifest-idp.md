@@ -6,7 +6,7 @@ domain: public
 permalink: /manifest-idp
 ---
 
-## Manifest: Internal Developer Platform (IDP) 
+## Intro: Manifest og principper - Internal Developer Platform (IDP) 
 
 ## Formål
 
@@ -43,4 +43,6 @@ Med platformen får udviklingsteams mulighed for at frigive deres kræfter til a
 - Vi støtter en **“You build it, You run it” kultur** med klare ansvarsområder.  
 
 ---
+Du kan læse mere detaljeret om tankerne bag i:
+IDP [manifesto](manifest) og [principper](principper) 
 
