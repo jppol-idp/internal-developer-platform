@@ -43,6 +43,6 @@ Med platformen får udviklingsteams mulighed for at frigive deres kræfter til a
 - Vi støtter en **“You build it, You run it” kultur** med klare ansvarsområder.  
 
 ---
-Du kan læse mere detaljeret om tankerne bag i:
-IDP [manifesto](manifest) og [principper](principper) 
+Du kan læse mere detaljeret om tankerne bag i
+[manifesto](manifest) og [principper](principper) 
 
