@@ -1,6 +1,5 @@
 ---
 title: Manifest
-parent: Baggrund
 domain: public
 permalink: /manifest
 ---
