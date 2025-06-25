@@ -13,7 +13,7 @@ review_in: 6 months
 </picture>
 
 ## **Intro**
-1. **Manifest** - IDP [manifesto](manifest-idp)
+1. **Manifest** - IDP [manifesto og principper](manifest-idp)
 1. **Service Level Agreement** - Få en oversigt over [vores SLA med jer](https://jira-jppol.atlassian.net/wiki/spaces/IDP/folder/3680632849?atlOrigin=eyJpIjoiNzU2YjYxNjkzZWJiNDFlMjlkZDI5YTE4OWM0YjNlM2UiLCJwIjoiYyJ9)
 
 
