@@ -1,5 +1,6 @@
 ---
 title: Manifest
+nav_order: 0
 domain: public
 permalink: /manifest
 ---
