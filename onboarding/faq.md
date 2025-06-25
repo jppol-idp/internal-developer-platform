@@ -41,9 +41,9 @@ Scroll to the right to see the comments for each value and its variables:
 ### 4. 🪣 How do I spin up an S3 bucket?
 We have this repository: [https://github.com/jppol-idp/helm-idp-s3-bucket/blob/main/charts/idp-s3-bucket/values.yaml](https://github.com/jppol-idp/helm-idp-s3-bucket/blob/main/charts/idp-s3-bucket/values.yaml)
 
-Create a folder similar with other folders in your app cluster.
+Create a folder similar to other folders in your app cluster.
 
-In your application.yaml file you need something like:
+In your application.yaml file you'll need something like this:
 
 ```yaml
 apiVersion: v2
@@ -86,12 +86,12 @@ The most important thing is to change the `bucket-name`.
 
 You can define multiple buckets in the file if needed.
 
-You must grant access via IRSA in the application's `values.yaml` file for each application.
+You’ll need to grant access via IRSA in the application's `values.yaml` file for each application.
 
 
 ---
 
-### 5. 🤫 How should we handle config and secrets
+### 5. 🤫 How should we handle config and secrets?
 
 We recommend placing configuration as environment variables, which can be defined in the `values.yaml` file:
 
@@ -164,7 +164,7 @@ pol-dev.idp.jppol.dk
 These are the default domains, but they can be extended.  
 This requires some configuration on our side.
 
-Once a domain is available, you can choose subdomains under the listed domains in the `fqdn` field for each application.  
+Once a domain is available, you can define subdomains under it in the `fqdn` field for each application.  
 When elements are added, DNS records are created automatically, and a certificate is issued for the specific domain.
 
 If you want records on other domains than those available in the account, that’s also possible – but significantly more complex.
