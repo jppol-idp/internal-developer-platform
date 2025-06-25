@@ -1,6 +1,5 @@
 ---
 title: Principper
-parent: Baggrund
 domain: public
 permalink: /principper
 ---
