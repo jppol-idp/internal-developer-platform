@@ -10,7 +10,9 @@ permalink: /manifest-idp
 
 ## Formål
 
-At skabe en platform, som udviklere elsker at bruge – der frigør tid til innovation, understøtter digital bæredygtighed og sikrer skalerbar, sikker og effektiv drift.
+At etablere en robust, skalerbar, sikker og effektiv platform, som vores udviklere elsker at bruge, og som understøtter vores mål om digital bæredygtighed.
+
+Med platformen får udviklingsteams mulighed for at frigive deres kræfter til at fokusere på decideret udvikling frem for infrastruktur – uden at tabe hastighed.
 
 ---
 
