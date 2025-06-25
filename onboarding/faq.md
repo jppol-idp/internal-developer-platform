@@ -157,11 +157,7 @@ You can find them listed in the README file in the apps repository (under each n
 For `pol-dev`, the list is here:  
 [https://github.com/jppol-idp/apps-pol/blob/main/apps/pol-dev/README.md](https://github.com/jppol-idp/apps-pol/blob/main/apps/pol-dev/README.md)
 
-Available domains
-pol-test.idp.jppol.dk
-pol-dev.idp.jppol.dk
-
-These are the default domains, but they can be extended.  
+The default domains are pol-dev.idp.jppol.dk and pol-test.idp.jppol.dk, but they can be extended.  
 This requires some configuration on our side.
 
 Once a domain is available, you can define subdomains under it in the `fqdn` field for each application.  
@@ -201,8 +197,6 @@ The example above shows how to whitelist IPs.
 It also includes a few other settings related to buffer sizes.
 The key annotation for whitelisting is:
 `nginx.ingress.kubernetes.io/whitelist-source-range: 91.214.20.0/24,54.220.9.41/32,52.50.24.11/32`
-
-You can also set nginx.public.enabled to false if you don’t want the service to be publicly exposed at all.
 
 > 🚨 In the future, it will also be possible to grant access from other AWS accounts via a transit gateway.
 
