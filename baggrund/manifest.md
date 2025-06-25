@@ -1,6 +1,5 @@
 ---
 title: Manifest
-nav_order: 2
 parent: Baggrund
 domain: public
 permalink: /manifest
