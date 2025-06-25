@@ -1,5 +1,6 @@
 ---
 title: Principper
+nav_exclude: true
 nav_order: 0
 domain: public
 permalink: /principper
