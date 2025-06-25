@@ -1,12 +1,12 @@
 ---
-title: IDP Manifest
+title: Manifest
 nav_order: 2
 parent: Baggrund
 domain: public
 permalink: /manifest-idp
 ---
 
-# Manifest for Internal Developer Platform (IDP)
+## Manifest: Internal Developer Platform (IDP) 
 
 ## Formål
 
