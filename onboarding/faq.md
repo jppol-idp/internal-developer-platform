@@ -8,7 +8,7 @@ permalink: /faq
 ---
 
 # FAQ - IDP 🚀
-If you or your team have any questions or run into issues, send us a [Slack message](https://ekstrabladet.slack.com/archives/C07TZPBHFUL). Always❤️ 
+❤️ Always. If you or your team have any questions or run into issues, send us a [Slack message](https://ekstrabladet.slack.com/archives/C07TZPBHFUL). 
 
 ---
 

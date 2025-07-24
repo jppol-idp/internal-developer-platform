@@ -35,9 +35,10 @@ permalink: /codetodeploy
 Before you begin, make sure you have the following in place:
 
 - [ ] Access to your code repository, e.g., [https://github.com/Politiken](https://github.com/Politiken)
-- [ ] Access to your IDP deployment repository, e.g., [https://github.com/jppol-idp/apps-pol](https://github.com/jppol-idp/apps-pol) ([- Manage access](https://github.com/orgs/jppol-idp/teams/apps-pol/members))
+- [ ] Access to your IDP deployment repository, e.g., [https://github.com/jppol-idp/apps-pol](https://github.com/jppol-idp/apps-pol) ([access management](https://github.com/orgs/jppol-idp/teams/apps-pol/members))
 - [ ] Access to #idp-support on [Slack](https://ekstrabladet.slack.com/archives/C08HWLGQCTE)
-- [ ] Access to IDP tools via AD group permissions, e.g., [https://argocd.pol-test.idp.jppol.dk](https://argocd.pol-test.idp.jppol.dk), [https://grafana.pol-test.idp.jppol.dk](https://grafana.pol-test.idp.jppol.dk)  ([- Manage access](https://jppol.service-now.com/sp?id=sc_cat_item&sys_id=ca0b855683731650dc9af1b6feaad3a4))
+- [ ] Access to IDP tools, e.g., [https://argocd.pol-test.idp.jppol.dk](https://argocd.pol-test.idp.jppol.dk), [https://grafana.pol-test.idp.jppol.dk](https://grafana.pol-test.idp.jppol.dk)
+- [ ] Access to the role idp-customer-access in your AWS account aws-jppol-pol-test [aws-jppol-pol-test](https://jppol-sso.awsapps.com/start#/)
 - [ ] Access to the role IDP-client-read-access in our ECR AWS account aws-jppol-idp-shared [aws-jppol-idp-shared](https://jppol-sso.awsapps.com/start#/)
 - [ ] Docker or similar installed
 
