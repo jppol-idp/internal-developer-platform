@@ -217,7 +217,7 @@ Add this bot to the slack channel(s) as well.
 
 ---
 
-> Please [share improvements with us in Slack](https://ekstrabladet.slack.com/archives/C07TZPBHFUL). 
+> Please [share feedback and improvements with us in Slack](https://ekstrabladet.slack.com/archives/C07TZPBHFUL). 
 
 ---
 *Sidst opdateret: 17-juni-2025*
