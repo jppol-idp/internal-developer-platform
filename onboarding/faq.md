@@ -159,7 +159,6 @@ apiVersion: v2
 name: ear-service
 description: Dev test application
 version: 0.1.0
-slackChannel: idp-argocd-koa
 
 helm:
   chart: helm/idp-s3-bucket
