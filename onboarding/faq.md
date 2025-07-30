@@ -197,6 +197,25 @@ You can define multiple buckets in the file if needed.
 You’ll need to grant access via IRSA in the application's `values.yaml` file for each application.
 
 ---
+### 9. ℹ️ Can I get status notifications in Slack?
+
+You can get ArgoCD app sync status notifications in Slack.
+Add the following to your `application.yaml` file. 
+
+```yaml
+slackChannel: my-slack-channel-name
+```
+
+To add multiple slack channels use ";" as seperator.
+
+
+Add this bot to the slack channel(s) as well.
+
+```shell
+/invite @argocd-idp
+```
+
+---
 
 > Please [share improvements with us in Slack](https://ekstrabladet.slack.com/archives/C07TZPBHFUL). 
 
