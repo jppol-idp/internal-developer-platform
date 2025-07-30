@@ -11,9 +11,9 @@ remote_theme: just-the-docs/just-the-docs
 #url: https://karthago.com
 
 aux_links:
-# linker til den originale, da ændringer herfra overskriver den anden
-GitHub: https://github.com/jppol-idp/docs
- #GitHub: https://github.com/jppol-idp/internal-developer-platform
+  # linker til den originale, da ændringer herfra overskriver den anden
+  GitHub: https://github.com/jppol-idp/docs
+  #GitHub: https://github.com/jppol-idp/internal-developer-platform
   Slack: https://ekstrabladet.slack.com/archives/C07TZPBHFUL
 
 #logo: https://github.com/user-attachments/assets/fb6cfda7-7660-477f-8a7a-41e7a6977f47
