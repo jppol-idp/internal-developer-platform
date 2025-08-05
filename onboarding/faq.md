@@ -34,6 +34,8 @@ Is your team not yet set up in the IDP? Reach out to us – we’ll have a chat.
 You can find the [list of configurable variables](https://github.com/jppol-idp/helm-idp-advanced/blob/main/README.md) (login required - it's auto-generated in our internal docs) 
 Scroll to the right to see the comments for each value and its variables:
 
+You can also [see examples of them in use](https://github.com/jppol-idp/helm-idp-advanced/blob/c7281e37ba26cacff7f066c75542496c42e9aa86/charts/idp-advanced/values.yaml) (login required - it's auto-generated in our internal docs) 
+
 ---
 
 ### 4. 🤫 How should we handle config and secrets?
