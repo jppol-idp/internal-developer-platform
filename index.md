@@ -24,7 +24,7 @@ review_in: 6 months
    
 
 ## **Support**
-Vi svarer hurtigst i **#idp-support** på [Slack](https://jppol-online.slack.com/archives/C3VL8FBM5)
+Vi svarer hurtigst i **#idp-team** på [Slack](https://jppol-online.slack.com/archives/C3VL8FBM5)
 
 ----
 
