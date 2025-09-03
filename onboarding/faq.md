@@ -26,7 +26,6 @@ Is your team not yet set up in the IDP? Reach out to us – we’ll have a chat.
 - ArgoCD
 - Argo Workflows
 - Grafana (data via Prometheus and Loki)
-- PagerDuty
 
 ---
 ### 3. 🧩 What values can I set in my Helm chart?
