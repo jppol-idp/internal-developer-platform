@@ -3,7 +3,6 @@ title: Using ADRs for our Architecture Principles
 parent: Architecture Principles
 nav_order: 1
 domain: public
-permalink: /architecture-principles
 ---
 
 # 000 Using ADRs for our Architecture Principles
