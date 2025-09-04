@@ -25,4 +25,3 @@ The initial work around the principles is facilitated in [this Miro board](https
 
 ### Architecure Principles
 
- 0. 🤔  [Using ADRs for our Architecure Principles](architecture-principles/000-using-adrs-for-our-architecure-principles.html)
