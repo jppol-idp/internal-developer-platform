@@ -12,6 +12,10 @@ review_in: 6 months
   <img alt="Text changing depending on mode. Light: 'So light!' Dark: 'So dark!'" src="assets/idp_light.png">
 </picture>
 
+
+## Architecture Principles
+Find our [architecture princples here](architecture-principles)
+
 ## **Intro**
 1. **Manifest** - IDP [manifesto og principper](manifest-idp)
 1. **Service Level Agreement** - Få en oversigt over [vores SLA med jer](https://jira-jppol.atlassian.net/wiki/spaces/IDP/folder/3680632849?atlOrigin=eyJpIjoiNzU2YjYxNjkzZWJiNDFlMjlkZDI5YTE4OWM0YjNlM2UiLCJwIjoiYyJ9)
@@ -36,5 +40,4 @@ Vi svarer hurtigst i **#idp-team** på [Slack](https://jppol.slack.com/archives/
 [Jekyll]: https://jekyllrb.com
 [GitHub Pages / Actions workflow]: https://github.blog/changelog/2022-07-27-github-pages-custom-github-actions-workflows-beta/
 [use this template]: https://github.com/just-the-docs/just-the-docs-template/generate
-
 
