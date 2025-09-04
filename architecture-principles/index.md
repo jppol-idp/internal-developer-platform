@@ -1,6 +1,6 @@
 ---
 title: Architecture Principles
-nav_order: 0
+nav_order: 1
 domain: public
 permalink: /architecture-principles
 ---
