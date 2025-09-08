@@ -7,7 +7,7 @@ permalink: /qaa
 
 ---
 
-# FAQ - IDP 🚀
+# Q&A - IDP 🚀
 If you or your team have any questions or run into issues, send us a [Slack message](https://ekstrabladet.slack.com/archives/C07TZPBHFUL). Always ❤️.
 
 ---
@@ -20,15 +20,7 @@ To gain access, your team lead needs to do the following: 
 Is your team not yet set up in the IDP? Reach out to us – we’ll have a chat.
 
 ---
-
-### 2. 🛠️ What tools do I get with IDP?
-- Github Enterprise
-- ArgoCD
-- Argo Workflows
-- Grafana (data via Prometheus and Loki)
-
----
-### 3. 🧩 What values can I set in my Helm chart?
+### 2. 🧩 What values can I set in my Helm chart?
 
 You can find the [list of configurable variables](https://github.com/jppol-idp/helm-idp-advanced/blob/main/README.md) (login required - it's auto-generated in our internal docs). 
 Scroll to the right to see the comments for each value and its variables:
@@ -37,7 +29,7 @@ You can also [see examples of them in use](https://github.com/jppol-idp/helm-idp
 
 ---
 
-### 4. 🤫 How should we handle config and secrets?
+### 3. 🤫 How should we handle config and secrets?
 
 We recommend placing configuration as environment variables, which can be defined in the `values.yaml` file:
 
@@ -80,7 +72,7 @@ For `pol-dev`, the list is here: 
 
 ---
 
-### 5. 🔗 How do we give our IDP containers access to our managed service outside of IDP?
+### 4. 🔗 How do we give our IDP containers access to our managed service outside of IDP?
 
 You can find the IP addresses in the README. For `pol-dev`, the list is here:  
 [https://github.com/jppol-idp/apps-pol/blob/main/apps/pol-dev/README.md](https://github.com/jppol-idp/apps-pol/blob/main/apps/pol-dev/README.md)
@@ -93,7 +85,7 @@ Note: It’s not a range, but specific addresses (i.e., a /32 "range").
 
 ---
 
-### 6. 🌐 How do we set up custom domains?
+### 5. 🌐 How do we set up custom domains?
 
 You bind domains using the `fqdn` field in your `values.yaml` file.
 
@@ -117,7 +109,7 @@ Once that’s in place, you can add the address in the `values.yaml` file, and c
 
 ---
 
-### 7. 🔐 How do we restrict external access to our API endpoints?
+### 6. 🔐 How do we restrict external access to our API endpoints?
 
 If the service should only be accessible internally within the _cluster_, you should disable public Nginx so it’s only available via private Nginx.
 
@@ -148,7 +140,7 @@ The key annotation for whitelisting is:
 
 ---
 
-### 8. 🪣 How do I spin up an S3 bucket?
+### 7. 🪣 How do I spin up an S3 bucket?
 We have this repository: [https://github.com/jppol-idp/helm-idp-s3-bucket/blob/main/charts/idp-s3-bucket/values.yaml](https://github.com/jppol-idp/helm-idp-s3-bucket/blob/main/charts/idp-s3-bucket/values.yaml)
 
 Create a folder similar to other folders in your app cluster.
@@ -198,7 +190,7 @@ You can define multiple buckets in the file if needed.
 You’ll need to grant access via IRSA in the application's `values.yaml` file for each application.
 
 ---
-### 9. ℹ️ Can I get status notifications in Slack?
+### 8. ℹ️ Can I get status notifications in Slack?
 
 You can get ArgoCD app sync status notifications in Slack.
 Add the following to your `application.yaml` file. 
@@ -221,4 +213,4 @@ Add this bot to the slack channel(s) as well.
 > Please [share feedback and improvements with us in Slack](https://ekstrabladet.slack.com/archives/C07TZPBHFUL). 
 
 ---
-*Sidst opdateret: 17-juni-2025*
+*Sidst opdateret: 08-september-2025*
