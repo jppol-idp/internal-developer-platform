@@ -67,6 +67,5 @@ We aim to support:
 
 
 ## Overview of the current IDP architecture and tooling
-
-<img width="2838" height="1468" alt="image" src="https://github.com/user-attachments/assets/3933886f-435b-4d03-82a1-6abf9b3d237b" />
+![image](https://public.docs.idp.jppol.dk/assets/idp-architecture.png)
 
