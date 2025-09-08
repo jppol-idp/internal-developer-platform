@@ -66,7 +66,7 @@ We aim to support:
 > Our goal is always to enable you to run everything as **self-service**.
 
 
-## Overview of the current IDP architecture and tooling
+## How IDP Works: Architecture & Tools Behind the Platform
 ![image](https://public.docs.idp.jppol.dk/assets/idp-architecture.png)
 
 
