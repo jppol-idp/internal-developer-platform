@@ -22,7 +22,7 @@ Find our [architecture princples here](architecture-principles)
 
 
 ## **Documentation [In English]**
-1. **Technology** - [Get an overview of the technology stack](technology)
+1. **Technology** - [Overview of the technology stack](technology)
 1. **Getting Started with IDP** - [From code to deploy in 30 minutes](codetodeploy)
 1. **Get answers to your questions** - [Visit our Q&A](qaa)
 
