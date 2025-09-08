@@ -16,7 +16,7 @@ We strictly follow **GitOps** principles, meaning every change is stored as a co
 
 ## Deployment & Scaling 
 - Supports multiple deployment and scaling strategies
-- All updates respect **GitOps** (i.e., changes are triggered by commits to your team’s configuration repository in **Github**)
+- All updates respect **GitOps** (i.e., changes are triggered by commits to your team’s configuration repository in **GitHub**)
 - **Argo CD** is used as continuous delivery tool for Kubernetes
 - Access to multiple environments (called **namespaces** in our terminology)
 
