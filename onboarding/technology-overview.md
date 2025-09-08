@@ -17,7 +17,7 @@ We strictly follow **GitOps** principles, meaning every change is stored as a co
 ## Deployment & Scaling 
 - Supports multiple deployment and scaling strategies
 - All updates respect **GitOps** (i.e., changes are triggered by commits to your team’s configuration repository in **GitHub**)
-- **Argo CD** is used as continuous delivery tool for Kubernetes
+- Continuous delivery for Kubernetes using **Argo CD**
 - Access to multiple environments (called **namespaces** in our terminology)
 
 ## Container Lifecycle Support
@@ -39,18 +39,18 @@ We strictly follow **GitOps** principles, meaning every change is stored as a co
 We offer a range of storage options:
 
 - Mounted container storage backed by **persistent EBS volumes**
-- **S3** object storage
-- **DynamoDB** for NoSQL
-- **PostgreSQL** via **AWS Aurora V2** (scalable)
+- Object storage via **S3**
+- NoSQL support with **DynamoDB**
+- Scalable relational databases via **PostgreSQL** on **AWS Aurora V2**
 
 ## Eventing & Workflows
 
-- Managed **Argo Events**
-- Managed **Argo Workflows**
+- Event-driven workflows via **Argo Events**
+- Workflow orchestration with **Argo Workflows**
 
 ## Observability
 
-- **Grafana** for data insights with **Prometheus** for metrics and **Loki** for log aggregation
+- Observability powered by **Grafana** with **Prometheus** for metrics and **Loki** for log aggregation
 - All console logs are automatically collected
 
 
