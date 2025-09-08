@@ -27,6 +27,7 @@
 ./onboarding/index.md
 ./onboarding/faq.md
 ./onboarding/from-code-to-deploy-in-30-minutes.md
+./onboarding/technology-overview.md
 ./administration/adgang.md
 ./architecture-principles/README.md
 ./architecture-principles/000-using-adrs-for-our-architecure-principles.md
