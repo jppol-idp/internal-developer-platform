@@ -1,5 +1,5 @@
 ---
-title: FAQ
+title: Q&A
 nav_order: 3 
 parent: Onboarding
 domain: public
