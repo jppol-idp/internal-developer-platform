@@ -1,9 +1,9 @@
 ---
 title: FAQ
-nav_order: 2 
+nav_order: 3 
 parent: Onboarding
 domain: public
-permalink: /faq
+permalink: /qaa
 
 ---
 
