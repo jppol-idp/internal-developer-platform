@@ -1,6 +1,6 @@
 ---
 title: From code to deploy in 30 minutes
-nav_order: 1 
+nav_order: 2 
 parent: Onboarding
 domain: public
 permalink: /codetodeploy
