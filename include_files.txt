@@ -29,6 +29,5 @@
 ./onboarding/technology-overview.md
 ./onboarding/qaa.md
 ./administration/adgang.md
-./architecture-principles/000-using-adrs-for-our-architecure-principles.md
 ./README.public.md
 ./README.md
