@@ -12,10 +12,6 @@ review_in: 6 months
   <img alt="Text changing depending on mode. Light: 'So light!' Dark: 'So dark!'" src="assets/idp_light.png">
 </picture>
 
-
-## Architecture Principles
-Find our [architecture princples here](architecture-principles)
-
 ## **Intro**
 1. **Manifest** - IDP [manifesto og principper](manifest-idp)
 1. **Service Level Agreement** - Oversigt over [vores SLA med jer](https://jira-jppol.atlassian.net/wiki/spaces/IDP/folder/3680632849?atlOrigin=eyJpIjoiNzU2YjYxNjkzZWJiNDFlMjlkZDI5YTE4OWM0YjNlM2UiLCJwIjoiYyJ9)
