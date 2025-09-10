@@ -30,5 +30,6 @@
 ./onboarding/technology-overview.md
 ./onboarding/qaa.md
 ./administration/adgang.md
+./how-to/auto-updates.md
 ./README.public.md
 ./README.md
