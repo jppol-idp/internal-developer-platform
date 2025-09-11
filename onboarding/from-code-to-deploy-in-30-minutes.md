@@ -95,21 +95,12 @@ arn:aws:ecr:eu-west-1:354918371398:repository/pol/*
 
 __Automatic deployment__
 
-Once the image is uploaded, deployment can be triggered directly from your code repository using GitHub secrets configured in Politiken’s org:
+The IDP cluster can update to the latest version of the images built, optionally limiting to tags matching certain SemVer 
+og Regex patterns.
 
-- IDP_DEPLOY_APP_ID
-- IDP_DEPLOY_APP_KEY
-
-```yaml
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ vars.IDP_DEPLOY_APP_ID }}
-          private-key: ${{ secrets.IDP_DEPLOY_APP_KEY }}
-          owner: ${{ github.repository_owner }}
-          repositories: apps-pol
-```
-
-> GitHub app installation link [https://github.com/organizations/jppol-idp/settings/installations/61380040](https://github.com/organizations/jppol-idp/settings/installations/61380040)
+This feature is enabled in `application.yaml` with a set of annotations. Enabling this feature will limit the need to 
+modify the deploy repository, as you only need to modify it in case of entirely new deployments or when tweaking the 
+configuration. [You can read more about auto updating images here.](https://public.docs.idp.jppol.dk/how-to-auto-update)
 
 ---
 ### 4. Create deployment configuration
