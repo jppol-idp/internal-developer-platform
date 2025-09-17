@@ -32,5 +32,6 @@
 ./administration/adgang.md
 ./how-to/index.md
 ./how-to/auto-updates.md
+./how-to/dynamo-db.md
 ./README.public.md
 ./README.md

@@ -14,3 +14,7 @@ _site/
 .bundle/
 vendor/
 
+# vim
+*~
+*.swp
+*.bak
