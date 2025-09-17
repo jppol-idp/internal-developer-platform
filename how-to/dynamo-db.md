@@ -1,5 +1,5 @@
 ---
-title: Auto updating deployments
+title: Working with DynamoDB
 nav_order: 2 
 parent: How to...
 domain: public
@@ -75,6 +75,58 @@ tables:
     serviceAccountWriteRoles: ["access-service-koa-dev"]
 ```
 
+### Example: Table with Local Secondary Indexes (LSIs) via Helm values
+
+The chart supports Local Secondary Indexes through the `localSecondaryIndex` array on each table. According to the chart schema, each LSI requires `name`, `projectionType`, and `nonKeyAttributes` fields; include `rangeKey` to specify the alternate sort key for the LSI. Remember that LSIs:
+- Share the same partition key as the base table (the table’s `hashKey`).
+- Must be defined at table creation time (they cannot be added later by DynamoDB).
+- Require any index key attributes to be declared in `attributes`.
+
+```yaml
+# Example values.yaml fragment
+# Define a table with two LSIs: one on TotalAmount and one on Status
+
+tables:
+  - name: Orders
+    useIdpPrefix: true
+    hashKey: CustomerId
+    rangeKey: OrderDate
+    attributes:
+      - name: CustomerId
+        type: 'S'
+      - name: OrderDate
+        type: 'S'
+      - name: TotalAmount
+        type: 'N'
+      - name: Status
+        type: 'S'
+    billingMode: PAY_PER_REQUEST
+
+    # Local Secondary Indexes (same HASH key: CustomerId)
+    localSecondaryIndex:
+      - name: AmountIndex
+        rangeKey: TotalAmount
+        projectionType: INCLUDE
+        nonKeyAttributes: ["items", "shippingAddress"]
+      - name: StatusIndex
+        rangeKey: Status
+        projectionType: ALL
+        nonKeyAttributes: []
+
+    # Optional: grant access to existing IAM roles
+    serviceAccountReadRoles: ["access-service-koa-dev"]
+    serviceAccountWriteRoles: ["access-service-koa-dev"]
+```
+
+Tips for LSIs
+- For `projectionType: INCLUDE`, list the attributes you want to project in `nonKeyAttributes` (up to 20).
+- For `projectionType: ALL` or `KEYS_ONLY`, this chart’s schema still expects `nonKeyAttributes`; set it to an empty list (`[]`) if you don’t need additional attributes.
+- Keep each partition key’s item collection (table + LSIs) under DynamoDB’s 10 GB limit.
+
+See the schema and docs for precise field definitions:
+- ../../helm/helm-idp-dynamodb/values.schema.json
+- ../../helm/helm-idp-dynamodb/README.md
+
 Notes
 - Table names in AWS are derived from the Kubernetes namespace and the logical table name, optionally prefixed with `idp-` when `useIdpPrefix: true` is set.
 - Default region for policies is eu-west-1 unless overridden per table.
@@ -94,3 +146,6 @@ Refer to ../../helm/helm-idp-dynamodb/ACCESSING_TABLE.md for details on policy n
 
 ## Backup and restore
 By default, point-in-time recovery (PITR) is enabled, allowing restore to any point in time within the last 35 days. If you need a restore, contact the IDP team. See official AWS docs on PITR for DynamoDB for more details.
+
+Point in time recovery only supports rollback to a specific point in time. You can enable regular AWS backup which will perform a nightly backup of the table, that can be restored to another table name and leave the 
+original table unmodified. Again restores must be performed by the IDP team.
