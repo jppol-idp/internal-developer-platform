@@ -54,3 +54,15 @@ Using the `newest-build` AIU will check if something has been pushed since the r
 
 AIU has other stragegies for updating images and can among other things used to detect and respect SemVer changes. We refer to the AIU documentation for the specifics. 
 
+## If your values file becomes garbled
+When AIU alters the image tag, it naturally perform changes to the `values.yaml` file. As part of this it performs a formatting of the file, that
+may be undesired. One example is when a string containing a long list of elements has deliberately been split over multiple lines using yamls (`>`)[https://stackoverflow.com/questions/3790454/how-do-i-break-a-string-in-yaml-over-multiple-lines] notation for readability.  During the tag change AIU perform a reformatting of the entire file and such specific formatting may get lost. 
+
+### Mutliple values file
+The solution is to insers the `image` section in a separate file valled `values.aui` and instruct AIU to write back changes to the alternate file. As AIU only modifies the file it 
+changes the `values.yaml` is left unodified. 
+
+To enable this feature you should start by removing the `image` section of `values.yaml` and write this to `values-aiu.yaml`. You must then update `application.yaml` with the 
+line `argocd_image_update_write_back_target: values-aiu.yaml`. 
+
+Completing these steps will cause AIU to only write back to `values-aiu.yaml`. 
