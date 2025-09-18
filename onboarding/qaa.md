@@ -13,9 +13,9 @@ If you or your team have any questions or run into issues, send us a [Slack mess
 ---
 
 ### 1. 🔑 How do I get access to IDP?
-To gain access, your team lead needs to do the following:  
-- Add you via your ServiceNow form so you are granted the correct AD group permissions.  
-- Grant you access to your GitHub Enterprise repository under our `jppol-idp` organization.
+- You need to be granted the correct AD group permissions.
+- Requst needs to go via Servicedesk and a ServiceNow form.
+- Request access from IDP support and we will request on your behalf.  
 
 Is your team not yet set up in the IDP? Reach out to us – we’ll have a chat.
 
