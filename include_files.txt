@@ -31,6 +31,7 @@
 ./onboarding/qaa.md
 ./administration/adgang.md
 ./how-to/index.md
+./how-to/postgres-database.md
 ./how-to/auto-updates.md
 ./how-to/dynamo-db.md
 ./README.public.md
