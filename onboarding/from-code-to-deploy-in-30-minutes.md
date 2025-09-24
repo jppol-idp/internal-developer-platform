@@ -89,7 +89,6 @@ image_tags: ${{ github.run_number }}
 The ECR repository allows GitHub Actions from Politiken’s organization to upload images here:
 arn:aws:ecr:eu-west-1:354918371398:repository/pol/*
 
-> You can verify the image upload by assuming the IDP-client-read-access role in the AWS account aws-jppol-idp-shared [aws-jppol-idp-shared](https://jppol-sso.awsapps.com/start#/)
 
 __Automatic deployment__
 
