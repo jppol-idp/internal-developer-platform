@@ -33,6 +33,7 @@
 ./how-to/index.md
 ./how-to/postgres-database.md
 ./how-to/auto-updates.md
+./how-to/prometheus-scraping.md
 ./how-to/dynamo-db.md
 ./README.public.md
 ./README.md
