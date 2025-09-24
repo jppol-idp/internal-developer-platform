@@ -28,12 +28,9 @@ Now define a `values.yaml` file describing the database you want to provision:
 ```yaml 
 tenantDatabases:
   - name: my-db
-    roleName: my-role
     namespace: my-namespace
     roleDeletionPolicy: Orphan
     dbDeletionPolicy: Orphan
-    customerProviderConfigName: my-app-providerconfig
-    connectionSecretName: my-db-secret
 ```
 
 Next you need to create an `application.yaml` in the same subfolder in order to instruct ArgoCD how to create your app and deploy the chart:
@@ -46,13 +43,17 @@ version: 0.1.0
 slackChannel: my-slack-channel
 helm:
   chart: helm/idp-tenantdatabase
-  chartVersion: "1.1.0"
+  chartVersion: "1.1.1"
 ```
 
 Once this is committed, ArgoCD will automatically deploy the database.
 
 ## Connect your Application
-Once the database is created, configure your application to use it. The connection details are stored in the secret you specified (my-db-secret).
+Once the database is created, configure your application to use it. 
+There are three different database roles created alongside your database: An admin role, a write role and a read role.
+
+Depending on which type of role you need to act as, configure your yaml to use the appropriate one.
+Using the example configuration, `my-db` above with write privileges, database access would be configured using the connection details from the K8s secret `my-db-write`.
 
 Update your app’s values.yaml to load these as environment variables:
 
@@ -63,21 +64,21 @@ env:
   - name: DB_USER
     valueFrom:
       secretKeyRef:
-        name: my-db-secret
+        name: my-db-write
         key: username
   - name: DB_PASSWORD
     valueFrom:
       secretKeyRef:
-        name: my-db-secret
+        name: my-db-write
         key: password
   - name: DB_HOST
     valueFrom:
       secretKeyRef:
-        name: my-db-secret
+        name: my-db-write
         key: endpoint
   - name: DB_PORT
     valueFrom:
       secretKeyRef:
-        name: my-db-secret
+        name: my-db-write
         key: port
 ```
