@@ -1,6 +1,6 @@
 ---
 title: Prometheus metrics scraping
-nav_order: 4 
+nav_order: 3 
 parent: How to...
 domain: public
 permalink: /prometheus-metrics
@@ -44,7 +44,7 @@ The idp-advanced helm chart currently only supports setting up ServiceMonitor (n
 
 Consider these implications when designing your metrics exposure strategy with the idp-advanced chart. If you need pod-level metrics granularity, you may need to:
 - Add pod identification labels to your metrics
-- Consider a custom chart that supports PodMonitor if per-pod metric isolation is critical
+- Bug the IDP team to get podMonitor functionality implemented in chart
 
 **Configuration Steps:**
 
