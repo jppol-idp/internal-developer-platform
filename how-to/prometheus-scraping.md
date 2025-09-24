@@ -52,7 +52,7 @@ Consider these implications when designing your metrics exposure strategy with t
 
 ```yaml
 service:
-  <-existing values->
+  ...existing content...
   metrics:
     enabled: true
 ```
