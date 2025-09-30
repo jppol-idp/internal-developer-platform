@@ -1,6 +1,6 @@
 ---
 title: Working with DynamoDB
-nav_order: 4 
+nav_order: 5 
 parent: How to...
 domain: public
 permalink: /how-to-dynamodb

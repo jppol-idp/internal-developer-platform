@@ -1,6 +1,6 @@
 ---
 title: Auto updating deployments
-nav_order: 2 
+nav_order: 3 
 parent: How to...
 domain: public
 permalink: /how-to-auto-update
