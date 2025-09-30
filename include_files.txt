@@ -24,6 +24,7 @@
 ./include_files.txt
 ./how-to/auto-updates.md
 ./how-to/prometheus-scraping.md
+./how-to/argocd-add-application-labels.md
 ./how-to/dynamo-db.md
 ./how-to/postgres-database.md
 ./how-to/index.md
