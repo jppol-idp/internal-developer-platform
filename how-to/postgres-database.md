@@ -17,7 +17,7 @@ If you want to learn more about what Aurora is and how it works, please refer to
 
 This feature is considered **Beta**, meaning it is functional but still under active development. Some configuration options etc. may change in future releases, and there may be minor bugs or limitations. We recommend using this feature first in development or staging environments and welcome your feedback to help improve it.
 
-Being a Beta feature, it is not automatically enabled in all accounts. If you have an interest in trying it out, please reach out in the [idp-team Slack channel](https://jppol.slack.com/archives/C07TZPBHFUL) and ask to have it enabled.
+If you have an interest in trying the Beta out, please reach out in the [idp-team Slack channel](https://jppol.slack.com/archives/C07TZPBHFUL) and ask to have it enabled.
 
 
 ## Define your Database
