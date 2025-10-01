@@ -32,6 +32,7 @@
 ./how-to/argocd-add-application-labels.md
 ./how-to/dynamo-db.md
 ./how-to/postgres-database.md
+./how-to/prometheus-blackbox-exporter.md
 ./how-to/index.md
 ./index.public.md
 ./onboarding/from-code-to-deploy-in-30-minutes.md
