@@ -26,6 +26,7 @@
 ./Gemfile.lock
 ./_config.yml
 ./include_files.txt
+./how-to/dns-records.md
 ./how-to/auto-updates.md
 ./how-to/prometheus-scraping.md
 ./how-to/alerting.md
