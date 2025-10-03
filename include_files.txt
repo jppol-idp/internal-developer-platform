@@ -44,6 +44,5 @@
 ./baggrund/manifest.md
 ./baggrund/principper.md
 ./baggrund/index.md
-./administration/adgang.md
 ./README.public.md
 ./README.md
