@@ -8,7 +8,7 @@ permalink: /qaa
 ---
 
 # Q&A - IDP 🚀
-If you or your team have any questions or run into issues, send us a [Slack message](https://ekstrabladet.slack.com/archives/C07TZPBHFUL). Always ❤️.
+If you or your team have any questions or run into issues, send us a [Slack message](https://jppol.slack.com/archives/C09JUREPVBP). Always ❤️.
 
 ---
 
@@ -210,7 +210,7 @@ Add this bot to the slack channel(s) as well.
 
 ---
 
-> Please [share feedback and improvements with us in Slack](https://ekstrabladet.slack.com/archives/C07TZPBHFUL). 
+> Please [share feedback and improvements with us in Slack](https://jppol.slack.com/archives/C09JUREPVBP). 
 
 ---
 *Sidst opdateret: 08-september-2025*
