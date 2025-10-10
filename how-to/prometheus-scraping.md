@@ -49,21 +49,17 @@ Consider these implications when designing your metrics exposure strategy with t
 **Configuration Steps:**
 
 1. Add the following to the service section:
-
-```yaml
-service:
-  ...existing content...
-  metrics:
-    enabled: true
-```
-
+    ```yaml
+    service:
+      ...existing content...
+      metrics:
+        enabled: true
+    ```
 2. Add or enable the serviceMonitor section:
-
-```yaml
-serviceMonitor:
-  enabled: true
-```
-
+    ```yaml
+    serviceMonitor:
+      enabled: true
+    ```
 3. If using non-standard ports or paths, refer to:
    - The idp-advanced default-values.yaml
    - The idp-advanced README.md for additional parameters
