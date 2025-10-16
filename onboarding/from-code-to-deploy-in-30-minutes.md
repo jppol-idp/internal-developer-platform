@@ -125,7 +125,7 @@ helm:
   chartVersion: "0.1.14"    # <-- version af helm chart
 ```
 
-> The chart helm/idp-advanced refers to [jppol-idp/helm-idp-advanced](https://github.com/jppol-idp/helm-idp-advanced/tree/main/charts/idp-advanced/Chart.yaml)
+> The chart helm/idp-advanced refers to [jppol-idp/helm-idp-advanced](https://github.com/jppol-idp/helm-idp-advanced/blob/main/Chart.yaml)
 
 `values.yaml`- defines deployment-specific variables:
 
