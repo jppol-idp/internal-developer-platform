@@ -144,6 +144,9 @@ If you are using idp-advanced to provision workloads, the service account role n
 
 Refer to ../../helm/helm-idp-dynamodb/ACCESSING_TABLE.md for details on policy naming, scoping, and how aggregation avoids AWS’ 10-managed-policies-per-role limit.
 
+*NB*: If you attempt to grant access to non-existing role or a role that has not been created by our helm charts, you will experience an error saying, that 
+no role based policy allows the assignment. Please double check role names, if this error occurs.
+
 ## Backup and restore
 By default, point-in-time recovery (PITR) is enabled, allowing restore to any point in time within the last 35 days. If you need a restore, contact the IDP team. See official AWS docs on PITR for DynamoDB for more details.
 
