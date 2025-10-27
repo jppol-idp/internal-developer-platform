@@ -30,7 +30,7 @@ We strictly follow **GitOps** principles, meaning every change is stored as a co
 - Access is integrated with your **JPPOL work account**
 - Services can be exposed:
   - **Publicly** or **internally**
-  - As **load-balanced HTTP services** using **nginx** or **AWS ALB**
+  - As **load-balanced HTTP services** using **nginx**
 - Transparent secret storage via **AWS Secrets Manager**
   
 
