@@ -44,6 +44,20 @@ This chart becomes relevant when you
 
 In short: You can maintain DNS records inside IDP hosted zones for whatever purpose you want. 
 
+## Crossplane policies for DNS records
+The Route53 records chart exposes Crossplane policy controls in values:
+
+```yaml
+managementPolicies: Control   # Control = create/update; Observe = read-only
+deletionPolicy: Delete         # Delete = allow deletions; Orphan = leave records behind
+```
+
+- Records
+  - Control => Crossplane may Create, Update, LateInitialize (and Observe) DNS records.
+  - Observe => Crossplane only observes existing records. This can be used to adopt records that already exist.
+  - If `deletionPolicy` is Delete, Delete is also included so removing a record from `values.yaml` will delete it in Route53. With Orphan, removals in values do not delete existing records.
+- Zones are always rendered with `managementPolicies: ["Observe"]` and cannot be created by this chart; the IDP platform manages zones.
+
 Records can be created in one folder for all zones in the cluster, in one folder per namespace 
 or in a folder pr "purpose". 
 

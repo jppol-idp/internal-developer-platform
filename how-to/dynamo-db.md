@@ -13,6 +13,26 @@ Using the Helm chart [helm-idp-dynamodb](https://github.com/jppol-idp/helm-idp-d
 
 The chart also supports granting read and/or write access to existing AWS IAM roles. This integrates cleanly with roles created by the idp-advanced chart (via IRSA). The chart now generates a single aggregated IAM managed policy per role, combining access across all tables you list for that role.
 
+## Crossplane policies (managementPolicies and deletionPolicy)
+The chart exposes Crossplane policy controls that decide whether resources are created/updated and whether they are deleted when removed from values:
+
+```yaml
+managementPolicies: Control   # Control (create/update) or Observe (read-only)
+deletionPolicy: Delete         # Delete or Orphan
+```
+
+- managementPolicies
+  - Control: Crossplane may Create, Update and LateInitialize resources (plus Observe).
+  - Observe: Crossplane only reads existing resources; nothing is created or changed. Useful for importing/adopting.
+- deletionPolicy
+  - Delete: Include Delete in managementPolicies. Removing a table (or uninstalling the chart) deletes the AWS resource.
+  - Orphan: Do not include Delete. Removing a table from values leaves the AWS resource in place.
+
+Notes
+- These settings apply to the Table, generated IAM Policy, and RolePolicyAttachment resources rendered by the chart.
+- If you intend to actually provision tables, set `managementPolicies: Control`. Use `Observe` for safe adoption/import.
+- For most cases keep deletion at `Delete`; switch to `Orphan` only for migrations or to prevent accidental deletion.
+
 ## Defining tables
 
 The values file contains a top-level array named `tables`, where each item defines one DynamoDB table. Each item maps closely to DynamoDB settings (hashKey, rangeKey, attributes, billingMode, optional indexes, etc.). For the full schema, see the chart docs in ../../helm/helm-idp-dynamodb/.
