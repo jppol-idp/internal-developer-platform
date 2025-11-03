@@ -31,15 +31,12 @@ Notes
 - The chart renders three Crossplane resources per bucket: Bucket, BucketOwnershipControls, and BucketACL.
 
 ### ACL options
-The `acl` field accepts the following canned ACLs (default: `private`):
-- private: Only the bucket owner has access. Recommended default.
-- public-read: Anyone on the internet can read objects. Use with caution.
-- public-read-write: Anyone can read and write objects. Almost never appropriate.
-- aws-exec-read: Owner has full control; AWS services (e.g., EC2) can read objects.
-- authenticated-read: Any authenticated AWS user can read objects. Rarely appropriate.
-- bucket-owner-read: Object writer has full control; bucket owner gets read access.
-- bucket-owner-full-control: Object writer and bucket owner both have full control.
-- log-delivery-write: Grants the Log Delivery group write access (for access logs target buckets).
+
+Should you want to make the bucket content public, you can set the property `publicRead` to `true`. 
+
+Generally we do not recommand this. Bucket access should instead be configured using the irsa roles of the 
+various applications. 
+
 
 ## Crossplane policies
 Control how Crossplane manages these resources via top-level settings in values.yaml:
