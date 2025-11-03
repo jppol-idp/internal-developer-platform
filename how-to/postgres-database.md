@@ -1,6 +1,6 @@
 ---
 title: Add Postgres Database
-nav_order: 8
+nav_order: 2
 parent: How to...
 domain: public
 permalink: /add-postgres-database

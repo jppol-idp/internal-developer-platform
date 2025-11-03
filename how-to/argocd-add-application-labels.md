@@ -1,6 +1,6 @@
 ---
 title: Add Labels to ArgoCD Applications
-nav_order: 2
+nav_order: 1
 parent: How to...
 domain: public
 permalink: /argocd-application-labels
