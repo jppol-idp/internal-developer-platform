@@ -17,15 +17,16 @@ The intent is not primarily to sign in via the AWS Console, but to use these per
 
 If you use helm/idp-advanced ≥ 2.4.1, you can also assume your deployments’ IRSA roles from your laptop to debug access or read (for example) DynamoDB tables provisioned via idp.
 
-For a platform-level overview and provisioning flow, see Documentation: Customer namespace access: ../dokumentation/customer-namespace-access.md.
-
 ## Before you start (prerequisites)
 - AWS CLI v2 installed and configured
 - kubectl and kubectx installed
 - For IRSA role assumption from your laptop: helm/idp-advanced ≥ 2.4.1 in your deployment
 
 ## Quick start (concrete example: namespace idp-dev on cluster idp-test)
-This section integrates and links to a concrete example from the apps repo: ../../apps-idp/apps/idp-dev/README.md.
+This section integrates and links to a concrete example from the idp internal apps repo: ../../apps-idp/apps/idp-dev/README.md.
+
+You should substitute "idp-dev" with your specific namespaces before the exaples work. Looking at your apps-"team" repository you 
+will find the scripts and examples for your specifix namespaces. The README.md in each namespace is updated at all times.
 
 1) Set up SSO profile and kubectl context
 - Run the helper script once to configure an AWS SSO profile and create a Kubernetes context named idp-ns-idp-dev:
