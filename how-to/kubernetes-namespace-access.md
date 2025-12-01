@@ -6,6 +6,7 @@ domain: public
 permalink: /kubernetes-namespace-access
 last_reviewed_on: 2025-11-28
 review_in: 3 months
+---
 
 # Access to Individual Kubernetes Namespaces via AWS SSO (Early Rollout)
 We have rolled out an early version of a new way to grant access to individual namespaces over the last few days. There may still be issues, but it is mature enough to start using. We appreciate feedback.

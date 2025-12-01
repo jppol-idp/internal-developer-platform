@@ -6,6 +6,7 @@ domain: public
 permalink: /how-to-redis
 last_reviewed_on: 2025-12-01
 review_in: 6 months
+---
 # Deploying Redis
 
 Deploy Redis in your IDP cluster. The `idp-redis` Helm chart supports two deployment modes: standalone Redis (single instance) and Redis with replication and automatic failover via Sentinel.
