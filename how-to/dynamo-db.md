@@ -1,12 +1,11 @@
 ---
 title: Working with DynamoDB
-nav_order: 11
+nav_order: 13
 parent: How to...
 domain: public
 permalink: /how-to-dynamodb
 last_reviewed_on: 2025-09-17
 review_in: 6 months
----
 # Working with DynamoDB
 
 Using the Helm chart [helm-idp-dynamodb](https://github.com/jppol-idp/helm-idp-dynamodb) you can declaratively create and manage DynamoDB tables that are accessible from workloads in our Kubernetes clusters.
