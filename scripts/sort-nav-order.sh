@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# Detect OS and set sed options accordingly
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # macOS
+    SED_INPLACE=(-i '')
+else
+    # Linux and others
+    SED_INPLACE=(-i)
+fi
+
 # Function to print usage
 print_usage() {
     echo "Usage: $0 [-d|--dry-run] <directory>"
@@ -74,9 +83,9 @@ update_file() {
         fi
     else
         if grep -q "^nav_order:" "$file"; then
-            sed -i '' "s/^nav_order:.*$/nav_order: $new_order/" "$file"
+            sed "${SED_INPLACE[@]}" "s/^nav_order:.*$/nav_order: $new_order/" "$file"
         else
-            sed -i '' "/^title:/a\\
+            sed "${SED_INPLACE[@]}" "/^title:/a\\
 nav_order: $new_order" "$file"
         fi
     fi
