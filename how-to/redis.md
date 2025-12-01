@@ -91,6 +91,7 @@ monitoring:
 ### Redis version
 
 Override the Redis version in `values.yaml`:
+More configuration options can be found in the [repositorys values.yaml](https://raw.githubusercontent.com/jppol-idp/helm-idp-redis/refs/heads/main/values.yaml?token=GHSAT0AAAAAADPEM222HW6JIHFNPFK7LWPK2JNV5WA)
 
 ```yaml
 global:
@@ -197,11 +198,6 @@ View metrics in your Prometheus/Grafana dashboard.
 ### Pods stuck in Pending
 
 Usually temporary during startup. Wait 1-2 minutes and refresh.
-
-If persistent, check storage class:
-```
-Storage class exists and has available capacity
-```
 
 ### Services show no endpoints
 
