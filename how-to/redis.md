@@ -230,20 +230,23 @@ r = redis.Redis(host='redis', port=6379, decode_responses=True)
 
 To add password protection:
 
-1. Ask your platform team to create a Kubernetes secret:
+1. Ask your platform team to create a Kubernetes secret(example below):
    ```
-   redis-password secret with key "password"
+   secret-name: 'redis-password-123'
+   key: 'password'
+   value: '<replace with random-password>'
    ```
 
 2. Enable auth in `values.yaml`:
    ```yaml
    auth:
      enabled: true
-     secretName: redis-password
+     secretName: redis-password-123
      secretKey: password
    ```
 
 3. Commit changes. ArgoCD will update the deployment.
+4. Your connect string would now look something like: `redis://default:<password>@<k8s-servicename>:6379`
 
 ## Monitoring with Prometheus
 
