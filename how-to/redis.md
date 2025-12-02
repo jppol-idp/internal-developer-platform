@@ -230,7 +230,7 @@ r = redis.Redis(host='redis', port=6379, decode_responses=True)
 
 To add password protection:
 
-1. Ask your platform team to create a Kubernetes secret(example below):
+1. Create a Kubernetes secret through the Github secrets action(example below):
    ```
    secret-name: 'redis-password-123'
    key: 'password'
