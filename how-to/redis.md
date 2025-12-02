@@ -261,7 +261,11 @@ Metrics are scraped every 30 seconds and include:
 - Replication lag
 - Sentinel status
 
-View metrics in your Prometheus/Grafana dashboard.
+### Grafana dashboard
+
+A pre-built Grafana dashboard is available in all clusters: **"Redis Dashboard for Prometheus Redis Exporter (helm stable/redis-ha)"**
+
+Use this dashboard to visualize Redis metrics without additional setup configuration.
 
 ## Troubleshooting
 

@@ -75,6 +75,22 @@ The script handles macOS (with `-i ''`) and Linux (with `-i`) sed syntax differe
 - **GitHub Pages**: Builds automatically from the `main` branch when pushed to GitHub
 - **Theme**: Uses "Just the Docs" theme (remote_theme: just-the-docs/just-the-docs)
 
+## Redis Documentation (`how-to/redis.md`)
+
+This is a key how-to guide documenting the IDP Redis Helm chart deployment. When updating this document:
+
+- **Source of truth**: `/how-to/redis.md` reflects the current state of the `helm-idp-redis` chart (https://github.com/jppol-idp/helm-idp-redis)
+- **Key sections**:
+  - Deployment modes (standalone vs replication with Sentinel)
+  - Resource management and QoS classes (critical for production)
+  - Configuration examples for development and production
+  - Service discovery and access patterns
+  - Authentication and monitoring setup
+
+- **Important to maintain**: When the helm chart changes (especially `values-simple.yaml`), update the documentation examples to match. This includes resource requests/limits, persistence settings, and replica counts.
+
+- **QoS guidance**: The document includes production recommendations for Guaranteed QoS (request == limit) to prevent pod evictions.
+
 ## Recent Changes Pattern
 
 Recent commits show the team frequently updates nav_order values and adds content to how-to guides. When adding new documents, ensure proper frontmatter including nav_order and domain fields.
