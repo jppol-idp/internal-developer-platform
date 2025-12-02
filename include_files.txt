@@ -49,5 +49,6 @@
 ./baggrund/manifest.md
 ./baggrund/principper.md
 ./baggrund/index.md
+./CLAUDE.md
 ./README.public.md
 ./README.md

@@ -48,6 +48,14 @@ Single Redis instance for development or non-critical caching.
 type: standalone
 
 standalone:
+  # Resource requests and limits (important for Redis memory management!)
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      memory: 256Mi
+
   persistence:
     enabled: false              # no disk storage (memory only)
     # size: 1Gi                 # if enabled=true, storage size
@@ -66,12 +74,30 @@ type: replication
 
 replication:
   size: 3                        # 1 master + 2 slaves
+
+  # Resource requests and limits (important for Redis memory management!)
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      memory: 256Mi
+
   persistence:
     enabled: true
     size: 10Gi                   # storage per Redis pod
 
 sentinel:
   size: 3                        # 3 Sentinel instances
+
+  # Resource requests and limits for Sentinel instances
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      memory: 128Mi
+
   persistence:
     enabled: true
     size: 1Gi                    # storage per Sentinel pod
@@ -85,6 +111,50 @@ monitoring:
 - 3 Sentinel pods for automatic failover
 - Services for master, slave, and sentinel access
 - Automatic metrics export to Prometheus
+
+## Resource management
+
+Redis is a memory-based key-value store, so setting appropriate resource requests and limits is critical for:
+- Preventing out-of-memory errors
+- Ensuring fair resource allocation in shared clusters
+- Maintaining predictable performance
+- Controlling QoS class (Quality of Service)
+
+### Understanding QoS classes
+
+Kubernetes assigns QoS classes based on requests and limits:
+
+- **Guaranteed**: `requests == limits` for all containers. Highest priority, never evicted under memory pressure.
+- **Burstable**: `requests < limits` or only requests set. Medium priority, evicted if needed.
+- **BestEffort**: No requests or limits. Lowest priority, evicted first under memory pressure.
+
+For production Redis deployments, **Guaranteed QoS is recommended** to prevent evictions.
+
+### Recommended values
+
+**Development/Non-critical:**
+
+```yaml
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    memory: 256Mi           # Burstable QoS
+```
+
+**Production (recommended):**
+
+```yaml
+resources:
+  requests:
+    cpu: 500m
+    memory: 1Gi
+  limits:
+    memory: 1Gi             # Guaranteed QoS (request == limit)
+```
+
+Apply these values to `standalone`, `replication`, and `sentinel` sections as shown in the examples above.
 
 ## Customizing your deployment
 
