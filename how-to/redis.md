@@ -228,25 +228,82 @@ r = redis.Redis(host='redis', port=6379, decode_responses=True)
 
 ## Authentication (optional)
 
-To add password protection:
+The chart supports two methods for Redis authentication:
 
-1. Create a Kubernetes secret through the Github secrets action(example below):
-   ```
-   secret-name: 'redis-password-123'
-   key: 'password'
-   value: '<replace with random-password>'
-   ```
+### Method 1: AWS Secrets Manager via ExternalSecret (recommended for production)
 
-2. Enable auth in `values.yaml`:
+This method automatically syncs passwords from AWS Secrets Manager to Kubernetes.
+
+**Prerequisites:**
+- SecretStore `aws-secrets-{{ namespace }}` configured in your cluster
+- Secret created in AWS Secrets Manager via GitHub Action
+- Pod IAM role (IRSA) configured for AWS access
+
+**How to set up:**
+
+1. **Create secret in AWS Secrets Manager**
+
+   Use the GitHub Action in your customer repository. See your namespace's `secrets.md` file for instructions.
+
+   Example for `idp-dev` namespace: https://github.com/jppol-idp/apps-idp/blob/main/apps/idp-dev/secrets.md
+
+   When creating the secret, specify:
+   - `secretsmanager_name: redis-password`
+   - `password: <your-secure-password>`
+
+   This creates the secret at: `customer/{{ namespace }}/redis-password`
+
+2. **Enable authentication in values.yaml:**
+
    ```yaml
    auth:
      enabled: true
-     secretName: redis-password-123
-     secretKey: password
+     secretName: redis-password    # Matches the secretsmanager_name from GitHub Action
    ```
 
-3. Commit changes. ArgoCD will update the deployment.
-4. Your connect string would now look something like: `redis://default:<password>@<k8s-servicename>:6379`
+3. **Commit and deploy**
+
+   Commit changes to git. ArgoCD will detect and apply the deployment. The chart automatically generates an ExternalSecret resource that syncs your password from AWS Secrets Manager.
+
+### Method 2: Existing Kubernetes Secret (alternative)
+
+If you already have a Kubernetes secret you want to use instead of ExternalSecret:
+
+**Configuration in values.yaml:**
+
+```yaml
+auth:
+  enabled: true
+  secretName: my-redis-password
+  externalSecretDisabled: true    # Disable ExternalSecret generation
+```
+
+**Requirements:**
+- Kubernetes secret must exist with key `password`
+- Secret name must match: `{{ release-name }}-password`
+
+For details on how to create and manage the Kubernetes secret, contact your platform team.
+
+### Accessing authenticated Redis
+
+Use the password in your application connection strings:
+
+```python
+import redis
+
+# Connect to master
+r = redis.Redis(
+    host='redis-master',
+    port=6379,
+    password='<your-secure-password>',
+    decode_responses=True
+)
+```
+
+Connection string format:
+```
+redis://default:<password>@redis-master:6379
+```
 
 ## Monitoring with Prometheus
 
