@@ -91,6 +91,20 @@ This is a key how-to guide documenting the IDP Redis Helm chart deployment. When
 
 - **QoS guidance**: The document includes production recommendations for Guaranteed QoS (request == limit) to prevent pod evictions.
 
+## ECR Pull-Through Cache Documentation
+
+This is a how-to guide documenting the Docker Hub image caching solution via AWS ECR. When updating this documentation:
+
+- **Source of truth**: `/how-to/docker-hub-image-caching.md` documents the ECR pull-through cache implementation
+- **Internal details**: `/dokumentation/ecr-pull-through-cache.md` contains technical implementation details for the team
+- **Key implementation details**:
+  - Developers explicitly update Docker Hub image references to ECR cache URLs
+  - Official Docker Hub images require the `/library/` prefix (e.g., `nginx:latest` → `.../docker-hub/library/nginx:latest`)
+  - Organization/user images do not use the `/library/` prefix (e.g., `grafana/grafana:latest` → `.../docker-hub/grafana/grafana:latest`)
+  - ECR account: 354918371398, region: eu-west-1
+
+- **Future expansion path**: The infrastructure supports adding additional registry caches (ghcr.io, quay.io, etc.) in the future without architectural changes. Each registry would use a new cache prefix pattern.
+
 ## Recent Changes Pattern
 
 Recent commits show the team frequently updates nav_order values and adds content to how-to guides. When adding new documents, ensure proper frontmatter including nav_order and domain fields.
