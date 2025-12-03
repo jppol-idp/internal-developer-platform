@@ -27,17 +27,38 @@ To prevent these issues, we've implemented an automatic caching solution that st
 
 ## How It Works
 
-When you deploy a workload that uses a Docker Hub image, the platform automatically:
+To use the ECR cache for your Docker Hub images, you need to update your deployment manifests to point to the cache:
 
-1. **Rewrites the image reference** to use our ECR cache
-2. **Pulls the image through ECR**, which caches it from Docker Hub on first use
-3. **Serves subsequent pulls from the cache**, avoiding Docker Hub rate limits
+1. **Update your image reference** to use the ECR cache URL
+2. **Deploy the updated manifest** to your cluster
+3. **The image is pulled through ECR**, which caches it from Docker Hub on first use
+4. **Subsequent pulls are served from the cache**, avoiding Docker Hub rate limits
 
-This happens **transparently** - you don't need to change anything in your deployment manifests.
+### Image Path Mapping
 
-### Example
+The path structure depends on the image type:
 
-Your deployment manifest:
+**Official Docker Hub images** (nginx, redis, postgres, etc.) require the `/library/` prefix:
+```yaml
+# Original
+image: nginx:latest
+
+# ECR cache path
+image: 354918371398.dkr.ecr.eu-west-1.amazonaws.com/docker-hub/library/nginx:latest
+```
+
+**User or organization images** (no `/library/` prefix):
+```yaml
+# Original
+image: grafana/grafana:latest
+
+# ECR cache path
+image: 354918371398.dkr.ecr.eu-west-1.amazonaws.com/docker-hub/grafana/grafana:latest
+```
+
+### Examples
+
+**Official image (nginx):**
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -48,18 +69,22 @@ spec:
     spec:
       containers:
         - name: app
-          image: nginx:latest
+          image: 354918371398.dkr.ecr.eu-west-1.amazonaws.com/docker-hub/library/nginx:latest
 ```
 
-What actually runs in the cluster:
+**Organization image (Grafana):**
 ```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: monitoring
 spec:
-  containers:
-    - name: app
-      image: 354918371398.dkr.ecr.eu-west-1.amazonaws.com/docker-hub/library/nginx:latest
+  template:
+    spec:
+      containers:
+        - name: grafana
+          image: 354918371398.dkr.ecr.eu-west-1.amazonaws.com/docker-hub/grafana/grafana:latest
 ```
-
-The image is automatically rewritten by the platform, and ArgoCD shows your application as "Synced" despite this difference.
 
 ## Supported Images
 
@@ -78,32 +103,6 @@ Images from **other registries are not affected**:
 - `ghcr.io/owner/image` - GitHub Container Registry
 - Images already in ECR
 
-## Opting Out
-
-In rare cases, you may need to disable the caching for a specific workload. Add this annotation to your pod template:
-
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: my-app
-spec:
-  template:
-    metadata:
-      annotations:
-        idp.jppol.dk/ecr-pull-through-cache: "disabled"
-    spec:
-      containers:
-        - name: app
-          image: nginx:latest  # Will pull directly from Docker Hub
-```
-
-**When to opt-out:**
-- Debugging image pull issues
-- Testing specific Docker Hub behavior
-- Temporary workaround for cache-related problems
-
-**Note**: Opting out makes your workload subject to Docker Hub rate limits again.
 
 ## Benefits
 
@@ -124,9 +123,6 @@ kubectl describe pod <pod-name> -n <namespace>
 
 If the error mentions ECR authentication or "not found", contact the platform team via Slack (#idp-team).
 
-### ArgoCD shows my application as OutOfSync
-
-The platform is configured to ignore image field differences caused by caching. If you're still seeing OutOfSync status specifically related to image fields, contact the platform team.
 
 ### I want to verify my image is cached
 
