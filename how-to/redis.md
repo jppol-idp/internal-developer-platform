@@ -112,6 +112,8 @@ monitoring:
 - Services for master, slave, and sentinel access
 - Automatic metrics export to Prometheus
 
+**Note**: The Sentinel master name is configured as `myMaster` (not the default `mymaster`). Use this name when connecting to Redis via Sentinel.
+
 ## Resource management
 
 Redis is a memory-based key-value store, so setting appropriate resource requests and limits is critical for:
@@ -210,7 +212,10 @@ Use the service name from within your namespace:
 ```
 redis-master:6379                    # master for writes
 redis:6379                           # any node for reads
+redis-sentinel:26379                 # sentinel (master name: myMaster)
 ```
+
+**Important**: When connecting via Sentinel, the master name is `myMaster` (not the default `mymaster`).
 
 ### Example: Connecting from your application
 
