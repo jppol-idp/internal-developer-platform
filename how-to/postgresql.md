@@ -106,22 +106,22 @@ env:
   - name: DB_USER
     valueFrom:
       secretKeyRef:
-        name: [database]-admin
+        name: [namespace]-[database]-admin
         key: username
   - name: DB_PASSWORD
     valueFrom:
       secretKeyRef:
-        name: [database]-admin
+        name: [namespace]-[database]-admin
         key: password
   - name: DB_HOST
     valueFrom:
       secretKeyRef:
-        name: [database]-admin
+        name: [namespace]-[database]-admin
         key: endpoint
   - name: DB_PORT
     valueFrom:
       secretKeyRef:
-        name: [database]-admin
+        name: [namespace]-[database]-admin
         key: port
 ```
 
