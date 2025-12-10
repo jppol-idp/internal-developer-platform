@@ -15,7 +15,6 @@ This is a Jekyll-based documentation site for an Internal Developer Platform (ID
 The site is organized into major sections:
 - `/how-to/` - How-to guides (mostly public)
 - `/architecture-decision-records/` - ADRs for technology and architectural decisions
-- `/architecture-principles/` - Design principles
 - `/dokumentation/` - General documentation
 - `/onboarding/` - Onboarding content
 - `/referater/` - Meeting minutes
