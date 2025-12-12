@@ -16,7 +16,7 @@ Databases are provisioned inside an IDP-managed Aurora cluster and can be connec
 
 If you want to learn more about what Aurora is and how it works, please refer to [the official documentation](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-serverless-v2.how-it-works.html).
 
-This feature is considered **Beta**, meaning it is functional but still under active development. Some configuration options etc. may change in future releases, and there may be minor bugs or limitations. We recommend using this feature first in development or staging environments and welcome your feedback to help improve it.
+This feature is considered **Beta**, meaning it is functional but still under active development. Some configuration options etc. may change in future releases, and there may be minor bugs or limitations. A list of known errors is presented in the [known errors section](#known-errors) and planned features are presented in the [WIP section](#work-in-progress-features). We recommend using this feature first in development or staging environments and welcome your feedback to help improve it.
 
 If you have an interest in trying the Beta out, please reach out in the [idp-team Slack channel](https://jppol.slack.com/archives/C09JUREPVBP) and ask to have it enabled.
 
@@ -29,9 +29,10 @@ Now define a `values.yaml` file describing the database you want to provision:
 ```yaml
 postgresqlDatabases:
   - name: my-db
+    deletionProtection: false
 ```
 
-<!-- **Deletion protection should be enabled for production databases.** Enabling deletion protection will ensure the database inside the Aurora cluster is not deleted, even if the database definition in the apps repository or any related Kubernetes resources are deleted. -->
+**Deletion protection should be enabled for production databases.** Enabling deletion protection will ensure the database in the Aurora cluster is not deleted if the database definition in the apps repository is deleted. If the database is accidentally deleted, follow the guide in [restore](#restore).
 
 Next you need to create an `application.yaml` in the same subfolder in order to instruct ArgoCD how to create your app and deploy the chart:
 
@@ -138,9 +139,24 @@ env:
 WIP features:
 
 - Backup and restore
-- Deletion protected databases
 - Monitoring
 - PostgreSQL version upgrade strategy
+
+## Restore
+
+### Restore protected database which has been removed from apps repo
+
+Contact IDP as some of these steps requires elevated privileges.
+
+In case the database is accidentally deleted from the apps repo, the resources in Kubernetes is removed while the resources outside of Kubernetes lives on. The service using the database only strictly needs the secrets in Kubernetes to connect to the database. The secrets for the three roles (read, write, admin) can be restored using the following procedure.
+
+*The `endpoint` can be found in the `ClusterProviderConfig` while the `password` can be found in the corresponding secret in AWS.*
+
+```bash
+kubectl create secret generic NAMESPACE-DB-ROLE -n NAMESPACE --from-literal=endpoint=foo --from-literal=port=5432 --from-literal=username=NAMESPACE-DB-ROLE --from-literal=password=foo
+```
+
+Create the secrets for the admin, write, and read roles.
 
 ## Known errors
 
