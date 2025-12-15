@@ -12,7 +12,7 @@ review_in: 6 months
 
 Deploy Redis in your IDP cluster. The `idp-redis` Helm chart supports two deployment modes: standalone Redis (single instance) and Redis with replication and automatic failover via Sentinel.
 
-## Indholdsfortegnelse
+## Table Of Contents
 
 - [Create your deployment files](#create-your-deployment-files)
 - [Deployment modes](#deployment-modes)
@@ -190,8 +190,10 @@ Apply these values to `standalone`, `replication`, and `sentinel` sections as sh
 
 ### Redis version
 
+Available versions can be found [here](https://quay.io/repository/opstree/redis?tab=tags)
+
 Override the Redis version in `values.yaml`:
-More configuration options can be found in the [repositorys values.yaml](https://raw.githubusercontent.com/jppol-idp/helm-idp-redis/refs/heads/main/values.yaml?token=GHSAT0AAAAAADPEM222HW6JIHFNPFK7LWPK2JNV5WA)
+More configuration options can be found in the [repositorys values.yaml](https://github.com/jppol-idp/helm-idp-redis/blob/main/values.yaml)
 
 ```yaml
 global:
@@ -228,11 +230,11 @@ Apply changes by committing your updated `values.yaml` to git. ArgoCD will detec
 
 ### Finding your service names
 
-When you deploy Redis via Helm, services are automatically created with names based on your **release name** (the `name` field in your `application.yaml`).
+When you deploy Redis via Helm, services are automatically created with names based on your **release name** (the `folder-name` of your application in your argo-cd apps folder).
 
 The service naming pattern is: `<release-name>-<service-type>`
 
-**Example**: If your `application.yaml` has `name: my-redis-deployment`, the main services will be:
+**Example**: If your `folder-name` is: my-redis-deployment`, the main services will be:
 - `my-redis-deployment-redis` (standalone) or `my-redis-deployment-redis-master` (replication)
 - `my-redis-deployment-redis-replica` (replication mode only)
 - `my-redis-deployment-redis-sentinel` (replication mode only)
@@ -373,7 +375,7 @@ This method automatically syncs passwords from AWS Secrets Manager to Kubernetes
    - `secretsmanager_name: redis-password`
    - `password: <your-secure-password>`
 
-   This creates the secret at: `customer/{{ namespace }}/redis-password`
+   This creates the secret at: `customer/<namespace>/redis-password`
 
 2. **Enable authentication in values.yaml:**
 
