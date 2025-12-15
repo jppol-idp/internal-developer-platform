@@ -7,9 +7,37 @@ permalink: /how-to-redis
 last_reviewed_on: 2025-12-01
 review_in: 6 months
 ---
+
 # Deploying Redis
 
 Deploy Redis in your IDP cluster. The `idp-redis` Helm chart supports two deployment modes: standalone Redis (single instance) and Redis with replication and automatic failover via Sentinel.
+
+## Indholdsfortegnelse
+
+- [Create your deployment files](#create-your-deployment-files)
+- [Deployment modes](#deployment-modes)
+  - [Standalone mode](#standalone-mode)
+  - [Replication mode (recommended for production)](#replication-mode-recommended-for-production)
+- [Resource management](#resource-management)
+  - [Understanding QoS classes](#understanding-qos-classes)
+  - [Recommended values](#recommended-values)
+- [Customizing your deployment](#customizing-your-deployment)
+  - [Redis version](#redis-version)
+  - [Storage size](#storage-size)
+  - [Number of replicas](#number-of-replicas)
+- [Accessing Redis](#accessing-redis)
+  - [Finding your service names](#finding-your-service-names)
+  - [Which service to use](#which-service-to-use)
+  - [Connecting with tools](#connecting-with-tools-redis-insights-redisinsight-redis-cli)
+  - [Connecting from your application](#connecting-from-your-application)
+- [Authentication (optional)](#authentication-optional)
+  - [Method 1: AWS Secrets Manager via ExternalSecret](#method-1-aws-secrets-manager-via-externalsecret-recommended-for-production)
+  - [Method 2: Existing Kubernetes Secret](#method-2-existing-kubernetes-secret-alternative)
+  - [Accessing authenticated Redis](#accessing-authenticated-redis)
+- [Monitoring with Prometheus](#monitoring-with-prometheus)
+  - [Grafana dashboard](#grafana-dashboard)
+- [Troubleshooting](#troubleshooting)
+- [Support](#support)
 
 **Chart**: `helm/idp-redis` from https://github.com/jppol-idp/helm-idp-redis
 
@@ -198,38 +226,127 @@ Apply changes by committing your updated `values.yaml` to git. ArgoCD will detec
 
 ## Accessing Redis
 
-Services are created automatically for different use cases:
+### Finding your service names
 
-| Service | Port | Use case |
+When you deploy Redis via Helm, services are automatically created with names based on your **release name** (the `name` field in your `application.yaml`).
+
+The service naming pattern is: `<release-name>-<service-type>`
+
+**Example**: If your `application.yaml` has `name: my-redis-deployment`, the main services will be:
+- `my-redis-deployment-redis` (standalone) or `my-redis-deployment-redis-master` (replication)
+- `my-redis-deployment-redis-replica` (replication mode only)
+- `my-redis-deployment-redis-sentinel` (replication mode only)
+
+**To see your actual service names**, use one of these methods:
+
+1. **ArgoCD GUI** (recommended for developers):
+   - Open your application in ArgoCD
+   - Look under "Services" - all service names are listed there
+
+2. **kubectl command**:
+   ```bash
+   kubectl get services -n <your-namespace> | grep redis
+   ```
+
+### Which service to use
+
+The service you connect to depends on your deployment mode and use case:
+
+#### Standalone mode
+
+| Service | Port | Use Case |
 |---------|------|----------|
-| `redis` | 6379 | Any Redis node (includes master and slaves) |
-| `redis-master` | 6379 | Master only (for writes) |
-| `redis-replica` | 6379 | Slaves only (for reads) |
-| `redis-sentinel` | 26379 | Sentinel for monitoring/failover |
+| `<release-name>-redis` | 6379 | All Redis operations (read and write) |
 
-Use the service name from within your namespace:
-
+**Connection example**:
 ```
-redis-master:6379                    # master for writes
-redis:6379                           # any node for reads
-redis-sentinel:26379                 # sentinel (master name: myMaster)
+<release-name>-redis:6379
 ```
 
-**Important**: When connecting via Sentinel, the master name is `myMaster` (not the default `mymaster`).
+#### Replication mode (with Sentinel)
 
-### Example: Connecting from your application
+| Service | Port | Use Case |
+|---------|------|----------|
+| `<release-name>-redis-master` | 6379 | **Write operations** and direct master access |
+| `<release-name>-redis-replica` | 6379 | **Read operations** from slaves |
+| `<release-name>-redis-sentinel` | 26379 | **Sentinel monitoring** (not for data operations!) |
 
-From a pod in your namespace, connect using service DNS:
+**For application connections**:
+```
+<release-name>-redis-master:6379      # For writes
+<release-name>-redis-replica:6379     # For read-only queries
+```
 
+**Important**:
+- Use `redis-master` for writes or when you need consistent reads
+- Use `redis-replica` for read-heavy workloads to distribute load
+- **Do NOT use `redis-sentinel` for data operations** - it's only for monitoring and failover coordination
+
+### Connecting with tools (Redis Insights, RedisInsight, redis-cli)
+
+When using tools like Redis Insights with `kubectl port-forward`, connect to the **master service**, not sentinel:
+
+```bash
+# Port-forward to master (correct)
+kubectl port-forward -n <namespace> svc/<release-name>-redis-master 6379:6379
+
+# Then connect Redis Insights to localhost:6379
+```
+
+**Do NOT port-forward to the sentinel service** - it won't give you access to your data.
+
+### Connecting from your application
+
+From a pod in your namespace, use the full service DNS name:
+
+**Standalone mode**:
 ```python
 import redis
 
-# Connect to master
-r = redis.Redis(host='redis-master', port=6379, decode_responses=True)
-
-# Or to any node
-r = redis.Redis(host='redis', port=6379, decode_responses=True)
+# Replace 'my-redis-deployment' with your actual release name
+r = redis.Redis(
+    host='my-redis-deployment-redis',
+    port=6379,
+    decode_responses=True
+)
 ```
+
+**Replication mode**:
+```python
+import redis
+
+# For writes - connect to master
+r_write = redis.Redis(
+    host='my-redis-deployment-redis-master',
+    port=6379,
+    decode_responses=True
+)
+
+# For reads - connect to replicas
+r_read = redis.Redis(
+    host='my-redis-deployment-redis-replica',
+    port=6379,
+    decode_responses=True
+)
+```
+
+**Using Sentinel for automatic failover** (advanced):
+```python
+from redis.sentinel import Sentinel
+
+# Connect to sentinel for automatic failover handling
+sentinel = Sentinel([
+    ('my-redis-deployment-redis-sentinel', 26379)
+], decode_responses=True)
+
+# Get master for writes (master name is 'myMaster')
+master = sentinel.master_for('myMaster', socket_timeout=0.1)
+
+# Get slave for reads
+slave = sentinel.slave_for('myMaster', socket_timeout=0.1)
+```
+
+**Note**: When using Sentinel in your application, the master name is configured as `myMaster` (not the default `mymaster`).
 
 ## Authentication (optional)
 
@@ -291,14 +408,22 @@ For details on how to create and manage the Kubernetes secret, contact your plat
 
 ### Accessing authenticated Redis
 
-Use the password in your application connection strings:
+Use the password in your application connection strings with the full service name:
 
 ```python
 import redis
 
-# Connect to master
+# Standalone mode
 r = redis.Redis(
-    host='redis-master',
+    host='my-redis-deployment-redis',
+    port=6379,
+    password='<your-secure-password>',
+    decode_responses=True
+)
+
+# Replication mode - connect to master
+r = redis.Redis(
+    host='my-redis-deployment-redis-master',
     port=6379,
     password='<your-secure-password>',
     decode_responses=True
@@ -307,7 +432,11 @@ r = redis.Redis(
 
 Connection string format:
 ```
-redis://default:<password>@redis-master:6379
+# Standalone
+redis://default:<password>@<release-name>-redis:6379
+
+# Replication (master)
+redis://default:<password>@<release-name>-redis-master:6379
 ```
 
 ## Monitoring with Prometheus
