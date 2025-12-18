@@ -1,5 +1,5 @@
 ---
-title: Alerting
+title: Working with Alerting
 nav_order: 3
 parent: How to...
 domain: public
