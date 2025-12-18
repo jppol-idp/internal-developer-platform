@@ -258,31 +258,31 @@ The service you connect to depends on your deployment mode and use case:
 
 | Service | Port | Use Case |
 |---------|------|----------|
-| `<release-name>-redis` | 6379 | All Redis operations (read and write) |
+| `<release-name>-service` | 6379 | All Redis operations (read and write) |
 
 **Connection example**:
 ```
-<release-name>-redis:6379
+<release-name>-service:6379
 ```
 
 #### Replication mode (with Sentinel)
 
 | Service | Port | Use Case |
 |---------|------|----------|
-| `<release-name>-redis-master` | 6379 | **Write operations** and direct master access |
-| `<release-name>-redis-replica` | 6379 | **Read operations** from slaves |
-| `<release-name>-redis-sentinel` | 26379 | **Sentinel monitoring** (not for data operations!) |
+| `<release-name>-master` | 6379 | **Write operations** and direct master access |
+| `<release-name>-replica` | 6379 | **Read operations** from slaves |
+| `<release-name>-sentinel` | 26379 | **Sentinel monitoring** (not for data operations!) |
 
 **For application connections**:
 ```
-<release-name>-redis-master:6379      # For writes
-<release-name>-redis-replica:6379     # For read-only queries
+<release-name>-master:6379      # For writes
+<release-name>-replica:6379     # For read-only queries
 ```
 
 **Important**:
-- Use `redis-master` for writes or when you need consistent reads
-- Use `redis-replica` for read-heavy workloads to distribute load
-- **Do NOT use `redis-sentinel` for data operations** - it's only for monitoring and failover coordination
+- Use `-master` for writes or when you need consistent reads
+- Use `-replica` for read-heavy workloads to distribute load
+- **Do NOT use `-sentinel` for data operations** - it's only for monitoring and failover coordination
 
 ### Connecting with tools (Redis Insights, RedisInsight, redis-cli)
 
@@ -290,7 +290,7 @@ When using tools like Redis Insights with `kubectl port-forward`, connect to the
 
 ```bash
 # Port-forward to master (correct)
-kubectl port-forward -n <namespace> svc/<release-name>-redis-master 6379:6379
+kubectl port-forward -n <namespace> svc/<release-name>-master 6379:6379
 
 # Then connect Redis Insights to localhost:6379
 ```
@@ -307,7 +307,7 @@ import redis
 
 # Replace 'my-redis-deployment' with your actual release name
 r = redis.Redis(
-    host='my-redis-deployment-redis',
+    host='my-redis-deployment-service',
     port=6379,
     decode_responses=True
 )
@@ -319,14 +319,14 @@ import redis
 
 # For writes - connect to master
 r_write = redis.Redis(
-    host='my-redis-deployment-redis-master',
+    host='my-redis-deployment-master',
     port=6379,
     decode_responses=True
 )
 
 # For reads - connect to replicas
 r_read = redis.Redis(
-    host='my-redis-deployment-redis-replica',
+    host='my-redis-deployment-replica',
     port=6379,
     decode_responses=True
 )
@@ -338,7 +338,7 @@ from redis.sentinel import Sentinel
 
 # Connect to sentinel for automatic failover handling
 sentinel = Sentinel([
-    ('my-redis-deployment-redis-sentinel', 26379)
+    ('my-redis-deployment-sentinel', 26379)
 ], decode_responses=True)
 
 # Get master for writes (master name is 'myMaster')
