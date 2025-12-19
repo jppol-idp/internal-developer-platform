@@ -54,12 +54,12 @@ description: Redis deployment with replication
 version: 0.1.0
 helm:
   chart: helm/idp-redis
-  chartVersion: "0.3.5"              # Use latest available version
+  chartVersion: "0.5.2"
 ```
 
 Replace:
 - `my-redis-deployment` with your deployment name
-- `0.3.5` with the desired chart version
+- `0.5.2` with the desired chart version. Use latest, which can be found [here](https://github.com/jppol-idp/helm-idp/releases)
 
 ### 2. values.yaml
 
