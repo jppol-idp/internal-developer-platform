@@ -39,7 +39,7 @@ Deploy Redis in your IDP cluster. The `idp-redis` Helm chart supports two deploy
 - [Troubleshooting](#troubleshooting)
 - [Support](#support)
 
-**Chart**: `helm/idp-redis` from https://github.com/jppol-idp/helm-idp-redis
+**Chart**: `helm/idp-redis` from https://github.com/jppol-idp/helm-idp
 
 ## Create your deployment files
 
@@ -193,7 +193,7 @@ Apply these values to `standalone`, `replication`, and `sentinel` sections as sh
 Available versions can be found [here](https://quay.io/repository/opstree/redis?tab=tags)
 
 Override the Redis version in `values.yaml`:
-More configuration options can be found in the [repositorys values.yaml](https://github.com/jppol-idp/helm-idp-redis/blob/main/values.yaml)
+More configuration options can be found in the repository's [values.yaml](https://github.com/jppol-idp/helm-idp/blob/main/charts/idp-redis/values.yaml)
 
 ```yaml
 global:
@@ -235,9 +235,9 @@ When you deploy Redis via Helm, services are automatically created with names ba
 The service naming pattern is: `<release-name>-<service-type>`
 
 **Example**: If your `folder-name` is: my-redis-deployment`, the main services will be:
-- `my-redis-deployment-redis` (standalone) or `my-redis-deployment-redis-master` (replication)
-- `my-redis-deployment-redis-replica` (replication mode only)
-- `my-redis-deployment-redis-sentinel` (replication mode only)
+- `my-redis-deployment-service` (standalone) or `my-redis-deployment-master` (replication)
+- `my-redis-deployment-replica` (replication mode only)
+- `my-redis-deployment-sentinel` (replication mode only)
 
 **To see your actual service names**, use one of these methods:
 
