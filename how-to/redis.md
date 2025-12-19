@@ -59,7 +59,7 @@ helm:
 
 Replace:
 - `my-redis-deployment` with your deployment name
-- `0.5.2` with the desired chart version. Use latest, which can be found [here](https://github.com/jppol-idp/helm-idp/releases)
+- `0.5.2` with the latest chart version, which can be found [here](https://github.com/jppol-idp/helm-idp/releases)
 
 ### 2. values.yaml
 
