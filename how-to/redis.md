@@ -63,7 +63,9 @@ Replace:
 
 ### 2. values.yaml
 
-This file configures your Redis deployment. Start with either **standalone** or **replication** mode below.
+This file configures your Redis deployment. All options can be found [here](https://github.com/jppol-idp/helm-idp/blob/main/charts/idp-redis/values.yaml)
+
+Start with either **standalone** or **replication** mode below.
 
 ## Deployment modes
 
@@ -76,7 +78,6 @@ Single Redis instance for development or non-critical caching.
 type: standalone
 
 standalone:
-  # Resource requests and limits (important for Redis memory management!)
   resources:
     requests:
       cpu: 100m
@@ -85,11 +86,10 @@ standalone:
       memory: 256Mi
 
   persistence:
-    enabled: false              # no disk storage (memory only)
-    # size: 1Gi                 # if enabled=true, storage size
+    enabled: false
 
 monitoring:
-  enabled: true                 # enable Prometheus metrics
+  enabled: true
 ```
 
 ### Replication mode (recommended for production)
@@ -101,9 +101,7 @@ Master-slave Redis with automatic failover via Sentinel.
 type: replication
 
 replication:
-  size: 3                        # 1 master + 2 slaves
-
-  # Resource requests and limits (important for Redis memory management!)
+  size: 3
   resources:
     requests:
       cpu: 100m
@@ -113,12 +111,10 @@ replication:
 
   persistence:
     enabled: true
-    size: 10Gi                   # storage per Redis pod
+    size: 10Gi
 
 sentinel:
-  size: 3                        # 3 Sentinel instances
-
-  # Resource requests and limits for Sentinel instances
+  size: 3
   resources:
     requests:
       cpu: 100m
@@ -128,10 +124,10 @@ sentinel:
 
   persistence:
     enabled: true
-    size: 1Gi                    # storage per Sentinel pod
+    size: 1Gi
 
 monitoring:
-  enabled: true                  # enable Prometheus metrics
+  enabled: true
 ```
 
 **What you get**:
