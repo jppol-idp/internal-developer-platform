@@ -39,6 +39,7 @@
 ./how-to/argocd-add-application-labels.md
 ./how-to/dynamo-db.md
 ./how-to/kubernetes-namespace-access.md
+./how-to/keda-autoscaling.md
 ./how-to/prometheus-blackbox-exporter.md
 ./how-to/index.md
 ./index.public.md

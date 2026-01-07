@@ -1,6 +1,6 @@
 ---
 title: Prometheus Blackbox Exporter Probes
-nav_order: 7
+nav_order: 8
 parent: How to...
 domain: public
 permalink: /prometheus-blackbox-probes
