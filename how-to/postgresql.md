@@ -160,4 +160,8 @@ Create the secrets for the admin, write, and read roles.
 
 ## Known errors
 
-When recreating a database, i.e. removing it from the apps repo and readding it, it currently fails because it will try to recreate the secrets in AWS which it can't do because secrets in AWS are soft-deleted.
+When recreating a database, i.e. removing it from the apps repo and readding it, it currently fails because it will try to recreate the secrets in AWS which it can't do because secrets in AWS are soft-deleted. The solution is to forcefully delete the secrets in AWS and then deleting the PostgresqlDatabase resource in order to recreate all the resources. The following snippet can be used to circumvent soft deletion in order to forcefully delete secrets (BE CAREFUL WHEN FORCE DELETING SECRETS):
+
+```bash
+aws secretsmanager delete-secret --secret-id SECRET-ID --force-delete-without-recovery
+```
