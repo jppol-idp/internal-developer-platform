@@ -134,12 +134,35 @@ env:
     value: idp-dev-my-db
 ```
 
+## Connect via local database viewer
+
+Request an rds-proxy in your namespace if it doesn't already exist.
+
+Start by following [this guide](https://public.docs.idp.jppol.dk/kubernetes-namespace-access) to get kubectl access. Then port-forward the rds-proxy running inside the cluster using the following command:
+
+```bash
+kubectl port-forward pod/rds-proxy 5432:5432 -n NAMESPACE
+```
+
+Let the terminal run to keep the connection alive. Retrieve the username and password of the role you want to connect as by reading the corresponding secret using:
+
+```bash
+kubectl get secret SECRET-NAME -n NAMESPACE -o yaml | grep 'username: ' | sed 's/ //g' | cut -d ':' -f 2 | base64 -d
+```
+
+```bash
+kubectl get secret SECRET-NAME -n NAMESPACE -o yaml | grep 'password: ' | sed 's/ //g' | cut -d ':' -f 2 | base64 -d
+```
+
+Finally, create a new connection to the database from your local database viewer using localhost, port 5432, the name of the database, and the username and password of the role you want to connect as.
+
 ## Work in progress features
 
 WIP features:
 
 - Backup and restore
 - Monitoring
+- pgAdmin
 - PostgreSQL version upgrade strategy
 
 ## Restore
