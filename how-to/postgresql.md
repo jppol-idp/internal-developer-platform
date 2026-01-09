@@ -11,7 +11,7 @@ review_in: 3 months
 
 ## Introduction
 
-This guide shows how to add a PostgreSQL database to your application using the [idp-postgresql chart](https://github.com/jppol-idp/helm-idp-postgresql).
+This guide shows how to add a PostgreSQL database to your application using the [idp-postgresql chart](https://github.com/helm-idp/tree/main/charts/idp-postgresql).
 Databases are provisioned inside an IDP-managed Aurora cluster and can be connected to your application through Kubernetes secrets.
 
 If you want to learn more about what Aurora is and how it works, please refer to [the official documentation](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-serverless-v2.how-it-works.html).
