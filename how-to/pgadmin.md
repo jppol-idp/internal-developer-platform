@@ -22,6 +22,7 @@ https://pgadmin.<cluster>.idp.jppol.dk
 ```
 
 Examples:
+
 - `https://pgadmin.idp-test.idp.jppol.dk`
 - `https://pgadmin.koa-dev.idp.jppol.dk`
 
@@ -37,7 +38,7 @@ After login, you need to add a server connection to connect to your database.
 
 ### 1. Get Credentials
 
-Follow the [PostgreSQL guide](/how-to-postgresql#connect-your-application) to retrieve your database endpoint and credentials.
+Follow the [PostgreSQL guide](/how-to-postgresql#connect-via-local-database-viewer) to retrieve your database endpoint and credentials.
 
 ### 2. Create Server in pgAdmin
 
