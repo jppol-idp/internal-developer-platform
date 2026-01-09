@@ -33,6 +33,7 @@
 ./how-to/auto-updates.md
 ./how-to/prometheus-scraping.md
 ./how-to/alerting.md
+./how-to/pgadmin.md
 ./how-to/s3-bucket.md
 ./how-to/docker-hub-image-caching.md
 ./how-to/postgresql.md
