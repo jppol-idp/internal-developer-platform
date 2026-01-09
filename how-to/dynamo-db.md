@@ -9,7 +9,7 @@ review_in: 6 months
 ---
 # Working with DynamoDB
 
-Using the Helm chart [helm-idp-dynamodb](https://github.com/jppol-idp/helm-idp-dynamodb) you can declaratively create and manage DynamoDB tables that are accessible from workloads in our Kubernetes clusters.
+Using the Helm chart [helm-idp-dynamodb](https://github.com/jppol-idp/helm-idp/tree/main/charts/idp-dynamodb) you can declaratively create and manage DynamoDB tables that are accessible from workloads in our Kubernetes clusters.
 
 The chart also supports granting read and/or write access to existing AWS IAM roles. This integrates cleanly with roles created by the idp-advanced chart (via IRSA). The chart now generates a single aggregated IAM managed policy per role, combining access across all tables you list for that role.
 
