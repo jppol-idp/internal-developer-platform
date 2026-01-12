@@ -141,7 +141,7 @@ The key annotation for whitelisting is:
 ---
 
 ### 7. 🪣 How do I spin up an S3 bucket?
-We have this repository: [https://github.com/jppol-idp/helm-idp/tree/main/charts/idp-s3-bucket](https://github.com/jppol-idp/helm-idp/helm-idp/tree/main/charts/idp-s3-bucket)
+We have this repository: [https://github.com/jppol-idp/helm-idp/tree/main/charts/idp-s3-bucket](https://github.com/jppol-idp/helm-idp/tree/main/charts/idp-s3-bucket)
 
 Create a folder similar to other folders in your app cluster.
 
