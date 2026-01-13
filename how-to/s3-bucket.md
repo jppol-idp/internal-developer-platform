@@ -11,7 +11,7 @@ review_in: 6 months
 
 Use the Helm chart helm-idp-s3-bucket to declaratively create and manage S3 buckets via Crossplane in IDP clusters.
 
-- Chart docs: ../../helm/helm-idp-s3-bucket/charts/idp-s3-bucket/README.md
+- [Chart docs](https://github.com/jppol-idp/helm-idp/blob/main/charts/idp-s3-bucket/README.md)
 
 ## Define buckets
 Specify buckets in the `buckets` array in your values.yaml:
