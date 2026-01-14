@@ -4,7 +4,7 @@ nav_order: 14
 parent: How to...
 domain: public
 permalink: /how-to-postgresql
-last_reviewed_on: 2025-09-11
+last_reviewed_on: 2026-01-14
 review_in: 3 months
 ---
 # Add Postgres Database [BETA FEATURE]
@@ -134,27 +134,42 @@ env:
     value: idp-dev-my-db
 ```
 
-## Connect via local database viewer
+## Connect via local development environment or database tool
 
-Request an rds-proxy in your namespace if it doesn't already exist.
+The IDP platform provides a shared RDS proxy that allows you to connect to your database from your local machine. This is useful for:
+- Running your application locally against a real database
+- Using database tools like pgAdmin, DBeaver, or DataGrip
 
-Start by following [this guide](https://public.docs.idp.jppol.dk/kubernetes-namespace-access) to get kubectl access. Then port-forward the rds-proxy running inside the cluster using the following command:
-
-```bash
-kubectl port-forward pod/rds-proxy 5432:5432 -n NAMESPACE
-```
-
-Let the terminal run to keep the connection alive. Retrieve the username and password of the role you want to connect as by reading the corresponding secret using:
+Start by following [this guide](https://public.docs.idp.jppol.dk/kubernetes-namespace-access) to get kubectl access. Then port-forward the rds-proxy to your local machine:
 
 ```bash
-kubectl get secret SECRET-NAME -n NAMESPACE -o yaml | grep 'username: ' | sed 's/ //g' | cut -d ':' -f 2 | base64 -d
+kubectl port-forward -n rds-proxy svc/rds-proxy-idp-rds-proxy 5432:5432
 ```
+
+Let the terminal run to keep the connection alive.
+
+Retrieve the username and password for your database role:
 
 ```bash
-kubectl get secret SECRET-NAME -n NAMESPACE -o yaml | grep 'password: ' | sed 's/ //g' | cut -d ':' -f 2 | base64 -d
+# Username
+kubectl get secret SECRET-NAME -n YOUR-NAMESPACE -o jsonpath='{.data.username}' | base64 -d
+
+# Password
+kubectl get secret SECRET-NAME -n YOUR-NAMESPACE -o jsonpath='{.data.password}' | base64 -d
 ```
 
-Finally, create a new connection to the database from your local database viewer using localhost, port 5432, the name of the database, and the username and password of the role you want to connect as.
+Where `SECRET-NAME` is one of:
+- `NAMESPACE-DATABASE-admin` - full access
+- `NAMESPACE-DATABASE-write` - read/write access
+- `NAMESPACE-DATABASE-read` - read-only access
+
+Connect your local application or database tool using:
+- **Host:** localhost
+- **Port:** 5432
+- **Database:** NAMESPACE-DATABASE (e.g., `idp-dev-my-db`)
+- **Username/Password:** from the secret above
+
+Alternatively, you can use the shared [pgAdmin](https://public.docs.idp.jppol.dk/pgadmin) deployment if you prefer a web-based interface.
 
 ## Work in progress features
 
@@ -162,7 +177,6 @@ WIP features:
 
 - Backup and restore
 - Monitoring
-- pgAdmin
 - PostgreSQL version upgrade strategy
 
 ## Restore
