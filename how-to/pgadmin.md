@@ -52,8 +52,20 @@ Follow the [PostgreSQL guide](/how-to-postgresql#connect-via-local-database-view
    - **Maintenance database**: `<namespace>-<database>` (e.g., `idp-dev-my-db`)
    - **Username**: Username from secret
    - **Password**: Password from secret
-   - **Save password**: Optional
+   - **Save password**: Check this to save the password (see below)
 5. Click **Save**
+
+### Saving Passwords
+
+If you check **Save password**, pgAdmin will prompt you to create a **Master Password** the first time. This master password encrypts all saved database passwords locally.
+
+**First time saving a password:**
+1. Check "Save password" when adding a server
+2. You'll be prompted to create a master password
+3. Enter and confirm your new master password
+4. The database password is now saved
+
+**If you see "Enter your master password"** but haven't set one before, click **Reset Master Password**. This happens if you're an existing user from before this feature was enabled. Note: resetting will clear any previously saved passwords (though you likely don't have any).
 
 ## Features
 
