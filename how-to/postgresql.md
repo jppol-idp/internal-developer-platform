@@ -4,7 +4,7 @@ nav_order: 14
 parent: How to...
 domain: public
 permalink: /how-to-postgresql
-last_reviewed_on: 2026-01-14
+last_reviewed_on: 2026-01-16
 review_in: 3 months
 ---
 # Add Postgres Database [BETA FEATURE]
@@ -32,7 +32,7 @@ postgresqlDatabases:
     deletionProtection: false
 ```
 
-**Deletion protection should be enabled for production databases.** Enabling deletion protection will ensure the database in the Aurora cluster is not deleted if the database definition in the apps repository is deleted. If the database is accidentally deleted, follow the guide in [restore](#restore).
+**Deletion protection should be enabled for production databases.** Enabling deletion protection will ensure the database in the Aurora cluster is not deleted if the database definition in the apps repository is deleted. If a protected database is accidentally deleted from the apps repo, follow the guide in [restore](#restore).
 
 Next you need to create an `application.yaml` in the same subfolder in order to instruct ArgoCD how to create your app and deploy the chart:
 
@@ -44,7 +44,7 @@ version: 0.1.0
 slackChannel: my-slack-channel
 helm:
   chart: helm/idp-postgresql
-  chartVersion: "0.4.1"
+  chartVersion: "0.5.0"
 ```
 
 Once this is committed, ArgoCD will automatically deploy the database.
@@ -137,6 +137,7 @@ env:
 ## Connect via local development environment or database tool
 
 The IDP platform provides a shared RDS proxy that allows you to connect to your database from your local machine. This is useful for:
+
 - Running your application locally against a real database
 - Using database tools like pgAdmin, DBeaver, or DataGrip
 
@@ -148,28 +149,36 @@ kubectl port-forward -n rds-proxy svc/rds-proxy-idp-rds-proxy 5432:5432
 
 Let the terminal run to keep the connection alive.
 
-Retrieve the username and password for your database role:
-
-```bash
-# Username
-kubectl get secret SECRET-NAME -n YOUR-NAMESPACE -o jsonpath='{.data.username}' | base64 -d
-
-# Password
-kubectl get secret SECRET-NAME -n YOUR-NAMESPACE -o jsonpath='{.data.password}' | base64 -d
-```
-
-Where `SECRET-NAME` is one of:
-- `NAMESPACE-DATABASE-admin` - full access
-- `NAMESPACE-DATABASE-write` - read/write access
-- `NAMESPACE-DATABASE-read` - read-only access
+Retrieve the username and password for your database role from the corresponding secret in aws secretsmanager.
 
 Connect your local application or database tool using:
+
 - **Host:** localhost
 - **Port:** 5432
 - **Database:** NAMESPACE-DATABASE (e.g., `idp-dev-my-db`)
 - **Username/Password:** from the secret above
 
 Alternatively, you can use the shared [pgAdmin](https://public.docs.idp.jppol.dk/pgadmin) deployment if you prefer a web-based interface.
+
+## Upgrade guide
+
+### Version 0.4.1 to 0.5.0
+
+This update changes the underlying resource API version and since no migration mechanism exists between versions, existing resources must be recreated and their data will be lost. Automated migration between resource versions is planned for a future release before general availability.
+
+A few manual steps is required when upgrading a database from postgresqldatabase helm chart version 0.4.1 to 0.5.0. Because secrets prior to version 0.5.0 are soft deleted, they will have to be forcefully deleted in order for crossplane to successfully recreate all the required resources.
+
+1. Delete the database from your apps repo
+2. Delete the database secrets from aws secretsmanager
+
+Deleting secrets requires elevated privileges, so please contact idp through your onboarding slack channel. For each secret (read, write, admin) run:
+
+```bash
+aws secretsmanager delete-secret --secret-id 'customer/NAMESPACE/SECRET' --force-delete-without-recov
+ery
+```
+
+3. Readd the database with the new version to your apps repo
 
 ## Work in progress features
 
@@ -187,7 +196,7 @@ Contact IDP as some of these steps requires elevated privileges.
 
 In case the database is accidentally deleted from the apps repo, the resources in Kubernetes is removed while the resources outside of Kubernetes lives on. The service using the database only strictly needs the secrets in Kubernetes to connect to the database. The secrets for the three roles (read, write, admin) can be restored using the following procedure.
 
-*The `endpoint` can be found in the `ClusterProviderConfig` while the `password` can be found in the corresponding secret in AWS.*
+The secret data can be found in the corresponding aws secretsmanager secrets.
 
 ```bash
 kubectl create secret generic NAMESPACE-DB-ROLE -n NAMESPACE --from-literal=endpoint=foo --from-literal=port=5432 --from-literal=username=NAMESPACE-DB-ROLE --from-literal=password=foo
@@ -196,6 +205,8 @@ kubectl create secret generic NAMESPACE-DB-ROLE -n NAMESPACE --from-literal=endp
 Create the secrets for the admin, write, and read roles.
 
 ## Known errors
+
+### Before version 0.5.0
 
 When recreating a database, i.e. removing it from the apps repo and readding it, it currently fails because it will try to recreate the secrets in AWS which it can't do because secrets in AWS are soft-deleted. The solution is to forcefully delete the secrets in AWS and then deleting the PostgresqlDatabase resource in order to recreate all the resources. The following snippet can be used to circumvent soft deletion in order to forcefully delete secrets (BE CAREFUL WHEN FORCE DELETING SECRETS):
 

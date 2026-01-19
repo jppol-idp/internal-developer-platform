@@ -4,7 +4,7 @@ nav_order: 8
 parent: How to...
 domain: public
 permalink: /how-to-pgadmin
-last_reviewed_on: 2026-01-09
+last_reviewed_on: 2026-01-16
 review_in: 6 months
 ---
 # pgAdmin Database Management
@@ -38,7 +38,7 @@ After login, you need to add a server connection to connect to your database.
 
 ### 1. Get Credentials
 
-Follow the [PostgreSQL guide](/how-to-postgresql#connect-via-local-database-viewer) to retrieve your database endpoint and credentials.
+Retrieve your database endpoint and credentials for your database role from the corresponding secret in aws secretsmanager.
 
 ### 2. Create Server in pgAdmin
 
@@ -60,6 +60,7 @@ Follow the [PostgreSQL guide](/how-to-postgresql#connect-via-local-database-view
 If you check **Save password**, pgAdmin will prompt you to create a **Master Password** the first time. This master password encrypts all saved database passwords locally.
 
 **First time saving a password:**
+
 1. Check "Save password" when adding a server
 2. You'll be prompted to create a master password
 3. Enter and confirm your new master password
