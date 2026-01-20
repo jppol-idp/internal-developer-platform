@@ -26,7 +26,7 @@ We strictly follow **GitOps** principles, meaning every change is stored as a co
   - Tag matching
   - Semantic Versioning (SemVer)
 
-## Access and Security
+## Access & Security
 - Access is integrated with your **JPPOL work account**
 - Services can be exposed:
   - **Publicly** or **internally**
@@ -34,10 +34,8 @@ We strictly follow **GitOps** principles, meaning every change is stored as a co
 - Transparent secret storage via **AWS Secrets Manager**
   
 
-## Storage Solutions
-
-We offer a range of storage options:
-
+## Cache & Storage Solutions
+- Caching support via **Redis**
 - Mounted container storage backed by **persistent EBS volumes**
 - Object storage via **S3**
 - NoSQL support with **DynamoDB**
