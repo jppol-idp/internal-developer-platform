@@ -11,7 +11,6 @@
 ./_includes/footer_custom.html
 ./assets/shipit.png
 ./assets/onboarding-grafana-drilldown-logs.png
-./assets/idp-architecture.png
 ./assets/idp_dark.png
 ./assets/metrics.png
 ./assets/idp_light.png
