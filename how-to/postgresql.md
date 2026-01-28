@@ -4,7 +4,7 @@ nav_order: 14
 parent: How to...
 domain: public
 permalink: /how-to-postgresql
-last_reviewed_on: 2026-01-16
+last_reviewed_on: 2026-01-28
 review_in: 3 months
 ---
 # Add Postgres Database [BETA FEATURE]
@@ -158,7 +158,13 @@ Connect your local application or database tool using:
 - **Database:** NAMESPACE-DATABASE (e.g., `idp-dev-my-db`)
 - **Username/Password:** from the secret above
 
-Alternatively, you can use the shared [pgAdmin](https://public.docs.idp.jppol.dk/pgadmin) deployment if you prefer a web-based interface.
+Alternatively, you can use the shared [pgAdmin](https://public.docs.idp.jppol.dk/how-to-pgadmin) deployment if you prefer a web-based interface.
+
+## SSL configuration
+
+It is required that connections to your database is established using SSL. As a minimum, you should set `sslmode` to `require` in your connection string / connection settings. When setting `sslmode` to `require`, data sent over the connection is encrypted but the identity of the server is not verified.
+
+It is recommended, but not required, that connections to production databases are established using `sslmode` equals `verify-full`. This encrypts data sent over the connection, and the identity of the server is cryptographically verified. This does however require that you include and configure some extra certs in your container. A guide to this can be found on the following AWS docs page: [Using SSL with a PostgreSQL DB instance](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/PostgreSQL.Concepts.General.SSL.html#PostgreSQL.Concepts.General.SSL.Connecting)
 
 ## Upgrade guide
 
@@ -168,8 +174,8 @@ This update changes the underlying resource API version and since no migration m
 
 A few manual steps is required when upgrading a database from postgresqldatabase helm chart version 0.4.1 to 0.5.0. Because secrets prior to version 0.5.0 are soft deleted, they will have to be forcefully deleted in order for crossplane to successfully recreate all the required resources.
 
-1. Delete the database from your apps repo
-2. Delete the database secrets from aws secretsmanager
+(1) Delete the database from your apps repo
+(2) Delete the database secrets from aws secretsmanager
 
 Deleting secrets requires elevated privileges, so please contact idp through your onboarding slack channel. For each secret (read, write, admin) run:
 
@@ -178,7 +184,7 @@ aws secretsmanager delete-secret --secret-id 'customer/NAMESPACE/SECRET' --force
 ery
 ```
 
-3. Readd the database with the new version to your apps repo
+(3) Readd the database with the new version to your apps repo
 
 ## Work in progress features
 
@@ -205,6 +211,16 @@ kubectl create secret generic NAMESPACE-DB-ROLE -n NAMESPACE --from-literal=endp
 Create the secrets for the admin, write, and read roles.
 
 ## Known errors
+
+### no pg_hba.conf entry for host
+
+If you get an error saying:
+
+```
+no pg_hba.conf entry for host (...)
+```
+
+Then you need to set `sslmode` to `require` in your connection string / connection settings.
 
 ### Before version 0.5.0
 
