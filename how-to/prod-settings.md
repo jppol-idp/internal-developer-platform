@@ -75,7 +75,7 @@ also ensuring performance.
 > *`.replicaCount`, `.autoScaling` and KEDA scaling are mutually exclusive.*
 
 While static sizes are simpler, they don't provide any adaptation to change in load or other fluctuations 
-in resource requirements. KEDA requires in dept knowledge of Kubernetes and very configurable. 
+in resource requirements. KEDA requires in depth knowledge of Kubernetes and very configurable. 
 
 Static sizes or autoscaling will likely fit most users.
 
