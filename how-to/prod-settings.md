@@ -25,9 +25,8 @@ for each unupdated chart in each namespace. It is safe to run this action as all
 created as pull requests. 
 
 ## Set requests and limits
->[!NOTE]
->You should always provide a `resources` block in the values file. This also include development and test 
->namespaces as this allows you to get an idea of reasonable values and ensures cost-efficient use of resources.
+> *You should always provide a `resources` block in the values file. This also include development and test*
+> *namespaces as this allows you to get an idea of reasonable values and ensures cost-efficient use of resources.*
 
 A resources block defines the minimum cpu and memory allocated to each running pod. It is also 
 possible - and advisible - to define a limit for resource consumption in the resources block. 
@@ -70,12 +69,21 @@ Specifying carefully crafted values for requests and limits ensures a cost-effec
 also ensuring performance. 
 
 ## Redundancy and scaling
->[!WARNING]
->Never go to production without specifying redundancy for your pods. 
+> *Never go to production without specifying redundancy for your pods.*
+> You can use _either_ replicaCount for a fixed size deployment,  autoscaling to 
+> scale on various targets _or_ KEDA scaling to scale on Kubernetes events. 
+> *`.replicaCount`, `.autoScaling` and KEDA scaling are mutually exclusive.*
 
+While static sizes are simpler, they don't provide any adaptation to change in load or other fluctuations 
+in resource requirements. KEDA requires in dept knowledge of Kubernetes and very configurable. 
+
+Static sizes or autoscaling will likely fit most users.
+
+### Static sizes with replicaCount
 Use `.replicaCount` to set a fixed number of pods to be running. The value should be two or greater, if the deployment 
 is a website or API where uptime is important. 
 
+### Using autoscaling
 Use `.autoscaling` to make the deployment try to adjust the number of pods to some target value. 
 
 >[!NOTE]
@@ -99,11 +107,10 @@ reserved cpu.
 For websites a lower cpu target is often desirable, as the cpu consumption is very uneven, but all scaling 
 needs to be adjusted to the specific workload. 
 
+### KEDA - scaling by system events
 As an alternative to autoscaling, it is possible to use (KEDA Autoscaling)[./keda-autoscaling], which reacts to certain Kubernetes 
 events.
 
->[!NOTE]
->`.replicaCount`, `.autoScaling` and KEDA scaling are mutually exclusive. 
 
 ## VPA
 It is possible to have Kubernetes record memory and cpu consumption for the running pods. 
