@@ -1,4 +1,3 @@
-
 ---
 title: Aurora RDS Proxy – Local Access Setup Guide
 nav_order: 14
