@@ -41,8 +41,10 @@
 ./how-to/dynamo-db.md
 ./how-to/kubernetes-namespace-access.md
 ./how-to/keda-autoscaling.md
+./how-to/aurora-rds-proxy.md
 ./how-to/prometheus-blackbox-exporter.md
 ./how-to/index.md
+./how-to/prod-settings.md
 ./index.public.md
 ./onboarding/from-code-to-deploy-in-30-minutes.md
 ./onboarding/qaa.md
