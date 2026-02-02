@@ -35,7 +35,7 @@ cd apps-koa/scripts/powershell
 
 Open your Powershell as administrator, Run the following command:
 ```
-powershell.exe -ExecutionPolicy Bypass -File .\kubernetes-install-tools.ps1
+powershell.exe -ExecutionPolicy Bypass -File .\kubernetes-install-tools.ps
 ```
 
 This script will:
@@ -48,7 +48,7 @@ This script will:
 
 Run the environment-specific setup script:
 ```
-./idp-ns-koa-dev.ps1
+./idp-ns-koa-dev.ps
 ```
 
 Choose the right script for the right environment:
