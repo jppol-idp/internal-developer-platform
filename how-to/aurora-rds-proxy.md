@@ -64,7 +64,7 @@ This configures your kubeconfig and AWS profile for the selected environment.
 
 If the previous step fails, try removing the AWS profile and re-running it:
 ```
-./remove-aws-profile.ps -ProfileName idp-ns-koa-dev
+./remove-aws-profile.ps1 -ProfileName idp-ns-koa-dev
 ```
 
 Choose the right AWS Profile to remove:
