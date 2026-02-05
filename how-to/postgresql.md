@@ -176,15 +176,9 @@ A few manual steps is required when upgrading a database from postgresqldatabase
 
 (1) Delete the database from your apps repo
 (2) Delete the database secrets from aws secretsmanager
-
-Deleting secrets requires elevated privileges, so please contact idp through your onboarding slack channel. For each secret (read, write, admin) run:
-
-```bash
-aws secretsmanager delete-secret --secret-id 'customer/NAMESPACE/SECRET' --force-delete-without-recov
-ery
-```
-
 (3) Readd the database with the new version to your apps repo
+
+Secrets can be deleted using the actions for setting secrets in the apps-repository. (Check that you want to remove the secret in the relevant action. You will not need to provide the secrets path.)
 
 ## Work in progress features
 
