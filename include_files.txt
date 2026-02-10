@@ -9,6 +9,7 @@
 ./architecture-decision-records/img/idp_diagram.png
 ./Gemfile
 ./_includes/footer_custom.html
+./assets/jira-renovate-example.png
 ./assets/shipit.png
 ./assets/onboarding-grafana-drilldown-logs.png
 ./assets/idp-architecture.png
