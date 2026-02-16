@@ -22,47 +22,8 @@ If you use helm/idp-advanced ≥ 2.4.1, you can also assume your deployments’ 
 - kubectl and kubectx installed
 - For IRSA role assumption from your laptop: helm/idp-advanced ≥ 2.4.1 in your deployment
 
-## Quick start (concrete example: namespace idp-dev on cluster idp-test)
-This section integrates and links to a concrete example from the idp internal apps repo: ../../apps-idp/apps/idp-dev/README.md.
-
-You should substitute "idp-dev" with your specific namespaces before the exaples work. Looking at your apps-"team" repository you 
-will find the scripts and examples for your specifix namespaces. The README.md in each namespace is updated at all times.
-
-1) Set up SSO profile and kubectl context
-- Run the helper script once to configure an AWS SSO profile and create a Kubernetes context named idp-ns-idp-dev:
-```
-./scripts/idp-ns-idp-dev.sh
-```
-- Optionally, use command substitution to export the suggested environment variables produced by the script into your current shell:
-```
-$(./scripts/idp-ns-idp-dev.sh)
-```
-
-2) Log in via AWS SSO
-```
-aws sso login --profile idp-ns-idp-dev
-```
-
-3) Verify kubectl access to the namespace
-```
-kubectl -n idp-dev get pods --context idp-ns-idp-dev
-```
-
-4) Assume a deployment’s IRSA role (for debugging; requires helm/idp-advanced ≥ 2.4.1)
-- Print temporary credentials:
-```
-./scripts/assume-idp-dev-irsa-role.sh <deployment>
-```
-- Or export them into your current shell for immediate use:
-```
-$(./scripts/assume-idp-dev-irsa-role.sh <deployment>)
-```
-- Verify which identity you now have:
-```
-aws sts get-caller-identity
-```
-
-For more detail and cluster-specific information (DNS domains, links, etc.), see the example README: ../../apps-idp/apps/idp-dev/README.md.
+## Quick start
+Looking at your apps-"team" repository you will find the scripts and examples for your specifix namespaces. The README.md in each namespace is updated at all times and contain cluster-specific information (DNS domains, links, etc.). The READMEs are located in your apps-"team" repository at `apps-"team"/apps/"team"-"env"` (for example, for idp-dev it would be `apps-idp/apps/idp-dev`).
 
 ## RBAC baseline and production notes (aligned with platform docs)
 - Current Kubernetes RBAC within the namespace is minimal: get on Pods/Services and create on the pods/portforward subresource. This will evolve; validate with kubectl auth can-i.
