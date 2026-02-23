@@ -184,11 +184,44 @@ Secrets can be deleted using the actions for setting secrets in the apps-reposit
 
 WIP features:
 
-- Backup and restore
 - Monitoring
 - PostgreSQL version upgrade strategy
 
-## Restore
+## Backup and Restore
+
+### Snapshot retention
+
+Automated snapshots are taken daily by the Aurora cluster between 02:00 and 04:00 CEST:
+
+- **Production/Staging:** 35 days of snapshots
+- **Test/Dev:** 7 days of snapshots
+
+### Disaster recovery from snapshot using pgAdmin
+
+To restore a database from a snapshot using pgAdmin, follow these steps:
+
+1. **Contact the IDP team** via the [idp-team Slack channel](https://jppol.slack.com/archives/C09JUREPVBP) and request a restore.
+2. **Find a suitable snapshot** together with the IDP team.
+3. **IDP initializes a restore cluster** from the selected snapshot.
+4. **Connect to the restore cluster** using pgAdmin:
+   - Get the new restore Aurora RDS cluster endpoint from the IDP team.
+   - Use the web version of pgAdmin at [https://pgadmin.<namespace>.idp.jppol.dk/browser/](https://pgadmin.<namespace>.idp.jppol.dk/browser/).
+5. **Take a backup of the desired database** from the restore cluster:
+   - In pgAdmin, right-click the database and select *Backup*.
+   - Select **Custom** as the format.
+   - **Important:** Select the correct admin role for the database (e.g. `NAMESPACE-DATABASE-admin`).
+   - Click *Backup*.
+6. **Connect to the primary DB cluster** in pgAdmin.
+7. **Restore the database** on the primary cluster:
+   - In pgAdmin, right-click the database and select *Restore*.
+   - Select the backup file from step 5.
+   - Under *Query Options*, **enable "Clean before restore"**.
+   - Select the admin role for the database.
+   - Click *Restore*.
+8. **Notify the IDP team** so they can shut down the restore cluster.
+
+### Disaster recovery without pgAdmin, using psql scripts directly from restore container (for large databases)
+TODO
 
 ### Restore protected database which has been removed from apps repo
 
