@@ -7,18 +7,26 @@ permalink: /how-to-postgresql
 last_reviewed_on: 2026-01-28
 review_in: 3 months
 ---
-# Add Postgres Database [BETA FEATURE]
+# Working with Postgres
 
 ## Introduction
 
-This guide shows how to add a PostgreSQL database to your application using the [idp-postgresql chart](https://github.com/jppol-idp/helm-idp/tree/main/charts/idp-postgresql).
-Databases are provisioned inside an IDP-managed Aurora cluster and can be connected to your application through Kubernetes secrets.
+This guide shows how to add a PostgreSQL database to your application using the [idp-postgresql chart](https://github.com/jppol-idp/helm-idp/tree/main/charts/idp-postgresql). Databases are provisioned inside an IDP-managed Aurora Serverless v2 cluster and can be connected to your application through Kubernetes secrets. If you want to learn more about what Aurora is and how it works, please refer to [the official documentation](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-serverless-v2.how-it-works.html).
 
-If you want to learn more about what Aurora is and how it works, please refer to [the official documentation](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-serverless-v2.how-it-works.html).
+One Aurora Serverless v2 cluster is provisioned per Kubernetes cluster. Each Aurora cluster will therefore contain multiple tenants. To ensure a level of separation between tenants, databases are prefixed with the tenants' Kubernetes namespace, and the roles provisioned with each database are only granted privileges to the database they belong to.
 
-This feature is considered **Beta**, meaning it is functional but still under active development. Some configuration options etc. may change in future releases, and there may be minor bugs or limitations. A list of known errors is presented in the [known errors section](#known-errors) and planned features are presented in the [WIP section](#work-in-progress-features). We recommend using this feature first in development or staging environments and welcome your feedback to help improve it.
+If you are interested in getting started with Postgres, please reach out in your idp onboarding Slack channel and ask to have it enabled.
 
-If you have an interest in trying the Beta out, please reach out in the [idp-team Slack channel](https://jppol.slack.com/archives/C09JUREPVBP) and ask to have it enabled.
+---
+
+## Table of contents
+
+{: .no_toc }
+
+- TOC
+{:toc}
+
+---
 
 ## Define your Database
 
@@ -29,10 +37,10 @@ Now define a `values.yaml` file describing the database you want to provision:
 ```yaml
 postgresqlDatabases:
   - name: my-db
-    deletionProtection: false
+    mode: standard
 ```
 
-**Deletion protection should be enabled for production databases.** Enabling deletion protection will ensure the database in the Aurora cluster is not deleted if the database definition in the apps repository is deleted. If a protected database is accidentally deleted from the apps repo, follow the guide in [restore](#restore).
+Mode can be either `standard` or `protected`. Using mode protected enables deletion protection. **Deletion protection should be enabled for production databases.** Enabling deletion protection will ensure the database in the Aurora cluster is not deleted if the database definition in the apps repository is deleted. If a protected database is accidentally deleted from the apps repo, follow the guide in [backup and restore](#restore-protected-database-which-has-been-removed-from-apps-repo). For a list of all possible configuration options in values.yaml see [README](https://github.com/jppol-idp/helm-idp/blob/main/charts/idp-postgresql/README.md).
 
 Next you need to create an `application.yaml` in the same subfolder in order to instruct ArgoCD how to create your app and deploy the chart:
 
@@ -44,61 +52,34 @@ version: 0.1.0
 slackChannel: my-slack-channel
 helm:
   chart: helm/idp-postgresql
-  chartVersion: "0.5.0"
+  chartVersion: "1.0.1"
 ```
 
-Once this is committed, ArgoCD will automatically deploy the database.
+Once this is committed, ArgoCD will automatically deploy the database. Expect the database to be fully ready in 1-3 minutes.
 
-## Grant privileges (optional)
+### Database roles
 
-**There are three different database roles created alongside your database: an admin role, a write role and a read role. Follow this section to configure the privileges of the read and write role if you want to use less permissive roles.**
+In addition to the database, multiple other resources are created. Namely 3 different roles:
 
-Currently, the admin role can create tables and assign permissions to the other roles via grants while the read and write roles have no default permissions. Out of the box granular role permissions are work in progress. Use the following queries as a cheatsheet for granting privileges. Replace `ipd-dev` with your namespace and `kdb1` with the name of your database.
+- `[namespace]-[database]-read`
+- `[namespace]-[database]-write`
+- `[namespace]-[database]-admin`
 
-Grant schema access:
+The `admin` role is the owner of the public schema and is able to create more schemas in the database. However, when creating schemas besides public, the read and write users are not automatically granted privileges to the schemas.
 
-```
-GRANT USAGE ON SCHEMA public TO "idp-dev-kdb1-write";
-GRANT USAGE ON SCHEMA public TO "idp-dev-kdb1-read";
-```
+The `read` role is granted read privileges (SELECT) on all tables created by the admin user in the public schema.
 
-Grant privileges on existing tables:
+The `write` role is granted write privileges (SELECT, INSERT, UPDATE, DELETE, TRUNCATE) on all tables created by the admin user in the public schema.
 
-```
-GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO "idp-dev-kdb1-write";
-GRANT SELECT ON ALL TABLES IN SCHEMA public TO "idp-dev-kdb1-read";
-```
+The credentials for the roles are stored as AWS secrets along with the connection details. The secrets are stored as `customer/[namespace]/[role]`.
 
-Grant privileges on existing sequences:
+## Connect to Postgres
 
-```
-GRANT USAGE, SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA public TO "idp-dev-kdb1-write";
-GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO "idp-dev-kdb1-read";
-```
+You can connect to Postgres either via your application in the Kubernetes cluster, a managed pgAdmin instance, or by proxying through RDS proxy.
 
-Set default privileges for future tables created by admin:
+### Connect your Application
 
-```
-ALTER DEFAULT PRIVILEGES FOR ROLE "idp-dev-kdb1-admin" IN SCHEMA public         GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO "idp-dev-kdb1-write";
-```
-
-```
-ALTER DEFAULT PRIVILEGES FOR ROLE "idp-dev-kdb1-admin" IN SCHEMA public    GRANT SELECT ON TABLES TO "idp-dev-kdb1-read";
-```
-
-Set default privileges for future sequences created by admin:
-
-```
-ALTER DEFAULT PRIVILEGES FOR ROLE "idp-dev-kdb1-admin" IN SCHEMA public    GRANT USAGE, SELECT, UPDATE ON SEQUENCES TO "idp-dev-kdb1-write";
-```
-
-```
-ALTER DEFAULT PRIVILEGES FOR ROLE "idp-dev-kdb1-admin" IN SCHEMA public    GRANT SELECT ON SEQUENCES TO "idp-dev-kdb1-read";
-```
-
-## Connect your Application
-
-Once the database is created, configure your application to use it. Depending on which type of role you need to act as, configure your yaml to use the appropriate one. Update your app’s values.yaml to load these as environment variables:
+Once the database is created, configure your application to use it. Consider what level of privileges your app requires and select a role accordingly. Update your app’s values.yaml to load these as environment variables:
 
 ```yaml
 env:
@@ -107,22 +88,22 @@ env:
   - name: DB_USER
     valueFrom:
       secretKeyRef:
-        name: [namespace]-[database]-admin
+        name: [namespace]-[database]-[read/write/admin]
         key: username
   - name: DB_PASSWORD
     valueFrom:
       secretKeyRef:
-        name: [namespace]-[database]-admin
+        name: [namespace]-[database]-[read/write/admin]
         key: password
   - name: DB_HOST
     valueFrom:
       secretKeyRef:
-        name: [namespace]-[database]-admin
+        name: [namespace]-[database]-[read/write/admin]
         key: endpoint
   - name: DB_PORT
     valueFrom:
       secretKeyRef:
-        name: [namespace]-[database]-admin
+        name: [namespace]-[database]-[read/write/admin]
         key: port
 ```
 
@@ -132,9 +113,19 @@ For example, when deploying `my-db` to the `idp-dev` namespace:
 env:
   - name: DB_NAME
     value: idp-dev-my-db
+  - name: DB_USER
+    valueFrom:
+      secretKeyRef:
+        name: idp-dev-my-db-write
+        key: username
+(...)
 ```
 
-## Connect via local development environment or database tool
+### Connect via pgAdmin
+
+You can use the shared [pgAdmin](https://public.docs.idp.jppol.dk/how-to-pgadmin) deployment if you prefer a web-based interface.
+
+### Connect via local development environment or database tool
 
 The IDP platform provides a shared RDS proxy that allows you to connect to your database from your local machine. This is useful for:
 
@@ -158,34 +149,9 @@ Connect your local application or database tool using:
 - **Database:** NAMESPACE-DATABASE (e.g., `idp-dev-my-db`)
 - **Username/Password:** from the secret above
 
-Alternatively, you can use the shared [pgAdmin](https://public.docs.idp.jppol.dk/how-to-pgadmin) deployment if you prefer a web-based interface.
+## Monitoring
 
-## SSL configuration
-
-It is required that connections to your database is established using SSL. As a minimum, you should set `sslmode` to `require` in your connection string / connection settings. When setting `sslmode` to `require`, data sent over the connection is encrypted but the identity of the server is not verified.
-
-It is recommended, but not required, that connections to production databases are established using `sslmode` equals `verify-full`. This encrypts data sent over the connection, and the identity of the server is cryptographically verified. This does however require that you include and configure some extra certs in your container. A guide to this can be found on the following AWS docs page: [Using SSL with a PostgreSQL DB instance](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/PostgreSQL.Concepts.General.SSL.html#PostgreSQL.Concepts.General.SSL.Connecting)
-
-## Upgrade guide
-
-### Version 0.4.1 to 0.5.0
-
-This update changes the underlying resource API version and since no migration mechanism exists between versions, existing resources must be recreated and their data will be lost. Automated migration between resource versions is planned for a future release before general availability.
-
-A few manual steps is required when upgrading a database from postgresqldatabase helm chart version 0.4.1 to 0.5.0. Because secrets prior to version 0.5.0 are soft deleted, they will have to be forcefully deleted in order for crossplane to successfully recreate all the required resources.
-
-(1) Delete the database from your apps repo
-(2) Delete the database secrets from aws secretsmanager
-(3) Readd the database with the new version to your apps repo
-
-Secrets can be deleted using the actions for setting secrets in the apps-repository. (Check that you want to remove the secret in the relevant action. You will not need to provide the secrets path.)
-
-## Work in progress features
-
-WIP features:
-
-- Monitoring
-- PostgreSQL version upgrade strategy
+[Prometheus Postgres Exporter](https://grafana.com/oss/prometheus/exporters/postgres-exporter/) collects Postgres specific metrics, while CloudWatch metrics provide health and performance metrics from the shared Aurora serverless v2 cluster. Metrics from both sources can be viewed in Grafana. For an example on how to use the metrics, see the `PostgreSQL database example` dashboard.
 
 ## Backup and Restore
 
@@ -220,24 +186,78 @@ To restore a database from a snapshot using pgAdmin, follow these steps:
    - Click *Restore*.
 8. **Notify the IDP team** so they can shut down the restore cluster.
 
-### Disaster recovery without pgAdmin, using psql scripts directly from restore container (for large databases)
-TODO
+### Disaster recovery without pgAdmin, using psql scripts directly from restore container
+
+pgAdmin is likely not a suitable tool for restoring large databases. The restore procedure for large databases is a work in progress.
 
 ### Restore protected database which has been removed from apps repo
 
-Contact IDP as some of these steps requires elevated privileges.
+*The import of protected databases is not yet an automated process as of idp-postgresql helm chart version 1.0.1*
 
-In case the database is accidentally deleted from the apps repo, the resources in Kubernetes is removed while the resources outside of Kubernetes lives on. The service using the database only strictly needs the secrets in Kubernetes to connect to the database. The secrets for the three roles (read, write, admin) can be restored using the following procedure.
+If a deletion protected database has accidentally been deleted from your apps repo, the actual database in the Aurora cluster and the other resources have not been deleted. Only the Kubernetes objects which represents the resources have been deleted.
 
-The secret data can be found in the corresponding aws secretsmanager secrets.
+To "restore" the protected database in this context means to bring it under management again. This scenario can be compared to deleting the Terraform state without letting Terraform reconcile the infrastructure, and then importing the infrastructure into the state to be able to control it with Terraform again.
+
+The first step is to contact IDP as some of these steps requires elevated privileges.
+
+The service using the database only strictly needs the secrets in Kubernetes to connect to the database. As mentioned previously, there is currently no automated way to import protected databases. The quick fix is to create 3 externalsecrets (one for each role) so that the service is still able to connect to the database after a restart. Create the externalsecrets similar to:
 
 ```bash
-kubectl create secret generic NAMESPACE-DB-ROLE -n NAMESPACE --from-literal=endpoint=foo --from-literal=port=5432 --from-literal=username=NAMESPACE-DB-ROLE --from-literal=password=foo
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: [namespace]-[database]-[read/write/admin]
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: aws-secrets
+    kind: ClusterSecretStore
+  target:
+    name: [namespace]-[database]-[read/write/admin]
+  data:
+    - secretKey: username
+      remoteRef:
+        key: customer/[customer]/[database]-[read/write/admin]
+        property: username
+    - secretKey: password
+      remoteRef:
+        key: customer/[customer]/[database]-[read/write/admin]
+        property: password
+    - secretKey: endpoint
+      remoteRef:
+        key: customer/[customer]/[database]-[read/write/admin]
+        property: endpoint
+    - secretKey: port
+      remoteRef:
+        key: customer/[customer]/[database]-[read/write/admin]
+        property: port
 ```
 
-Create the secrets for the admin, write, and read roles.
+## SSL configuration
 
-## Known errors
+It is required that connections to your database are established using SSL. As a minimum, you should set `sslmode` to `require` in your connection string / connection settings. The different SSL modes are documented in the [Postgres docs](https://www.postgresql.org/docs/11/libpq-ssl.html#LIBPQ-SSL-SSLMODE-STATEMENTS). When setting `sslmode` to `require`, data sent over the connection is encrypted but the identity of the server is not verified.
+
+It is recommended, but not required, that connections to production databases are established using `sslmode` equals `verify-full`. This encrypts data sent over the connection, and the identity of the server is cryptographically verified. This does however require that you include and configure some extra certs in your container. Note that the certificates might already be baked into your container image or installed via a package manager. A guide to installing AWS' certs can be found on the following AWS docs page: [Using SSL with a PostgreSQL DB instance](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/PostgreSQL.Concepts.General.SSL.html#PostgreSQL.Concepts.General.SSL.Connecting)
+
+## Upgrade guide
+
+### Version 0.5.0 to 1.0.1
+
+This update also has breaking changes in the underlying API. Unlike with the last breaking change, there is an automated conversion in place that enables conversion between version 0.5.0 and 1.0.1. Upgrade the chart to version 1.0.1 and modify the values file to match the new API. Notably, the field `deletionProtection` has been removed in favor of `mode` which can be either `standard` or `protected`. Enabling `deletionProtection` is equivalent to setting `mode: protected`.
+
+### Version 0.4.1 to 0.5.0
+
+This update changes the underlying resource API version and since no migration mechanism exists between versions, existing resources must be recreated and their data will be lost. Automated migration between resource versions is planned for a future release before general availability.
+
+A few manual steps are required when upgrading a database from postgresqldatabase helm chart version 0.4.1 to 0.5.0. Because secrets prior to version 0.5.0 are soft deleted, they will have to be forcefully deleted in order for crossplane to successfully recreate all the required resources.
+
+(1) Delete the database from your apps repo
+(2) Delete the database secrets from aws secretsmanager
+(3) Readd the database with the new version to your apps repo
+
+Secrets can be deleted using the actions for setting secrets in the apps-repository. (Check that you want to remove the secret in the relevant action. You will not need to provide the secrets path.)
+
+## Common errors
 
 ### no pg_hba.conf entry for host
 
@@ -247,12 +267,4 @@ If you get an error saying:
 no pg_hba.conf entry for host (...)
 ```
 
-Then you need to set `sslmode` to `require` in your connection string / connection settings.
-
-### Before version 0.5.0
-
-When recreating a database, i.e. removing it from the apps repo and readding it, it currently fails because it will try to recreate the secrets in AWS which it can't do because secrets in AWS are soft-deleted. The solution is to forcefully delete the secrets in AWS and then deleting the PostgresqlDatabase resource in order to recreate all the resources. The following snippet can be used to circumvent soft deletion in order to forcefully delete secrets (BE CAREFUL WHEN FORCE DELETING SECRETS):
-
-```bash
-aws secretsmanager delete-secret --secret-id SECRET-ID --force-delete-without-recovery
-```
+Then you need to set `sslmode` to `require` in your connection string / connection settings. See section on [SSL configuration](#ssl-configuration) for a more in detail explanation.
