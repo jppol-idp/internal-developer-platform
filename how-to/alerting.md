@@ -344,7 +344,7 @@ To add more alerts later, simply append additional rules to the `rules` list and
    version: 0.1.0
    helm:
      chart: helm/idp-grafana-alarm
-     chartVersion: "1.0.0"
+     chartVersion: "1.0.1"  # see latest version at https://github.com/jppol-idp/helm-idp/releases
    ```
 
 2. Add the `values.yaml` you created in step 3
