@@ -20,7 +20,7 @@ review_in: 6 months
 - [Setting Up Alerts as Code (Helm Chart)](#setting-up-alerts-as-code-helm-chart)
   - [Step 1: Create and Test in the GUI](#step-1-create-and-test-in-the-gui)
   - [Step 2: Export the Alert Rule](#step-2-export-the-alert-rule)
-  - [Step 3: Convert to Helm Values](#step-3-convert-to-helm-values)
+  - [Step 3: Create Helm Values](#step-3-create-helm-values)
   - [Step 4: Deploy via ArgoCD](#step-4-deploy-via-argocd)
   - [Deleting an Alert](#deleting-an-alert)
 - [Requesting a Slack Contact Point](#requesting-a-slack-contact-point)
@@ -255,74 +255,82 @@ groups:
           receiver: "Slack - My Team"
 ```
 
-### Step 3: Convert to Helm Values
+### Step 3: Create Helm Values
 
-The exported YAML maps almost directly to the chart's `values.yaml`. You only need to:
+The exported YAML maps directly to the chart's `values.yaml`. You only need to:
 
-1. **Remove** the wrapper lines: `apiVersion`, `orgId`, and `folder`
-2. **Rename** `groups` to `alertGroups`
-3. **Flatten** `notification_settings.receiver` to just `receiver`
-4. **Add** a `folder.title` for your team's alert folder in Grafana
+1. **Remove** the wrapper lines (`apiVersion`, `groups`, `orgId`, `folder`)
+2. **Add** `folder` and `interval` at the top
+3. **Paste** the `rules` block as-is — no changes needed, including `notification_settings`
 
 ```yaml
-folder:
-  title: "My Team Alerts"
+# Choose ONE of these folder options:
 
-alertGroups:
-  - name: my-alert-group          # from groups[].name
-    interval: 1m                   # from groups[].interval
-    rules:
-      - uid: abc123xyz             # everything below is copied directly from the export
-        title: High Error Rate
-        condition: C
-        for: 5m
-        noDataState: OK
-        execErrState: OK
-        receiver: "Slack - My Team"  # was notification_settings.receiver
-        annotations:
-          summary: "High error rate detected"
-        labels:
-          severity: warning
-        data:                      # copy the entire data block as-is
-          - refId: A
-            relativeTimeRange:
-              from: 600
-              to: 0
-            datasourceUid: prometheus
-            model:
-              datasource:
-                type: prometheus
-                uid: prometheus
-              expr: 'rate(http_requests_total{status=~"5.."}[5m]) > 0.1'
-              instant: true
-              range: false
-              refId: A
-          - refId: C
-            datasourceUid: __expr__
-            model:
-              conditions:
-                - evaluator:
-                    params:
-                      - 0
-                    type: gt
-                  operator:
-                    type: and
-                  query:
-                    params:
-                      - A
-                  reducer:
-                    params: []
-                    type: last
-                  type: query
-              datasource:
-                type: __expr__
-                uid: __expr__
-              expression: A
-              refId: C
-              type: threshold
+# Option A: Create a new folder for your team's alerts
+folder: "My Team Alerts"
+
+# Option B: Use an existing folder (set folder to empty, specify folderRef)
+# folder: ""
+# folderRef: "idp-managed-alerts"
+
+# Evaluation interval (from groups[].interval in the export)
+interval: 1m
+
+# Paste rules directly from the export — no modifications needed
+rules:
+  - uid: abc123xyz
+    title: High Error Rate
+    condition: C
+    data:
+      - refId: A
+        relativeTimeRange:
+          from: 600
+          to: 0
+        datasourceUid: prometheus
+        model:
+          datasource:
+            type: prometheus
+            uid: prometheus
+          expr: 'rate(http_requests_total{status=~"5.."}[5m]) > 0.1'
+          instant: true
+          range: false
+          refId: A
+      - refId: C
+        datasourceUid: __expr__
+        model:
+          conditions:
+            - evaluator:
+                params:
+                  - 0
+                type: gt
+              operator:
+                type: and
+              query:
+                params:
+                  - A
+              reducer:
+                params: []
+                type: last
+              type: query
+          datasource:
+            type: __expr__
+            uid: __expr__
+          expression: A
+          refId: C
+          type: threshold
+    noDataState: OK
+    execErrState: OK
+    for: 5m
+    annotations:
+      summary: "High error rate detected"
+    labels:
+      severity: warning
+    isPaused: false
+    notification_settings:
+      receiver: "Slack - My Team"
 ```
 
-> **Tip:** The `data` block (queries, conditions, thresholds) can be copied directly from the export without any changes.
+To add more alerts later, simply append additional rules to the `rules` list and push the change.
 
 ### Step 4: Deploy via ArgoCD
 
