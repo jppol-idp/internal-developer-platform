@@ -21,6 +21,7 @@ review_in: 6 months
   - [Step 1: Create and Test in the GUI](#step-1-create-and-test-in-the-gui)
   - [Step 2: Export the Alert Rule](#step-2-export-the-alert-rule)
   - [Step 3: Create Helm Values](#step-3-create-helm-values)
+  - [Using Multiple Alert Groups](#using-multiple-alert-groups)
   - [Step 4: Deploy via ArgoCD](#step-4-deploy-via-argocd)
   - [Deleting an Alert](#deleting-an-alert)
 - [Requesting a Slack Contact Point](#requesting-a-slack-contact-point)
@@ -331,6 +332,101 @@ rules:
 ```
 
 To add more alerts later, simply append additional rules to the `rules` list and push the change.
+
+### Using Multiple Alert Groups
+
+If you need alerts with different evaluation intervals, or want to organize alerts into separate groups (as they appear in the Grafana UI), use the `groups` key instead of (or alongside) `rules`:
+
+```yaml
+folder: "My Team Alerts"
+
+groups:
+  - name: critical-alerts
+    interval: 30s
+    rules:
+      - uid: svc-down-001
+        title: Service Down
+        condition: C
+        for: 0s
+        notification_settings:
+          receiver: "Slack - My Team"
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: up{namespace="my-team"} == 0
+              instant: true
+              refId: A
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: [0]
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: [A]
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              refId: C
+              type: threshold
+
+  - name: warning-alerts
+    interval: 5m
+    rules:
+      - uid: high-mem-001
+        title: High Memory Usage
+        condition: C
+        for: 10m
+        notification_settings:
+          receiver: "Slack - My Team"
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: container_memory_working_set_bytes{namespace="my-team"} > 1e9
+              instant: true
+              refId: A
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: [0]
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: [A]
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              refId: C
+              type: threshold
+```
+
+Each group becomes a separate alert rule group in Grafana with its own name and evaluation interval. You can also use `groups` alongside the top-level `rules` key — `rules` creates one group named after the Helm release, and `groups` creates additional named groups.
+
+> **Tip:** When exporting multiple groups from the Grafana UI, each `groups[]` entry in the export maps directly to an entry in the `groups` list. Just copy the `name`, `interval`, and `rules` from each.
 
 ### Step 4: Deploy via ArgoCD
 
