@@ -190,99 +190,22 @@ Follow the steps in the sections above to create your alert rule in the Grafana 
 
 1. In Grafana, go to **Alerting > Alert rules**
 2. Find your alert rule and click on it to open the details
-3. Click the **Export** button and choose **JSON** format
-4. Save the exported JSON — you will convert this to Helm values in the next step
+3. Click the **Export** button and choose the **YAML** tab
+4. Click **Copy code** or **Download**
 
-The exported JSON looks like this:
-
-```json
-{
-  "apiVersion": 1,
-  "groups": [{
-    "orgId": 1,
-    "name": "my-alert-group",
-    "folder": "",
-    "interval": "1m",
-    "rules": [{
-      "uid": "abc123xyz",
-      "title": "High Error Rate",
-      "condition": "C",
-      "data": [
-        {
-          "refId": "A",
-          "relativeTimeRange": { "from": 600, "to": 0 },
-          "datasourceUid": "prometheus",
-          "model": {
-            "expr": "rate(http_requests_total{status=~\"5..\"}[5m]) > 0.1",
-            "instant": true,
-            "range": false,
-            "refId": "A"
-          }
-        },
-        {
-          "refId": "C",
-          "datasourceUid": "__expr__",
-          "model": {
-            "conditions": [{
-              "evaluator": { "params": [0], "type": "gt" },
-              "operator": { "type": "and" },
-              "query": { "params": ["A"] },
-              "reducer": { "params": [], "type": "last" },
-              "type": "query"
-            }],
-            "expression": "A",
-            "refId": "C",
-            "type": "threshold"
-          }
-        }
-      ],
-      "noDataState": "OK",
-      "execErrState": "OK",
-      "for": "5m",
-      "annotations": {
-        "summary": "High error rate detected"
-      },
-      "labels": {
-        "severity": "warning"
-      },
-      "isPaused": false,
-      "notification_settings": {
-        "receiver": "Slack - My Team"
-      }
-    }]
-  }]
-}
-```
-
-### Step 3: Convert to Helm Values
-
-Map the exported JSON to a `values.yaml` file for the `idp-grafana-alarm` chart. The structure maps almost directly — you just need to:
-
-1. **Drop** `apiVersion`, `orgId`, and `folder` (the chart handles these)
-2. **Move** `notification_settings.receiver` to `receiver` (flattened)
-3. **Convert** JSON to YAML
-
-Here is the converted `values.yaml` for the example above:
+The exported YAML looks like this:
 
 ```yaml
-folder:
-  title: "My Team Alerts"
-
-alertGroups:
-  - name: my-alert-group
+apiVersion: 1
+groups:
+  - orgId: 1
+    name: my-alert-group
+    folder: My Folder
     interval: 1m
     rules:
       - uid: abc123xyz
         title: High Error Rate
         condition: C
-        for: 5m
-        noDataState: OK
-        execErrState: OK
-        receiver: "Slack - My Team"
-        annotations:
-          summary: "High error rate detected"
-        labels:
-          severity: warning
         data:
           - refId: A
             relativeTimeRange:
@@ -290,6 +213,9 @@ alertGroups:
               to: 0
             datasourceUid: prometheus
             model:
+              datasource:
+                type: prometheus
+                uid: prometheus
               expr: 'rate(http_requests_total{status=~"5.."}[5m]) > 0.1'
               instant: true
               range: false
@@ -311,28 +237,92 @@ alertGroups:
                     params: []
                     type: last
                   type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              refId: C
+              type: threshold
+        noDataState: OK
+        execErrState: OK
+        for: 5m
+        annotations:
+          summary: "High error rate detected"
+        labels:
+          severity: warning
+        isPaused: false
+        notification_settings:
+          receiver: "Slack - My Team"
+```
+
+### Step 3: Convert to Helm Values
+
+The exported YAML maps almost directly to the chart's `values.yaml`. You only need to:
+
+1. **Remove** the wrapper lines: `apiVersion`, `orgId`, and `folder`
+2. **Rename** `groups` to `alertGroups`
+3. **Flatten** `notification_settings.receiver` to just `receiver`
+4. **Add** a `folder.title` for your team's alert folder in Grafana
+
+```yaml
+folder:
+  title: "My Team Alerts"
+
+alertGroups:
+  - name: my-alert-group          # from groups[].name
+    interval: 1m                   # from groups[].interval
+    rules:
+      - uid: abc123xyz             # everything below is copied directly from the export
+        title: High Error Rate
+        condition: C
+        for: 5m
+        noDataState: OK
+        execErrState: OK
+        receiver: "Slack - My Team"  # was notification_settings.receiver
+        annotations:
+          summary: "High error rate detected"
+        labels:
+          severity: warning
+        data:                      # copy the entire data block as-is
+          - refId: A
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: prometheus
+            model:
+              datasource:
+                type: prometheus
+                uid: prometheus
+              expr: 'rate(http_requests_total{status=~"5.."}[5m]) > 0.1'
+              instant: true
+              range: false
+              refId: A
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - A
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
               expression: A
               refId: C
               type: threshold
 ```
 
-**Field mapping reference:**
-
-| Grafana Export | Helm Values | Notes |
-|----------------|-------------|-------|
-| `groups[].name` | `alertGroups[].name` | |
-| `groups[].interval` | `alertGroups[].interval` | Default: `1m` |
-| `rules[].uid` | `rules[].uid` | Must be unique |
-| `rules[].title` | `rules[].title` | |
-| `rules[].condition` | `rules[].condition` | |
-| `rules[].data` | `rules[].data` | Copy directly |
-| `rules[].for` | `rules[].for` | |
-| `rules[].noDataState` | `rules[].noDataState` | Default: `OK` |
-| `rules[].execErrState` | `rules[].execErrState` | Default: `OK` |
-| `rules[].annotations` | `rules[].annotations` | |
-| `rules[].labels` | `rules[].labels` | |
-| `rules[].notification_settings.receiver` | `rules[].receiver` | Flattened |
-| `apiVersion`, `orgId`, `folder` | *(drop)* | Managed by chart |
+> **Tip:** The `data` block (queries, conditions, thresholds) can be copied directly from the export without any changes.
 
 ### Step 4: Deploy via ArgoCD
 
