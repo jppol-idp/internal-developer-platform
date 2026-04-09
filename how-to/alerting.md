@@ -4,7 +4,7 @@ nav_order: 11
 parent: How to...
 domain: public
 permalink: /alerting
-last_reviewed_on: 2025-10-01
+last_reviewed_on: 2026-04-09
 review_in: 6 months
 ---
 
@@ -17,9 +17,13 @@ review_in: 6 months
 - [Setting Up Alerts in Grafana Using Built-in Alerting](#setting-up-alerts-in-grafana-using-built-in-alerting)
    - [Setting Up Alerts via the Alerting Menu (Recommended)](#setting-up-alerts-via-the-alerting-menu-recommended)
    - [Setting Up Alerts via a Dashboard Panel](#setting-up-alerts-via-a-dashboard-panel)
-   - [Setting Up Alerts via a Helm chart](#setting-up-alerts-via-a-helm-chart)
+- [Setting Up Alerts as Code (Helm Chart)](#setting-up-alerts-as-code-helm-chart)
+  - [Step 1: Create and Test in the GUI](#step-1-create-and-test-in-the-gui)
+  - [Step 2: Export the Alert Rule](#step-2-export-the-alert-rule)
+  - [Step 3: Convert to Helm Values](#step-3-convert-to-helm-values)
+  - [Step 4: Deploy via ArgoCD](#step-4-deploy-via-argocd)
+  - [Deleting an Alert](#deleting-an-alert)
 - [Requesting a Slack Contact Point](#requesting-a-slack-contact-point)
-- [Further Plans for Alerting](#further-plans-for-alerting)
 - [References](#references)
 
 # Main Steps When Creating a New Alert Rule
@@ -166,195 +170,192 @@ Below is an example walkthrough with screenshots illustrating the process:
 
 ---
 
-## Setting Up Alerts via a Helm Chart
+## Setting Up Alerts as Code (Helm Chart)
 
-> **Note:** The current procedure for provisioning alerts programmatically in Grafana is rather difficult and requires careful management of configuration files and unique identifiers. We hope that the new official Grafana-supported provisioning method (currently in beta) will make this process much easier to manage in the future.
+The `idp-grafana-alarm` Helm chart lets you manage Grafana alert rules as code via Kubernetes CRDs. Alerts are deployed through ArgoCD and automatically synced to Grafana via the grafana-operator.
 
-> **TIP:** The easiest way to create alerts via Helm chart is to first set up the alert in the Grafana GUI, then export it as JSON. This provides you with all the necessary configuration, including datasource IDs and other variables that are difficult to find manually.
+The recommended workflow is: **create and test in the GUI first**, then export and convert to Helm values for permanent deployment.
 
-### Using the helm-idp-grafana-alarm Chart
+### Prerequisites
 
-The recommended way to deploy Grafana alert rules via ConfigMap is to use the `idp-grafana-alarm` Helm chart. This chart handles the creation and management of the ConfigMap and ensures proper integration with your Grafana instance.
+- A working alert rule tested in the Grafana GUI
+- A Slack contact point configured for your team (see [Requesting a Slack Contact Point](#requesting-a-slack-contact-point))
+- Access to your team's apps repository (e.g., `apps-idp`)
 
-### Steps to Deploy
+### Step 1: Create and Test in the GUI
 
-1. **Create the Alert in GUI First**
-   - Set up your alert rule in the Grafana UI following the steps in the previous sections
-   - Export the alert configuration as JSON (available in the alert rule details)
-   - Use this exported JSON to populate your Helm values file
+Follow the steps in the sections above to create your alert rule in the Grafana UI. Make sure the alert fires correctly and notifications arrive in your Slack channel before proceeding.
 
-2. **Prepare Your Helm Values File**
-   - Create a values.yaml file for the idp-grafana-alarm chart
-   - Include your alert rule configuration from the exported JSON
+### Step 2: Export the Alert Rule
 
-3. **Set Up and Deploy with ArgoCD**
-   - Set up a new ArgoCD Application in your apps repository for your alert configuration. 
-   
-   > **Note:** Chart versions are updated regularly. Always check your Helm repository or internal documentation for the current recommended version of `idp-grafana-alarm`.
+1. In Grafana, go to **Alerting > Alert rules**
+2. Find your alert rule and click on it to open the details
+3. Click the **Export** button and choose **JSON** format
+4. Save the exported JSON — you will convert this to Helm values in the next step
 
-   Create an `application.yaml` like this:
-     ```yaml
-     apiVersion: v2
-     name: grafana-alarm-test
-     description: A Helm chart for setting up Grafana alarms
-     version: 0.1.0
-     helm:
-       chart: helm/idp-grafana-alarm
-       chartVersion: "0.1.2"
-     ```
-   - Make sure to reference the `values.yaml` file you prepared with your alert configuration.
-   - Commit both the `application.yaml` and your `values.yaml` to your Apps repository.
-   - ArgoCD will then deploy the Helm chart and provision your alerts automatically.
+The exported JSON looks like this:
 
-### Example Values.yaml File
+```json
+{
+  "apiVersion": 1,
+  "groups": [{
+    "orgId": 1,
+    "name": "my-alert-group",
+    "folder": "",
+    "interval": "1m",
+    "rules": [{
+      "uid": "abc123xyz",
+      "title": "High Error Rate",
+      "condition": "C",
+      "data": [
+        {
+          "refId": "A",
+          "relativeTimeRange": { "from": 600, "to": 0 },
+          "datasourceUid": "prometheus",
+          "model": {
+            "expr": "rate(http_requests_total{status=~\"5..\"}[5m]) > 0.1",
+            "instant": true,
+            "range": false,
+            "refId": "A"
+          }
+        },
+        {
+          "refId": "C",
+          "datasourceUid": "__expr__",
+          "model": {
+            "conditions": [{
+              "evaluator": { "params": [0], "type": "gt" },
+              "operator": { "type": "and" },
+              "query": { "params": ["A"] },
+              "reducer": { "params": [], "type": "last" },
+              "type": "query"
+            }],
+            "expression": "A",
+            "refId": "C",
+            "type": "threshold"
+          }
+        }
+      ],
+      "noDataState": "OK",
+      "execErrState": "OK",
+      "for": "5m",
+      "annotations": {
+        "summary": "High error rate detected"
+      },
+      "labels": {
+        "severity": "warning"
+      },
+      "isPaused": false,
+      "notification_settings": {
+        "receiver": "Slack - My Team"
+      }
+    }]
+  }]
+}
+```
 
-> **Note:** It is important to change the `rules: uid` value for each alert to something unique. This ensures that each alert is managed and updated correctly by Grafana and avoids conflicts during provisioning.
+### Step 3: Convert to Helm Values
 
-> **Note:** All UIDs, datasource references, and configuration values in this guide are examples. Replace them with actual values from your Grafana instance.
+Map the exported JSON to a `values.yaml` file for the `idp-grafana-alarm` chart. The structure maps almost directly — you just need to:
 
-Here's a complete example of a values.yaml file for the idp-grafana-alarm chart:
+1. **Drop** `apiVersion`, `orgId`, and `folder` (the chart handles these)
+2. **Move** `notification_settings.receiver` to `receiver` (flattened)
+3. **Convert** JSON to YAML
+
+Here is the converted `values.yaml` for the example above:
 
 ```yaml
-# Values for Grafana Alert ConfigMap
-# Name of the ConfigMap (optional, will use release name if not specified)
-nameOverride: ""
-fullnameOverride: ""
+folder:
+  title: "My Team Alerts"
 
-# Metadata configurations (optional, for adding additional custom metadata)
-metadata:
-  annotations: {}
-    # Add custom annotations here (in addition to the default ones)
-    # example.com/custom-annotation: "value"
-  labels: {}
-    # Add custom labels here (in addition to the default ones)
-    # custom-label: "value"
-
-# ConfigMap data
-# You can define multiple configurations using different keys
-config:
-  # Default configuration (will use "grafana-alert-[release-name].yaml" as filename)
-  default: |-
-    apiVersion: 1
-    groups:
-      - orgId: 1
-        name: grafana-alerts
-        folder: test-alerts
-        interval: 10s
-        rules:
-          - uid: 3qv9xk7e6a4msb
-            title: grafana-alert-loki-text-search-test
-            condition: C
-            data:
-              - refId: A
-                queryType: instant
-                relativeTimeRange:
-                  from: 900
-                  to: 0
-                datasourceUid: P8E80F9AEF21F6940
-                model:
-                  editorMode: code
-                  expr: sum(count_over_time({container="linkerd-proxy"} |= `invalid peer certificate` | logfmt [$__auto]))
-                  instant: true
-                  intervalMs: 1000
-                  maxDataPoints: 43200
-                  queryType: instant
-                  refId: A
-              - refId: C
-                datasourceUid: __expr__
-                model:
-                  conditions:
-                    - evaluator:
-                        params:
-                          - 1
-                        type: gt
-                      operator:
-                        type: and
-                      query:
-                        params:
-                          - C
-                      reducer:
-                        params: []
-                        type: last
-                      type: query
-                  datasource:
-                    type: __expr__
-                    uid: __expr__
-                  expression: A
-                  intervalMs: 1000
-                  maxDataPoints: 43200
-                  refId: C
-                  type: threshold
-            noDataState: OK
-            execErrState: OK
-            annotations:
-              summary: |-
-                Test alert
-                Please check IDP-469 for details
-            labels:
-              severity: low
-            isPaused: false
-            notification_settings:
-              receiver: slack-idp-test-provisioned
-  
-  # Example of adding a second configuration (will use "grafana-alert-[release-name]-another-alert.yaml" as filename)
-  # Uncomment and modify if needed
-  # another-alert: |-
-  #   apiVersion: 1
-  #   groups:
-  #     - orgId: 1
-  #       name: another-grafana-alert-group
-  #       folder: Monitoring
-  #       interval: 30s
-  #       rules:
-  #         - uid: abcdefg123456
-  #           title: another-example-alert
-  #           condition: C
-  #           # ... rest of the alert configuration
+alertGroups:
+  - name: my-alert-group
+    interval: 1m
+    rules:
+      - uid: abc123xyz
+        title: High Error Rate
+        condition: C
+        for: 5m
+        noDataState: OK
+        execErrState: OK
+        receiver: "Slack - My Team"
+        annotations:
+          summary: "High error rate detected"
+        labels:
+          severity: warning
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: 'rate(http_requests_total{status=~"5.."}[5m]) > 0.1'
+              instant: true
+              range: false
+              refId: A
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - A
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              expression: A
+              refId: C
+              type: threshold
 ```
 
-#### Key Elements of the Configuration:
-- **config.default**: Contains the main alert configuration. The content here comes from exporting your alert from the Grafana UI.
-- **datasourceUid**: Unique identifier for your data source (in the example: P8E80F9AEF21F6940 for Loki). This is why it's easier to configure in the UI first.
-- **notification_settings.receiver**: Specifies which Slack contact point to use (e.g., slack-idp-test-provisioned).
-- **Multiple configurations**: You can define multiple alert configurations under different keys in the config section.
+**Field mapping reference:**
 
-This approach ensures that your alerts are properly configured with all the necessary IDs and references, and the Helm chart handles the integration with Grafana automatically.
+| Grafana Export | Helm Values | Notes |
+|----------------|-------------|-------|
+| `groups[].name` | `alertGroups[].name` | |
+| `groups[].interval` | `alertGroups[].interval` | Default: `1m` |
+| `rules[].uid` | `rules[].uid` | Must be unique |
+| `rules[].title` | `rules[].title` | |
+| `rules[].condition` | `rules[].condition` | |
+| `rules[].data` | `rules[].data` | Copy directly |
+| `rules[].for` | `rules[].for` | |
+| `rules[].noDataState` | `rules[].noDataState` | Default: `OK` |
+| `rules[].execErrState` | `rules[].execErrState` | Default: `OK` |
+| `rules[].annotations` | `rules[].annotations` | |
+| `rules[].labels` | `rules[].labels` | |
+| `rules[].notification_settings.receiver` | `rules[].receiver` | Flattened |
+| `apiVersion`, `orgId`, `folder` | *(drop)* | Managed by chart |
 
-### Deleting a Provisioned Alert
+### Step 4: Deploy via ArgoCD
 
-Deleting a provisioned alert is not as simple as just undeploying the application or removing the alert from your Helm values. Grafana requires a special delete manifest to be deployed in order to remove the alert rule from the system.
+1. In your apps repository (e.g., `apps-idp`), create a directory for your alerts under `apps/<namespace>/`:
 
-Since direct deployment of raw Kubernetes manifests is not available, you should use the same Helm chart (`idp-grafana-alarm`) as when deploying alerts, but with a values.yaml that uses the `deleteRules` syntax.
+   **`application.yaml`:**
+   ```yaml
+   apiVersion: v2
+   name: my-team-alerts
+   description: Grafana alerts for my team
+   version: 0.1.0
+   helm:
+     chart: helm/idp-grafana-alarm
+     chartVersion: "1.0.0"
+   ```
 
-#### Example values.yaml for Deleting an Alert
+2. Add the `values.yaml` you created in step 3
 
-```yaml
-config:
-  delete-alert-<uid>: |-
-    apiVersion: 1
-    deleteRules:
-      - orgId: 1
-        uid: aeq3xvx67mx34s
-```
+3. Commit and push to `main` — ArgoCD will deploy the alert rules automatically
 
-**Important:**
-- You must update the `uid` and `orgId` fields to match the alert you want to delete.
-- The key under `config:` (here `delete-alert`) and the filename it generates should be unique for the delete operation.
-- Deploy this values.yaml using the same Helm chart and ArgoCD process as for creating alerts.
+### Deleting an Alert
 
-After the alert has been deleted and is no longer present in Grafana, you can safely remove the corresponding ArgoCD `application.yaml` (and the delete values.yaml) from your repository to fully clean up the provisioned alert and its deployment resources.
-
----
-
-### Debugging Provisioned Alerts
-
-If your alert does not appear in Grafana or you suspect a provisioning error, you can check the Grafana logs for issues related to alert provisioning. Use the following Loki query to search for relevant logs:
-
-```logql
-{namespace="monitoring", app="grafana", container="grafana-sc-alerts"} | logfmt | lokiPath != `/loki/api/v1/query_range`
-```
-
-This query will help you see if your alert rule was provisioned and if any errors were encountered during the process.
+With the grafana-operator approach, deleting alerts is straightforward: simply remove the alert rule from your `values.yaml` (or remove the entire ArgoCD application) and push the change. The grafana-operator handles cleanup automatically via Kubernetes finalizers — no special delete manifests needed.
 
 ---
 
@@ -370,10 +371,6 @@ If your team does not already have a Slack contact point set up for your desired
 - The name of your Slack channel (e.g., `#teamname-environment-alerts`)
 
 The IDP team will configure the Slack webhook integration and set up the contact point in Grafana. Alerts will only be delivered to channels with a properly configured contact point.
-
-## Further Plans for Alerting
-
-We may consider integrating with `incident.io` in the future to enable more advanced routing and incident management features. For now, all alerting is handled directly via Slack contact points in each Grafana installation.
 
 ## References
 
