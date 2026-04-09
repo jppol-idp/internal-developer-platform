@@ -1,5 +1,5 @@
 ---
-title: Grafana shared dashboards
+title: Grafana externally shared dashboards
 nav_order: 6
 parent: How to...
 domain: public
@@ -7,7 +7,7 @@ permalink: /grafana-shared-dashboards
 last_reviewed_on: 2026-04-09
 review_in: 6 months
 ---
-# Grafana Shared Dashboards
+# Grafana Externally Shared Dashboards
 
 ## Introduction
 
@@ -43,7 +43,7 @@ Pay special attention to:
 
 If you are unsure whether your dashboard contains personal data, consult your team's data protection contact or Legal before requesting external sharing.
 
-## How to request a shared dashboard
+## How to request an externally shared dashboard
 
 Sharing a dashboard externally requires **Grafana Admin** permissions. This is a limitation of the Grafana OSS license — granular permission delegation for this feature is only available in Grafana Enterprise. As a result, the IDP team handles sharing on your behalf.
 
