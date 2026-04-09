@@ -50,9 +50,7 @@ Sharing a dashboard externally requires **Grafana Admin** permissions. This is a
 To get a dashboard shared:
 
 1. Make sure your dashboard meets the requirements above (no template variables, etc.)
-2. Contact the IDP team via Slack (`#idp-support`) with:
-   - The cluster and dashboard name (or URL)
-   - Whether you want kiosk mode (`?kiosk`) for office screens
+2. Contact the IDP team on Slack with the cluster and dashboard name (or URL)
 3. The IDP team will enable external sharing and provide you with the link
 4. To revoke or pause sharing, contact the IDP team
 
