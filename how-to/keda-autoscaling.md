@@ -1,6 +1,6 @@
 ---
 title: KEDA Autoscaling
-nav_order: 6
+nav_order: 10
 parent: How to...
 domain: public
 permalink: /keda-autoscaling

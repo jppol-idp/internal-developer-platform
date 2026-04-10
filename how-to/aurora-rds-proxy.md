@@ -1,6 +1,6 @@
 ---
 title: Aurora RDS Proxy – Local Access Setup Guide
-nav_order: 14
+nav_order: 3
 parent: How to...
 domain: public
 permalink: /how-to-proxy-rds

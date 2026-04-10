@@ -1,6 +1,6 @@
 ---
 title: Kubernetes Namespace Access via AWS SSO
-nav_order: 7
+nav_order: 11
 parent: How to...
 domain: public
 permalink: /kubernetes-namespace-access

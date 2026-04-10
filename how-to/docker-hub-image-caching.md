@@ -1,6 +1,6 @@
 ---
 title: Docker Hub Image Caching
-nav_order: 4
+nav_order: 7
 parent: How to...
 domain: public
 permalink: /docker-hub-image-caching

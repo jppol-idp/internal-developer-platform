@@ -1,6 +1,6 @@
 ---
 title: Working with DNS
-nav_order: 12
+nav_order: 17
 parent: How to...
 domain: public
 permalink: /how-to-dns

@@ -1,6 +1,6 @@
 ---
 title: Adding OIDC authentication to your app
-nav_order: 17
+nav_order: 1
 parent: How to...
 domain: public
 permalink: /how-to-oidc-middleware

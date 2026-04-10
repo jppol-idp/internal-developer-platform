@@ -1,6 +1,6 @@
 ---
 title: Working with S3 Buckets
-nav_order: 16
+nav_order: 21
 parent: How to...
 domain: public
 permalink: /how-to-s3

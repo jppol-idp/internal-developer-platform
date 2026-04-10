@@ -1,6 +1,6 @@
 ---
 title: Production settings
-nav_order: 2
+nav_order: 13
 parent: How to...
 domain: public
 permalink: /how-to-configure-production

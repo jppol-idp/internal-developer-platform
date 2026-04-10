@@ -1,6 +1,6 @@
 ---
 title: Grafana externally shared dashboards
-nav_order: 6
+nav_order: 8
 parent: How to...
 domain: public
 permalink: /grafana-shared-dashboards

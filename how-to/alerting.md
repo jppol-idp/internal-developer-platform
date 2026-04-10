@@ -1,6 +1,6 @@
 ---
 title: Working with Alerting
-nav_order: 11
+nav_order: 16
 parent: How to...
 domain: public
 permalink: /alerting

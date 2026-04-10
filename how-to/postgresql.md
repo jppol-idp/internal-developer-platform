@@ -1,6 +1,6 @@
 ---
 title: Working with PostgreSQL
-nav_order: 14
+nav_order: 19
 parent: How to...
 domain: public
 permalink: /how-to-postgresql

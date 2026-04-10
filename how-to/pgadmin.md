@@ -1,6 +1,6 @@
 ---
 title: pgAdmin Database Management
-nav_order: 8
+nav_order: 12
 parent: How to...
 domain: public
 permalink: /how-to-pgadmin
