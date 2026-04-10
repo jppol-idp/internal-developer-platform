@@ -4,7 +4,7 @@ nav_order: 6
 parent: How to...
 domain: public
 permalink: /grafana-shared-dashboards
-last_reviewed_on: 2026-04-09
+last_reviewed_on: 2026-04-10
 review_in: 6 months
 ---
 # Grafana Externally Shared Dashboards
@@ -42,6 +42,10 @@ Pay special attention to:
 - **Query filters** that include user identifiers
 
 If you are unsure whether your dashboard contains personal data, consult your team's data protection contact or Legal before requesting external sharing.
+
+### No playlist support
+
+Grafana **playlists** (rotating through multiple dashboards) are not supported for externally shared dashboards — each shared link points to one specific dashboard only. If you need to rotate between multiple dashboards on an office screen, use a kiosk-style tool like **Yodeck** or **Grafana Kiosk** that cycles through multiple shared dashboard URLs on the client side.
 
 ## How to request an externally shared dashboard
 
