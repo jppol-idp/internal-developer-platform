@@ -14,6 +14,7 @@
 ./assets/alert-step1.png
 ./assets/slack-alert.png
 ./assets/argocd-label-filtering.png
+./assets/ingress-logs-explore-builder.png
 ./assets/metrics.png
 ./assets/idp_dark.png
 ./assets/karthago.png
@@ -42,6 +43,7 @@
 ./how-to/aurora-rds-proxy.md
 ./how-to/s3-bucket.md
 ./how-to/postgresql.md
+./how-to/ingress-access-logs.md
 ./how-to/dns-records.md
 ./how-to/docker-hub-image-caching.md
 ./how-to/argocd-add-application-labels.md
