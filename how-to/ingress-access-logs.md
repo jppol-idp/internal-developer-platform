@@ -27,7 +27,7 @@ Every request that reaches your application through the public ingress is logged
 2. In the datasource dropdown, pick **Loki**
 3. Use this base query to see all public ingress logs:
 
-    ```logql
+    ```
     {namespace="traefik", container="traefik-public"} | json
     ```
 
@@ -39,7 +39,7 @@ The public ingress handles a lot of traffic, and running `| json` on every log l
 
 For example, if you only care about requests to `partner-service.koa.jppol.dk`, put the hostname in a line filter before `| json`:
 
-```logql
+```
 {namespace="traefik", container="traefik-public"}
   |= "partner-service.koa.jppol.dk"
   | json
@@ -76,7 +76,7 @@ If `OriginStatus` is `0`, the request **never reached your backend**. The ingres
 
 **Example:** a client reports a 403 from your API.
 
-```logql
+```
 {namespace="traefik", container="traefik-public"} | json | DownstreamStatus="403"
 ```
 
@@ -92,14 +92,14 @@ This distinction is what turns a vague "something returned 403" into an actionab
 All examples target the public ingress. Adjust the host, status, or path to your case. Every example line-filters first, then parses JSON — follow the same pattern in your own queries.
 
 **All requests to one host:**
-```logql
+```
 {namespace="traefik", container="traefik-public"}
   |= "partner-service.koa.jppol.dk"
   | json
 ```
 
 **All non-2xx responses to one host:**
-```logql
+```
 {namespace="traefik", container="traefik-public"}
   |= "partner-service.koa.jppol.dk"
   | json
@@ -107,7 +107,7 @@ All examples target the public ingress. Adjust the host, status, or path to your
 ```
 
 **Only requests blocked before reaching the backend (for one host):**
-```logql
+```
 {namespace="traefik", container="traefik-public"}
   |= "partner-service.koa.jppol.dk"
   |= "\"OriginStatus\":0"
@@ -116,7 +116,7 @@ All examples target the public ingress. Adjust the host, status, or path to your
 The second line filter is an optimization — it drops any line that doesn't even contain `OriginStatus:0` before Loki parses the JSON.
 
 **Requests from a specific client IP:**
-```logql
+```
 {namespace="traefik", container="traefik-public"}
   |= "4.175.208.6"
   | json
@@ -125,7 +125,7 @@ The second line filter is an optimization — it drops any line that doesn't eve
 The line filter is a rough pre-filter (it also matches if the IP shows up in e.g. `X-Forwarded-For`); the structured filter on `ClientHost` then narrows it to requests where that IP is the actual client.
 
 **Slow requests to one host (total duration > 1 second):**
-```logql
+```
 {namespace="traefik", container="traefik-public"}
   |= "partner-service.koa.jppol.dk"
   | json
@@ -134,7 +134,7 @@ The line filter is a rough pre-filter (it also matches if the IP shows up in e.g
 `Duration` is in **nanoseconds**. `1000000000` ns = 1 s.
 
 **Top client IPs hitting a host in the last hour:**
-```logql
+```
 sum by (ClientHost) (
   count_over_time(
     {namespace="traefik", container="traefik-public"}
@@ -239,7 +239,7 @@ These aren't part of the JSON log line — they are Loki stream labels you can f
 
 If your application uses the private ingress (internal-only, not reachable from the public internet), the exact same fields and queries apply — just swap the `container` label:
 
-```logql
+```
 {namespace="traefik", container="traefik-private"} | json
 ```
 
