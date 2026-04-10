@@ -107,3 +107,27 @@ This is a how-to guide documenting the Docker Hub image caching solution via AWS
 ## Recent Changes Pattern
 
 Recent commits show the team frequently updates nav_order values and adds content to how-to guides. When adding new documents, ensure proper frontmatter including nav_order and domain fields.
+
+## Writing customer-facing how-to guides
+
+When adding or significantly editing a how-to in `/how-to/`, treat it as a product the customer reads cold. They have not seen the conversation that produced it, they do not know the IDP team's internal naming, and they cannot ask follow-up questions before they get stuck.
+
+### End-to-end customer-perspective review (mandatory before merging)
+
+After writing a how-to, **always do a final pass reading the document from start to finish as if you were a new customer encountering it for the first time**. Do not skip this. Reviewing in fragments while writing is not the same — bugs hide in the seams between sections. Look specifically for:
+
+1. **Placeholder consistency.** Pick one convention for example values (`my-namespace`, `myapp`, etc.) and use it everywhere in code blocks. Mixing `<your-namespace>` with `my-namespace` looks sloppy and makes new readers wonder if `my-namespace` is literal.
+2. **Unintroduced acronyms.** Expand every acronym on first use, even ones the team uses daily (ESO → External Secrets Operator). Customers do not live in our jargon.
+3. **Forward references that work standalone.** When you say "see step 2", verify step 2 actually contains what you promised. When troubleshooting suggests a fix, make sure that fix is reachable without scrolling through unrelated sections.
+4. **Tautological tables and lists.** Cut anything that restates information the reader already has. If a customer asked for a display name, they do not need to "extract" the display name from the response.
+5. **Bridge between abstract examples and real screenshots.** If a screenshot shows a real deployment with concrete names (e.g. `idp-alert-overview-oidc`) but the rest of the doc uses placeholders (`myapp-oidc`), explicitly explain the relationship in one sentence so the reader does not think they are looking at a different system.
+6. **Casing/naming variants.** If you use `MyApp` for human-readable names and `myapp` for slugs, call it out once so the reader knows which one to put where.
+7. **Pinned versions in examples.** Always add a comment in the YAML noting the example version is illustrative, plus a link to where the latest version can be found.
+
+### Customer language conventions
+
+- **No "Traefik".** Customers do not know they use Traefik — they configure ingress via `ingress.public.enabled` / `ingress.private.enabled` in idp-advanced. Use "ingress middleware" or "OIDC middleware" instead. The technical chart README can mention Traefik freely; public docs should not.
+- **"servicedesk" is one word.** Never "service desk".
+- **Support sections direct customers to the IDP team on Slack**, not to "idp-support" or "platform engineers".
+- **Things outside the IDP team's area** (e.g. Entra app management, AD groups) should be explicitly attributed to servicedesk or the relevant external team — do not make claims about how they will be delivered or what the customer can self-serve.
+- **Do not recommend third-party websites for generating secrets**, even client-side ones. Show local one-liners (Python, Node, Bash, browser DevTools console) instead.
