@@ -1,6 +1,6 @@
 ---
 title: Prometheus metrics scraping
-nav_order: 15
+nav_order: 16
 parent: How to...
 domain: public
 permalink: /prometheus-metrics

@@ -67,6 +67,7 @@
 ./how-to/index.md
 ./how-to/auto-updates.md
 ./how-to/alerting.md
+./how-to/values-yaml-ide-schema.md
 ./how-to/dynamo-db.md
 ./how-to/grafana-shared-dashboards.md
 ./how-to/aurora-rds-proxy.md

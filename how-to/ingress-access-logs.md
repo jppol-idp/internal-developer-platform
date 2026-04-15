@@ -1,6 +1,6 @@
 ---
 title: Reading ingress access logs in Grafana
-nav_order: 16
+nav_order: 17
 parent: How to...
 domain: public
 permalink: /ingress-access-logs
