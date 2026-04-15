@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "replicaCount": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Number of replicas for high availability"
+    },
+    "image": {
+      "type": "object",
+      "properties": {
+        "registry": {
+          "type": "string",
+          "description": "Image registry"
+        },
+        "repository": {
+          "type": "string",
+          "description": "Image repository"
+        },
+        "tag": {
+          "type": "string",
+          "description": "Image tag"
+        },
+        "pullPolicy": {
+          "type": "string",
+          "enum": ["Always", "IfNotPresent", "Never"],
+          "description": "Image pull policy"
+        }
+      }
+    },
+    "debugLogging": {
+      "type": "boolean",
+      "description": "Enable verbose debug logging (connection info)"
+    },
+    "rds": {
+      "type": "object",
+      "properties": {
+        "host": {
+          "type": "string",
+          "description": "RDS hostname"
+        },
+        "port": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65535,
+          "description": "RDS port"
+        }
+      },
+      "required": ["host"]
+    },
+    "service": {
+      "type": "object",
+      "properties": {
+        "port": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65535,
+          "description": "Service port"
+        }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "properties": {
+        "requests": {
+          "type": "object",
+          "properties": {
+            "memory": { "type": "string" },
+            "cpu": { "type": "string" }
+          }
+        },
+        "limits": {
+          "type": "object",
+          "properties": {
+            "memory": { "type": "string" },
+            "cpu": { "type": "string" }
+          }
+        }
+      }
+    },
+    "podDisruptionBudget": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable PDB"
+        },
+        "minAvailable": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Minimum available pods"
+        }
+      }
+    },
+    "nodeSelector": {
+      "type": "object",
+      "description": "Node selector"
+    },
+    "tolerations": {
+      "type": "array",
+      "description": "Tolerations"
+    },
+    "affinity": {
+      "type": "object",
+      "description": "Affinity rules"
+    }
+  }
+}

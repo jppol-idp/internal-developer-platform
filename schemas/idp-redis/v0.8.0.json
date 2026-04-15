@@ -1,0 +1,739 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["type"],
+  "properties": {
+    "type": {
+      "type": "string",
+      "description": "Deployment type: 'standalone' or 'replication'",
+      "enum": ["standalone", "replication"]
+    },
+    "global": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Global configuration shared across all Redis deployments",
+      "properties": {
+        "image": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Global image configuration",
+          "properties": {
+            "registry": {
+              "type": "string",
+              "description": "Docker registry URL (default: quay.io)"
+            },
+            "pullPolicy": {
+              "type": "string",
+              "description": "Image pull policy",
+              "enum": ["Always", "Never", "IfNotPresent"]
+            },
+            "tag": {
+              "type": "string",
+              "description": "Image tag override (empty uses Chart.appVersion)"
+            }
+          }
+        },
+        "imagePullSecrets": {
+          "type": "array",
+          "description": "Image pull secrets for private registries",
+          "items": {
+            "type": "object"
+          }
+        },
+        "storage": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Global storage configuration",
+          "properties": {
+            "storageClassName": {
+              "type": "string",
+              "description": "Storage class name (empty uses cluster default)"
+            },
+            "accessModes": {
+              "type": "array",
+              "description": "PVC access modes",
+              "items": {
+                "type": "string",
+                "enum": ["ReadWriteOnce", "ReadOnlyMany", "ReadWriteMany"]
+              }
+            }
+          }
+        },
+        "labels": {
+          "type": "object",
+          "description": "Common labels for all resources"
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Common annotations for all resources"
+        }
+      }
+    },
+    "standalone": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Standalone Redis configuration (used when type=standalone)",
+      "properties": {
+        "image": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Image configuration (overrides global)",
+          "properties": {
+            "registry": {
+              "type": "string",
+              "description": "Docker registry URL"
+            },
+            "repository": {
+              "type": "string",
+              "description": "Image repository"
+            },
+            "tag": {
+              "type": "string",
+              "description": "Image tag"
+            }
+          }
+        },
+        "resources": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Container resource requirements",
+          "properties": {
+            "requests": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "cpu": {
+                  "type": "string",
+                  "description": "CPU request"
+                },
+                "memory": {
+                  "type": "string",
+                  "description": "Memory request"
+                }
+              }
+            },
+            "limits": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "cpu": {
+                  "type": "string",
+                  "description": "CPU limit"
+                },
+                "memory": {
+                  "type": "string",
+                  "description": "Memory limit"
+                }
+              }
+            }
+          }
+        },
+        "persistence": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Persistence configuration",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable persistence for data durability"
+            },
+            "size": {
+              "type": "string",
+              "description": "Storage size (e.g., 1Gi, 10Gi)"
+            },
+            "storageClassName": {
+              "type": "string",
+              "description": "Storage class name override"
+            }
+          }
+        },
+        "podSecurityContext": {
+          "type": "object",
+          "description": "Pod-level security context",
+          "properties": {
+            "runAsUser": {
+              "type": "integer",
+              "description": "User ID to run as"
+            },
+            "runAsGroup": {
+              "type": "integer",
+              "description": "Group ID to run as"
+            },
+            "fsGroup": {
+              "type": "integer",
+              "description": "Filesystem group ID"
+            }
+          }
+        },
+        "securityContext": {
+          "type": "object",
+          "description": "Container-level security context",
+          "properties": {
+            "allowPrivilegeEscalation": {
+              "type": "boolean",
+              "description": "Allow privilege escalation"
+            },
+            "readOnlyRootFilesystem": {
+              "type": "boolean",
+              "description": "Mount filesystem as read-only"
+            },
+            "runAsNonRoot": {
+              "type": "boolean",
+              "description": "Require non-root user"
+            }
+          }
+        },
+        "affinity": {
+          "type": "object",
+          "description": "Pod affinity rules"
+        },
+        "nodeSelector": {
+          "type": "object",
+          "description": "Node selector labels"
+        },
+        "tolerations": {
+          "type": "array",
+          "description": "Pod tolerations",
+          "items": {
+            "type": "object"
+          }
+        },
+        "env": {
+          "type": "array",
+          "description": "Environment variables",
+          "items": {
+            "type": "object"
+          }
+        },
+        "labels": {
+          "type": "object",
+          "description": "Additional labels for standalone Redis"
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional annotations for standalone Redis"
+        }
+      }
+    },
+    "replication": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "RedisReplication configuration (used when type=replication)",
+      "properties": {
+        "image": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Image configuration (overrides global)",
+          "properties": {
+            "registry": {
+              "type": "string",
+              "description": "Docker registry URL"
+            },
+            "repository": {
+              "type": "string",
+              "description": "Image repository"
+            },
+            "tag": {
+              "type": "string",
+              "description": "Image tag"
+            }
+          }
+        },
+        "size": {
+          "type": "integer",
+          "description": "Number of Redis replicas (minimum 2)",
+          "minimum": 2
+        },
+        "resources": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Container resource requirements",
+          "properties": {
+            "requests": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "cpu": {
+                  "type": "string",
+                  "description": "CPU request"
+                },
+                "memory": {
+                  "type": "string",
+                  "description": "Memory request"
+                }
+              }
+            },
+            "limits": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "cpu": {
+                  "type": "string",
+                  "description": "CPU limit"
+                },
+                "memory": {
+                  "type": "string",
+                  "description": "Memory limit"
+                }
+              }
+            }
+          }
+        },
+        "persistence": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Persistence configuration",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable persistence for data durability"
+            },
+            "size": {
+              "type": "string",
+              "description": "Storage size (e.g., 1Gi, 10Gi)"
+            },
+            "storageClassName": {
+              "type": "string",
+              "description": "Storage class name override"
+            }
+          }
+        },
+        "podSecurityContext": {
+          "type": "object",
+          "description": "Pod-level security context",
+          "properties": {
+            "runAsUser": {
+              "type": "integer",
+              "description": "User ID to run as"
+            },
+            "runAsGroup": {
+              "type": "integer",
+              "description": "Group ID to run as"
+            },
+            "fsGroup": {
+              "type": "integer",
+              "description": "Filesystem group ID"
+            }
+          }
+        },
+        "securityContext": {
+          "type": "object",
+          "description": "Container-level security context",
+          "properties": {
+            "allowPrivilegeEscalation": {
+              "type": "boolean",
+              "description": "Allow privilege escalation"
+            },
+            "readOnlyRootFilesystem": {
+              "type": "boolean",
+              "description": "Mount filesystem as read-only"
+            },
+            "runAsNonRoot": {
+              "type": "boolean",
+              "description": "Require non-root user"
+            }
+          }
+        },
+        "podDisruptionBudget": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Pod Disruption Budget configuration",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable Pod Disruption Budget"
+            },
+            "minAvailable": {
+              "type": "integer",
+              "description": "Minimum pods that must stay available",
+              "minimum": 1
+            }
+          }
+        },
+        "affinity": {
+          "type": "object",
+          "description": "Pod affinity rules"
+        },
+        "nodeSelector": {
+          "type": "object",
+          "description": "Node selector labels"
+        },
+        "tolerations": {
+          "type": "array",
+          "description": "Pod tolerations",
+          "items": {
+            "type": "object"
+          }
+        },
+        "env": {
+          "type": "array",
+          "description": "Environment variables",
+          "items": {
+            "type": "object"
+          }
+        },
+        "labels": {
+          "type": "object",
+          "description": "Additional labels for RedisReplication"
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional annotations for RedisReplication"
+        }
+      }
+    },
+    "sentinel": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "RedisSentinel configuration (automatically deployed with replication)",
+      "properties": {
+        "image": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Image configuration (overrides global)",
+          "properties": {
+            "registry": {
+              "type": "string",
+              "description": "Docker registry URL"
+            },
+            "repository": {
+              "type": "string",
+              "description": "Image repository"
+            },
+            "tag": {
+              "type": "string",
+              "description": "Image tag"
+            }
+          }
+        },
+        "size": {
+          "type": "integer",
+          "description": "Number of Sentinel replicas",
+          "minimum": 1
+        },
+        "redisSentinelConfig": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Redis Sentinel specific configuration for monitoring and failover",
+          "properties": {
+            "downAfterMilliseconds": {
+              "type": "string",
+              "description": "Time in milliseconds a master should be unreachable to be considered down (default: 30000)"
+            },
+            "failoverTimeout": {
+              "type": "string",
+              "description": "Timeout for failover operation in milliseconds (default: 180000)"
+            },
+            "masterGroupName": {
+              "type": "string",
+              "description": "Name of the master group that Sentinel monitors"
+            },
+            "parallelSyncs": {
+              "type": "string",
+              "description": "Number of slaves that can be reconfigured in parallel during failover (default: 1)"
+            },
+            "quorum": {
+              "type": "string",
+              "description": "Minimum number of Sentinels that need to agree about master being down (default: 2)"
+            }
+          }
+        },
+        "resources": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Container resource requirements",
+          "properties": {
+            "requests": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "cpu": {
+                  "type": "string",
+                  "description": "CPU request"
+                },
+                "memory": {
+                  "type": "string",
+                  "description": "Memory request"
+                }
+              }
+            },
+            "limits": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "cpu": {
+                  "type": "string",
+                  "description": "CPU limit"
+                },
+                "memory": {
+                  "type": "string",
+                  "description": "Memory limit"
+                }
+              }
+            }
+          }
+        },
+        "persistence": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Persistence configuration",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable persistence for data durability"
+            },
+            "size": {
+              "type": "string",
+              "description": "Storage size (e.g., 1Gi, 10Gi)"
+            },
+            "storageClassName": {
+              "type": "string",
+              "description": "Storage class name override"
+            }
+          }
+        },
+        "podSecurityContext": {
+          "type": "object",
+          "description": "Pod-level security context",
+          "properties": {
+            "runAsUser": {
+              "type": "integer",
+              "description": "User ID to run as"
+            },
+            "runAsGroup": {
+              "type": "integer",
+              "description": "Group ID to run as"
+            },
+            "fsGroup": {
+              "type": "integer",
+              "description": "Filesystem group ID"
+            }
+          }
+        },
+        "securityContext": {
+          "type": "object",
+          "description": "Container-level security context",
+          "properties": {
+            "allowPrivilegeEscalation": {
+              "type": "boolean",
+              "description": "Allow privilege escalation"
+            },
+            "readOnlyRootFilesystem": {
+              "type": "boolean",
+              "description": "Mount filesystem as read-only"
+            },
+            "runAsNonRoot": {
+              "type": "boolean",
+              "description": "Require non-root user"
+            }
+          }
+        },
+        "podDisruptionBudget": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Pod Disruption Budget configuration",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable Pod Disruption Budget"
+            },
+            "minAvailable": {
+              "type": "integer",
+              "description": "Minimum pods that must stay available",
+              "minimum": 1
+            }
+          }
+        },
+        "affinity": {
+          "type": "object",
+          "description": "Pod affinity rules"
+        },
+        "nodeSelector": {
+          "type": "object",
+          "description": "Node selector labels"
+        },
+        "tolerations": {
+          "type": "array",
+          "description": "Pod tolerations",
+          "items": {
+            "type": "object"
+          }
+        },
+        "env": {
+          "type": "array",
+          "description": "Environment variables",
+          "items": {
+            "type": "object"
+          }
+        },
+        "labels": {
+          "type": "object",
+          "description": "Additional labels for RedisSentinel"
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional annotations for RedisSentinel"
+        }
+      }
+    },
+    "monitoring": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Prometheus monitoring configuration (includes redis-exporter)",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable Prometheus monitoring (deploys exporter sidecar and ServiceMonitor)"
+        },
+        "labels": {
+          "type": "object",
+          "description": "Labels for ServiceMonitor (for Prometheus discovery)"
+        },
+        "interval": {
+          "type": "string",
+          "description": "Prometheus scrape interval"
+        },
+        "scrapeTimeout": {
+          "type": "string",
+          "description": "Prometheus scrape timeout"
+        },
+        "params": {
+          "type": "object",
+          "description": "Additional Prometheus scrape params"
+        },
+        "exporter": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Redis Exporter configuration (only used when monitoring.enabled=true)",
+          "properties": {
+            "image": {
+              "type": "string",
+              "description": "Full image URL for redis-exporter"
+            },
+            "imagePullPolicy": {
+              "type": "string",
+              "description": "Image pull policy",
+              "enum": ["Always", "Never", "IfNotPresent"]
+            },
+            "port": {
+              "type": "integer",
+              "description": "Exporter metrics port",
+              "minimum": 1,
+              "maximum": 65535
+            },
+            "resources": {
+              "type": "object",
+              "additionalProperties": false,
+              "description": "Container resource requirements",
+              "properties": {
+                "requests": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "cpu": {
+                      "type": "string",
+                      "description": "CPU request"
+                    },
+                    "memory": {
+                      "type": "string",
+                      "description": "Memory request"
+                    }
+                  }
+                },
+                "limits": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "cpu": {
+                      "type": "string",
+                      "description": "CPU limit"
+                    },
+                    "memory": {
+                      "type": "string",
+                      "description": "Memory limit"
+                    }
+                  }
+                }
+              }
+            },
+            "env": {
+              "type": "array",
+              "description": "Environment variables for exporter",
+              "items": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "auth": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Redis authentication configuration (uses AWS Secrets Manager via ExternalSecret by default)",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable authentication for Redis instances"
+        },
+        "secretName": {
+          "type": "string",
+          "description": "AWS Secrets Manager secret name (just the suffix). Full path will be: customer/{{ .Release.Namespace }}/{{ secretName }}"
+        },
+        "externalSecretDisabled": {
+          "type": "boolean",
+          "description": "Set to true to skip ExternalSecret generation and use an existing K8s secret instead (advanced)"
+        }
+      }
+    },
+    "service": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Kubernetes Service configuration",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Service type",
+          "enum": ["ClusterIP", "NodePort", "LoadBalancer", "ExternalName"]
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Service annotations"
+        }
+      }
+    },
+    "serviceAccount": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Kubernetes ServiceAccount configuration",
+      "properties": {
+        "create": {
+          "type": "boolean",
+          "description": "Create a service account"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the service account to use"
+        },
+        "annotations": {
+          "type": "object",
+          "description": "ServiceAccount annotations"
+        }
+      }
+    },
+    "idp_oidc_provider_url": {
+      "type": "string",
+      "description": "OIDC provider URL (set by ArgoCD application generator)"
+    },
+    "idp_aws_account": {
+      "type": ["number", "string"],
+      "description": "AWS account ID (set by ArgoCD application generator)"
+    },
+    "ingress": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Injected by ApplicationSet — not used by this chart"
+    }
+  }
+}

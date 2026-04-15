@@ -1,0 +1,248 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.example.com/helm-idp-dynamodb/values.schema.json",
+  "title": "helm-idp-dynamodb values schema",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "idp_aws_account": {
+      "description": "Only present for compatibility issues."
+    },
+    "idp_oidc_provider_url": {
+      "description": "Only present for compatibility issues."
+    },
+    "ingress": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Injected by ApplicationSet — not used by this chart"
+    },
+    "managementPolicies": {
+      "type": "string",
+      "enum": ["Control", "Observe"],
+      "description": "Should records be observed or controlled. (Zones are always observe only.)"
+    },
+    "deletionPolicy": {
+      "type": "string",
+      "enum": ["Orphan", "Delete"],
+      "description": "Should records be deleted or left orphan if a record is removed or chart is uninstalled?"
+    },
+    "tables": {
+      "type": "array",
+      "description": "Specify tables to be created. Each entry defines a DynamoDB table and its attributes.",
+      "default": [],
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "pointInTimeRecovery": {
+            "type": "boolean",
+            "description": "Enable point in time recovery for the table. (Allow recovery enable restore to any point in time in the last 35 days.)",
+            "default": true
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the table. The namespace will be prefixed when rendered (e.g., <namespace>-<name>)."
+          },
+          "hashKey": {
+            "type": "string",
+            "description": "Name of the hash (partition) key. Must also be defined in the attributes array."
+          },
+          "rangeKey": {
+            "type": "string",
+            "description": "Name of the range (sort) key, if any. Must also be defined in the attributes array."
+          },
+          "readCapacity": {
+            "type": "integer",
+            "description": "Read capacity - only meaningful when billingMode is PROVISIONED"
+          },
+          "writeCapacity": {
+            "type": "integer",
+            "description": "Write capacity - only meaningful when billingMode is PROVISIONED"
+          },
+          "billingMode": {
+            "enum": [
+              "PAY_PER_REQUEST",
+              "PROVISIONED"
+            ],
+            "description": "Billing mode for the table. Can be either PAY_PER_REQUEST or PROVISIONED. If PROVISIONED you must also specify readCapacity and writeCapacity."
+          },
+          "region": {
+            "type": "string",
+            "description": "Optional. If set it must point to a valid AWS region."
+          },
+          "attributes": {
+            "type": "array",
+            "description": "Complete set of attribute definitions for the table (at least those used as keys).",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Attribute name."
+                },
+                "type": {
+                  "type": "string",
+                  "description": "Attribute type. Typical DynamoDB types: 'S' (string), 'N' (number), 'B' (binary)."
+                }
+              },
+              "required": [
+                "name",
+                "type"
+              ]
+            }
+          },
+          "useIdpPrefix": {
+            "type": "boolean",
+            "default": false,
+            "description": "If enabled the table name will get prefixed with 'idp-' in addition to the namespace. Only for legacy purposes; you should usually omit this settings."
+          },
+          "serviceAccountWriteRoles": {
+            "type": "array",
+            "description": "List of existing IAM Role names to which this chart will attach the generated write policies for this table.",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true,
+            "default": []
+          },
+          "serviceAccountReadRoles": {
+            "type": "array",
+            "description": "List of existing IAM Role names to which this chart will attach the generated read policies for this table.",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true,
+            "default": []
+          },
+          "ttl": {
+            "description": "Setup of ttl for the records. Each element must consist of 'attributeName' (a string) and the boolean 'enabled'.",
+            "type": "object",
+            "required": ["attributeName", "enabled" ],
+            "additionalProperties": false,
+            "properties": {
+              "attributeName": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Name of attribute to use for ttl."
+              },
+              "enabled": {
+                "type": "boolean",
+                "description": "Whether ttl should be enabled or not."
+              }
+            }
+          },
+          "globalSecondaryIndex": {
+            "type": "array",
+            "description": "A list of global secondary indexes to create for the table.",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "hashKey": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Primary key of the index"
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Name of the index."
+                },
+                "nonKeyAttributes": {
+                  "description": "An array of strings defining the attributes to include in the index for faster retrieval.",
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Attribute name for 'INCLUDED' attribute."
+                  }
+                },
+                "projectionType": {
+                  "type": "string",
+                  "description": "Defines lookup. KEYS_ONLY will require additional reads but require least storage. Using 'INCLUDE' requires elements in 'nonKeyAttributes'.",
+                  "enum": [
+                    "KEYS_ONLY",
+                    "INCLUDE",
+                    "ALL"
+                  ]
+                },
+                "rangeKey": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Sorting key. Required"
+                },
+                "readCapacity": {
+                  "type": "integer",
+                  "description": "Read capacity - only meaningful when billingMode is PROVISIONED"
+                },
+                "writeCapacity": {
+                  "type": "integer",
+                  "description": "Write capacity - only meaningful when billingMode is PROVISIONED"
+                }
+              },
+              "required": [
+                "name",
+                "hashKey",
+                "projectionType"
+              ]
+            }
+          },
+          "localSecondaryIndex": {
+            "type": "array",
+            "description": "List of Local Secondary Indexes to create for the table.",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Index name."
+                },
+                "rangeKey": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Range key for sorting (the alternate sort key used by the LSI)."
+                },
+                "projectionType": {
+                  "description": "Defines how the index handles non-index attributes. Possible values are 'KEYS_ONLY', 'INCLUDE' and 'ALL'.",
+                  "type": "string",
+                  "enum": [
+                    "KEYS_ONLY",
+                    "INCLUDE",
+                    "ALL"
+                  ]
+                },
+                "nonKeyAttributes": {
+                  "description": "An array of strings defining the attributes to include in the index for faster retrieval.",
+                  "type": "array",
+                  "additionalProperties": false,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              },
+              "required": [
+                "name",
+                "rangeKey",
+                "nonKeyAttributes",
+                "projectionType"
+              ]
+            },
+            "default": []
+          }
+        },
+        "required": [
+          "hashKey",
+          "billingMode",
+          "attributes",
+          "name"
+        ]
+      }
+    }
+  }
+}

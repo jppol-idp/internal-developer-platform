@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "postgresqlDatabases": {
+      "description": "List of postgresql database configurations to be provisioned.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "Name of the postgresql database (must be unique per namespace). The actual name of the database will be prefixed with the Kubernetes namespace to avoid naming collisions",
+            "type": "string"
+          },
+          "mode": {
+            "description": "Lifecycle mode which is either standard or protected. Production databases should be protected",
+            "type": "string",
+            "default": "standard",
+            "enum": ["standard", "protected"]
+          }
+        }
+      }
+    }
+  }
+}

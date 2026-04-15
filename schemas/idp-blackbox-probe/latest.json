@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Helm IDP Blackbox Probe Values",
+  "type": "object",
+  "properties": {
+    "idp_aws_account": { 
+      "anyOf": [
+        { "type": "string" },
+        { "type": "integer" }
+      ]
+    },
+    "idp_oidc_provider_url": { "type": "string" },
+    "probes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "urls"],
+        "properties": {
+          "name": { "type": "string" },
+          "jobName": { "type": "string" },
+          "jobname": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["http_2xx", "http_403_as_ok", "tcp_connect"]
+          },
+          "external": { "type": "boolean" },
+          "interval": { "type": "string" },
+          "urls": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "anyOf": [
+                {
+                  "pattern": "^(https?://)([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,}(:[0-9]+)?(/.*)?$"
+                },
+                {
+                  "pattern": "^([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,}(:[0-9]+)$"
+                },
+                {
+                  "pattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}(:[0-9]+)$"
+                }
+              ]
+            }
+          }
+            ,
+            "metricRelabelings": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "sourceLabels": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  },
+                  "targetLabel": { "type": "string" },
+                  "regex": { "type": "string" },
+                  "replacement": { "type": "string" },
+                  "action": { "type": "string" }
+                },
+                "required": ["targetLabel", "replacement", "action"],
+                "additionalProperties": false
+              }
+            }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["probes"],
+  "additionalProperties": true
+}

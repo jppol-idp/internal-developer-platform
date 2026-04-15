@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "argo-workflow-job values",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "jobName": {
+          "type": "string",
+          "description": "Name to apply to the Workflow object.",
+          "default": "example-test-job",
+          "minLength": 1
+        }
+      }
+    },
+    "serviceAccount": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "annotations": {
+          "type": "object",
+          "description": "Annotations to add to the ServiceAccount.",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "default": {}
+        },
+        "irsa": {
+          "type": "object",
+          "description": "AWS IAM Roles for Service Accounts (IRSA) settings.",
+          "additionalProperties": true,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false,
+              "description": "Enable IRSA for the ServiceAccount."
+            }
+          }
+        }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "description": "Argo Workflows Workflow.spec values. Passed through to the Workflow CR.",
+      "additionalProperties": true,
+      "properties": {
+        "entrypoint": {
+          "type": "string",
+          "default": "whalesay"
+        },
+        "templates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "name": { "type": "string" },
+              "inputs": { "type": "object" },
+              "outputs": { "type": "object" },
+              "metadata": { "type": "object" },
+              "container": {
+                "type": "object",
+                "additionalProperties": true,
+                "properties": {
+                  "name": { "type": "string" },
+                  "image": { "type": "string" },
+                  "command": { "type": "array", "items": { "type": "string" } },
+                  "args": { "type": "array", "items": { "type": "string" } },
+                  "resources": { "type": "object" }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+

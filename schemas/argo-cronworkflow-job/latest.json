@@ -1,0 +1,249 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "argo-cronworkflow-job values",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "jobName": {
+          "type": "string",
+          "description": "Name to apply to the CronWorkflow object.",
+          "default": "example-cron-job",
+          "minLength": 1
+        }
+      }
+    },
+    "serviceAccount": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "annotations": {
+          "type": "object",
+          "description": "Annotations to add to the ServiceAccount.",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "default": {}
+        },
+        "irsa": {
+          "type": "object",
+          "description": "AWS IAM Roles for Service Accounts (IRSA) settings.",
+          "additionalProperties": true,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false,
+              "description": "Enable IRSA for the ServiceAccount."
+            },
+            "iamPolicyStatements": {
+              "type": "array",
+              "description": "Additional IAM policy statements to attach via IRSA.",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "Sid": {
+                    "type": "string"
+                  },
+                  "Effect": {
+                    "type": "string",
+                    "enum": [
+                      "Allow",
+                      "Deny"
+                    ]
+                  },
+                  "Action": {
+                    "oneOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    ]
+                  },
+                  "Resource": {
+                    "oneOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    ]
+                  },
+                  "Condition": {
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "Effect",
+                  "Action",
+                  "Resource"
+                ]
+              },
+              "default": []
+            }
+          }
+        }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "description": "Argo Workflows CronWorkflow spec values. Passed through to the CronWorkflow CR.",
+      "additionalProperties": true,
+      "properties": {
+        "concurrencyPolicy": {
+          "type": "string",
+          "enum": [
+            "Allow",
+            "Forbid",
+            "Replace"
+          ],
+          "default": "Replace",
+          "description": "Concurrency policy for CronWorkflow runs."
+        },
+        "schedule": {
+          "type": "string",
+          "description": "Single cron schedule (alternative to schedules).",
+          "minLength": 1
+        },
+        "schedules": {
+          "type": "array",
+          "description": "One or more cron schedules.",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "*/1 * * * *"
+          ]
+        },
+        "successfulJobsHistoryLimit": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 5,
+          "description": "How many successful runs to retain."
+        },
+        "failedJobsHistoryLimit": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 5,
+          "description": "How many failed runs to retain."
+        },
+        "startingDeadlineSeconds": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 30,
+          "description": "Allowed time skew to start a missed run."
+        },
+        "suspend": {
+          "type": "boolean",
+          "default": false,
+          "description": "If true, do not run scheduled workflows."
+        },
+        "workflowSpec": {
+          "type": "object",
+          "description": "Argo Workflow spec used by the CronWorkflow.",
+          "additionalProperties": true,
+          "properties": {
+            "entrypoint": {
+              "type": "string",
+              "default": "whalesay"
+            },
+            "templates": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": true,
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "inputs": {
+                    "type": "object"
+                  },
+                  "outputs": {
+                    "type": "object"
+                  },
+                  "metadata": {
+                    "type": "object"
+                  },
+                  "container": {
+                    "type": "object",
+                    "additionalProperties": true,
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "image": {
+                        "type": "string"
+                      },
+                      "command": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "args": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "resources": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "external_secrets": {
+      "type": "array",
+      "description": "List of environment variables sourced from AWS Secrets Manager.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "env_name": {
+            "type": "string",
+            "description": "name of value as it is exposed to the environment of the step"
+          },
+          "secretsmanager_name": {
+            "type": "string",
+            "description": "Name of secretsmanager secret to retrieve. Namespace and path is appended by the system"
+          },
+          "property": {
+            "type": "string",
+            "description": "When secret contains a json object this value can contain a path to an attribute  (Optional)"
+          }
+        },
+        "required": [
+          "env_name",
+          "secretsmanager_name"
+        ]
+      },
+      "default": []
+    }
+  }
+}

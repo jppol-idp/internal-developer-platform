@@ -1,0 +1,609 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Helm values schema",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "replicaCount": { "type": "integer" },
+    "deploymentStrategy": {
+      "type": "object",
+      "description": "Deployment strategy configuration. For single-replica deployments with zero-downtime updates, use RollingUpdate with maxSurge: 1 and maxUnavailable: 0",
+      "properties": {
+        "type": { "type": "string", "enum": ["RollingUpdate", "Recreate"] },
+        "rollingUpdate": {
+          "type": "object",
+          "properties": {
+            "maxSurge": { "type": ["string", "integer"] },
+            "maxUnavailable": { "type": ["string", "integer"] }
+          }
+        }
+      }
+    },
+    "managementPolicies": {
+      "type": "string",
+      "enum": ["Control", "Observe"],
+      "description": "Should records be observed or controlled. (Zones are always observe only.)"
+    },
+    "deletionPolicy": {
+      "type": "string",
+      "enum": ["Orphan", "Delete"],
+      "description": "Should records be deleted or left orphan if a record is removed or chart is uninstalled?"
+    },
+    "forceSync": {
+      "type": "string",
+      "description": "Change value to instruct the system to reread secret value from AWS secrets manager"
+    },
+    "image": {
+      "type": "object",
+      "properties": {
+        "repository": { "type": "string" },
+        "pullPolicy": { "type": "string", "enum": ["Always", "Never", "IfNotPresent"] },
+        "tag": { "type": "string" }
+      },
+      "required": ["repository", "pullPolicy", "tag"]
+    },
+    "nameOverride": { "type": "string" },
+    "fullnameOverride": { "type": "string" },
+    "podAnnotations": { "type": "object", "additionalProperties": { "type": "string" } },
+    "podLabels": { "type": "object", "additionalProperties": { "type": "string" } },
+    "podSecurityContext": { "type": "object" },
+    "securityContext": { "type": "object" },
+    "compute": {
+      "type": "object",
+      "properties": {
+        "arch": { "type": "string", "enum": ["amd64", "arm64"] },
+        "spot": { "type": "boolean" },
+        "gpu": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "type": { "type": "string", "enum": ["nvidia", "amd"] },
+            "count": { "type": "integer" }
+          }
+        }
+      }
+    },
+    "serviceAccount": {
+      "type": "object",
+      "properties": {
+        "create": { "type": "boolean" },
+        "irsa": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "iamPolicyStatements": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "Effect": { "type": "string" },
+                  "Action": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  },
+                  "Resource": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "external_secrets": {
+      "type": "array",
+      "items": {
+         "type": "object",
+         "required":["env_name", "secretsmanager_name"],
+         "additionalProperties": false,
+         "properties": {
+           "env_name": { "type": "string" },
+           "secretsmanager_name": { "type": "string" },
+           "property": { "type": "string" }
+         }
+      }
+    },
+    "env": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "oneOf": [
+        {
+          "required": ["name", "value"],
+          "additionalProperties": false,
+          "properties": {
+            "name": { "type": "string" },
+            "value": { "type": "string" }
+            }
+        }
+        ,
+        {
+          "required": ["name", "valueFrom"],
+          "additionalProperties": false,
+          "properties": {
+            "name": { "type": "string" },
+            "valueFrom": {
+              "type": "object",
+              "required": ["secretKeyRef"],
+              "additionalProperties": false,
+              "properties": {
+                 "secretKeyRef": {
+                   "type": "object",
+                   "required": ["name", "key"],
+                   "properties": {
+                     "name": { "type": "string" },
+                     "key": { "type": "string" }
+                   },
+                   "additionalProperties": false
+                 }
+              }
+            }
+          }
+        }
+        ]
+      }
+    },
+    "service": {
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "enum": ["ClusterIP", "NodePort", "LoadBalancer"] },
+        "port": { "type": "integer" },
+        "metrics": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "port": { "type": "integer" },
+            "name": { "type": "string" }
+          }
+        }
+      }
+    },
+    "serviceMonitor": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } },
+        "interval": { "type": "string" },
+        "scrapeTimeout": { "type": "string" },
+        "portName": { "type": "string" },
+        "path": { "type": "string" },
+        "scheme": { "type": "string", "enum": ["http", "https"] },
+        "relabelings": { "type": "array" },
+        "metricRelabelings": { "type": "array" },
+        "targetLabels": { "type": "array" },
+        "endpointAdditionalParams": { "type": "object" }
+      }
+    },
+    "ingress": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "fqdn": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Hostnames connected to the ingress. Note that all hostnames are prepended with 'internal-' or 'internal.' when bound to the private ingress."
+        },
+        "public": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "httpCertChallenge": { "type": "boolean" },
+            "ipAllowList": { "type": "array", "items": { "type": "string" }, "description": "IP CIDR ranges to allow. Generates IPAllowList Middleware CRD." },
+            "annotations": { "type": "object", "additionalProperties": { "type": "string" } },
+            "middlewares": { "type": "array", "items": { "type": "string" }, "description": "Additional middleware references. Format: namespace-name@kubernetescrd" }
+          }
+        },
+        "private": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "wildcardCertificate": { "type": "boolean", "description": "When true, private ingresses use 'internal-' + fqdn with wildcard cert. When false, 'internal.' + fqdn with individual cert." },
+            "ipAllowList": { "type": "array", "items": { "type": "string" }, "description": "IP CIDR ranges to allow. Generates IPAllowList Middleware CRD." },
+            "annotations": { "type": "object", "additionalProperties": { "type": "string" } },
+            "middlewares": { "type": "array", "items": { "type": "string" }, "description": "Additional middleware references. Format: namespace-name@kubernetescrd" }
+          }
+        }
+      }
+    },
+    "vpa": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "updatePolicy": { "type": "string", "enum": ["Auto", "Initial", "Off"] }
+      }
+    },
+    "storage": { "type": "object" },
+    "volumes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string" }
+        }
+      }
+    },
+    "volumeMounts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "mountPath"],
+        "properties": {
+          "name": { "type": "string" },
+          "mountPath": { "type": "string" },
+          "readOnly": { "type": "boolean" }
+        }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "properties": {
+        "limits": {
+          "type": "object",
+          "properties": {
+            "cpu": {
+              "type": "string",
+              "pattern": "^[0-9]+m?$"
+            },
+            "memory": {
+              "type": "string",
+              "pattern": "^([0-9]+\\.)?[0-9]+(Ei|Pi|Ti|Gi|Mi|Ki|E|P|T|G|M|K)?$"
+            }
+          }
+        },
+        "requests": {
+          "type": "object",
+          "properties": {
+            "cpu": {
+              "type": "string",
+              "pattern": "^[0-9]+m?$"
+            },
+            "memory": {
+              "type": "string",
+              "pattern": "^([0-9]+\\.)?[0-9]+(Ei|Pi|Ti|Gi|Mi|Ki|E|P|T|G|M|K)?$"
+            }
+          }
+        }
+      }
+    },
+    "livenessProbe": {
+      "type": ["object", "null"],
+      "properties": {
+        "httpGet": {
+          "type": "object",
+          "properties": {
+            "path": { "type": "string" },
+            "port": { "type": ["string", "integer"] },
+            "scheme": { "type": "string", "enum": ["HTTP", "HTTPS"] },
+            "httpHeaders": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name", "value"],
+                "properties": {
+                  "name": { "type": "string" },
+                  "value": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "tcpSocket": {
+          "type": "object",
+          "properties": {
+            "port": { "type": ["string", "integer"] },
+            "host": { "type": "string" }
+          }
+        },
+        "exec": {
+          "type": "object",
+          "properties": {
+            "command": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "grpc": {
+          "type": "object",
+          "properties": {
+            "port": { "type": "integer" },
+            "service": { "type": "string" }
+          }
+        },
+        "initialDelaySeconds": { "type": "integer" },
+        "periodSeconds": { "type": "integer" },
+        "timeoutSeconds": { "type": "integer" },
+        "successThreshold": { "type": "integer" },
+        "failureThreshold": { "type": "integer" }
+      }
+    },
+    "readinessProbe": {
+      "type": ["object", "null"],
+      "properties": {
+        "httpGet": {
+          "type": "object",
+          "properties": {
+            "path": { "type": "string" },
+            "port": { "type": ["string", "integer"] },
+            "scheme": { "type": "string", "enum": ["HTTP", "HTTPS"] },
+            "httpHeaders": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name", "value"],
+                "properties": {
+                  "name": { "type": "string" },
+                  "value": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "tcpSocket": {
+          "type": "object",
+          "properties": {
+            "port": { "type": ["string", "integer"] },
+            "host": { "type": "string" }
+          }
+        },
+        "exec": {
+          "type": "object",
+          "properties": {
+            "command": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "grpc": {
+          "type": "object",
+          "properties": {
+            "port": { "type": "integer" },
+            "service": { "type": "string" }
+          }
+        },
+        "initialDelaySeconds": { "type": "integer" },
+        "periodSeconds": { "type": "integer" },
+        "timeoutSeconds": { "type": "integer" },
+        "successThreshold": { "type": "integer" },
+        "failureThreshold": { "type": "integer" }
+      }
+    },
+    "startupProbe": {
+      "type": ["object", "null"],
+      "properties": {
+        "httpGet": {
+          "type": "object",
+          "properties": {
+            "path": { "type": "string" },
+            "port": { "type": ["string", "integer"] },
+            "scheme": { "type": "string", "enum": ["HTTP", "HTTPS"] },
+            "httpHeaders": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name", "value"],
+                "properties": {
+                  "name": { "type": "string" },
+                  "value": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "tcpSocket": {
+          "type": "object",
+          "properties": {
+            "port": { "type": ["string", "integer"] },
+            "host": { "type": "string" }
+          }
+        },
+        "exec": {
+          "type": "object",
+          "properties": {
+            "command": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "grpc": {
+          "type": "object",
+          "properties": {
+            "port": { "type": "integer" },
+            "service": { "type": "string" }
+          }
+        },
+        "initialDelaySeconds": { "type": "integer" },
+        "periodSeconds": { "type": "integer" },
+        "timeoutSeconds": { "type": "integer" },
+        "successThreshold": { "type": "integer" },
+        "failureThreshold": { "type": "integer" }
+      }
+    },
+    "terminationGracePeriodSeconds": {
+      "type": ["integer", "null"],
+      "minimum": 0,
+      "description": "Duration in seconds the pod needs to terminate gracefully"
+    },
+    "lifecycle": {
+      "type": "object",
+      "properties": {
+        "preStop": {
+          "type": "object",
+          "properties": {
+            "exec": {
+              "type": "object",
+              "properties": {
+                "command": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              }
+            },
+            "httpGet": {
+              "type": "object",
+              "properties": {
+                "path": { "type": "string" },
+                "port": { "type": ["string", "integer"] },
+                "scheme": { "type": "string", "enum": ["HTTP", "HTTPS"] },
+                "host": { "type": "string" },
+                "httpHeaders": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["name", "value"],
+                    "properties": {
+                      "name": { "type": "string" },
+                      "value": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            },
+            "tcpSocket": {
+              "type": "object",
+              "properties": {
+                "port": { "type": ["string", "integer"] },
+                "host": { "type": "string" }
+              }
+            },
+            "sleep": {
+              "type": "object",
+              "properties": {
+                "seconds": { "type": "integer", "minimum": 0 }
+              },
+              "required": ["seconds"]
+            }
+          }
+        },
+        "postStart": {
+          "type": "object",
+          "properties": {
+            "exec": {
+              "type": "object",
+              "properties": {
+                "command": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              }
+            },
+            "httpGet": {
+              "type": "object",
+              "properties": {
+                "path": { "type": "string" },
+                "port": { "type": ["string", "integer"] },
+                "scheme": { "type": "string", "enum": ["HTTP", "HTTPS"] },
+                "host": { "type": "string" },
+                "httpHeaders": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["name", "value"],
+                    "properties": {
+                      "name": { "type": "string" },
+                      "value": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            },
+            "tcpSocket": {
+              "type": "object",
+              "properties": {
+                "port": { "type": ["string", "integer"] },
+                "host": { "type": "string" }
+              }
+            },
+            "sleep": {
+              "type": "object",
+              "properties": {
+                "seconds": { "type": "integer", "minimum": 0 }
+              },
+              "required": ["seconds"]
+            }
+          }
+        }
+      }
+    },
+    "autoscaling": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "minReplicas": { "type": "integer" },
+        "maxReplicas": { "type": "integer" },
+        "targetCPUUtilizationPercentage": { "type": "integer" }
+      }
+    },
+    "podDisruptionBudget": {
+      "type": "object",
+      "description": "PodDisruptionBudget configuration for ensuring availability during disruptions. By default, PDB is skipped for single-replica deployments to prevent blocking node drains",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "skipSingleReplica": {
+          "type": "boolean",
+          "description": "Skip PDB creation for single-replica deployments. Defaults to true"
+        },
+        "minAvailable": { "type": ["integer", "string"] },
+        "maxUnavailable": { "type": ["integer", "string"] },
+        "unhealthyPodEvictionPolicy": {
+          "type": "string",
+          "enum": ["IfHealthyBudget", "AlwaysAllow"],
+          "description": "Policy for handling unhealthy pods during eviction (Kubernetes 1.26+)"
+        }
+      }
+    },
+    "nodeSelector": { "type": "object", "additionalProperties": { "type": "string" } },
+    "tolerations": { "type": "array", "items": { "type": "object" } },
+    "affinity": { "type": "object" },
+    "topologySpreadConstraints": {
+      "type": "array",
+      "description": "Topology spread constraints for pod distribution across nodes/zones",
+      "items": {
+        "type": "object",
+        "properties": {
+          "maxSkew": { "type": "integer", "minimum": 1 },
+          "topologyKey": { "type": "string" },
+          "whenUnsatisfiable": { "type": "string", "enum": ["DoNotSchedule", "ScheduleAnyway"] },
+          "labelSelector": {
+            "type": "object",
+            "properties": {
+              "matchLabels": { "type": "object", "additionalProperties": { "type": "string" } },
+              "matchExpressions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "key": { "type": "string" },
+                    "operator": { "type": "string", "enum": ["In", "NotIn", "Exists", "DoesNotExist"] },
+                    "values": { "type": "array", "items": { "type": "string" } }
+                  }
+                }
+              }
+            }
+          },
+          "minDomains": { "type": "integer", "minimum": 1 },
+          "nodeAffinityPolicy": { "type": "string", "enum": ["Honor", "Ignore"] },
+          "nodeTaintsPolicy": { "type": "string", "enum": ["Honor", "Ignore"] }
+        },
+        "required": ["maxSkew", "topologyKey", "whenUnsatisfiable"]
+      }
+    },
+    "idp_oidc_provider_url": { "type": "string" },
+    "idp_aws_account": { "type": ["number", "string"] },
+    "linkerd": {
+      "type": "object",
+      "description": "Linkerd service mesh configuration",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable Linkerd sidecar injection for pods"
+        }
+      }
+    }
+  }
+}
