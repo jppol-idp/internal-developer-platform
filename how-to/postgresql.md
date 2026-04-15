@@ -52,7 +52,7 @@ version: 0.1.0
 slackChannel: my-slack-channel
 helm:
   chart: helm/idp-postgresql
-  chartVersion: "1.0.1"
+  chartVersion: "1.0.1" # Check https://github.com/jppol-idp/helm-idp/tree/main/charts/idp-postgresql for the latest version
 ```
 
 Once this is committed, ArgoCD will automatically deploy the database. Expect the database to be fully ready in 1-3 minutes.
@@ -239,23 +239,21 @@ It is required that connections to your database are established using SSL. As a
 
 It is recommended, but not required, that connections to production databases are established using `sslmode` equals `verify-full`. This encrypts data sent over the connection, and the identity of the server is cryptographically verified. This does however require that you include and configure some extra certs in your container. Note that the certificates might already be baked into your container image or installed via a package manager. A guide to installing AWS' certs can be found on the following AWS docs page: [Using SSL with a PostgreSQL DB instance](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/PostgreSQL.Concepts.General.SSL.html#PostgreSQL.Concepts.General.SSL.Connecting)
 
-## Upgrade guide
+## Database engine updates
 
-### Version 0.5.0 to 1.0.1
+The IDP team manages all PostgreSQL engine updates on the shared Aurora cluster. Routine maintenance runs nightly between 02:00–04:00 UTC.
 
-This update also has breaking changes in the underlying API. Unlike with the last breaking change, there is an automated conversion in place that enables conversion between version 0.5.0 and 1.0.1. Upgrade the chart to version 1.0.1 and modify the values file to match the new API. Notably, the field `deletionProtection` has been removed in favor of `mode` which can be either `standard` or `protected`. Enabling `deletionProtection` is equivalent to setting `mode: protected`.
+**OS patches and minor version updates** are applied during the maintenance window using zero-downtime patching. OS patches take under 5 minutes; minor version upgrades typically complete in a few seconds. A very small number of active connections may be dropped during the cutover.
 
-### Version 0.4.1 to 0.5.0
+**Major version updates** are performed using blue-green deployments outside the regular maintenance window. A fully replicated copy of the cluster is created, verified, and then switched over with a cutover that takes under 5 minutes. The IDP team will announce the window in advance. During the replication phase, **DDL changes (schema changes, `CREATE`/`DROP TABLE`, etc.) must not be applied** — they will block the switchover. The IDP team will coordinate with you on timing.
 
-This update changes the underlying resource API version and since no migration mechanism exists between versions, existing resources must be recreated and their data will be lost. Automated migration between resource versions is planned for a future release before general availability.
+If you have questions about an upcoming update, reach out in your onboarding Slack channel.
 
-A few manual steps are required when upgrading a database from postgresqldatabase helm chart version 0.4.1 to 0.5.0. Because secrets prior to version 0.5.0 are soft deleted, they will have to be forcefully deleted in order for crossplane to successfully recreate all the required resources.
+## Migrating an existing database to IDP
 
-(1) Delete the database from your apps repo
-(2) Delete the database secrets from aws secretsmanager
-(3) Readd the database with the new version to your apps repo
+If you have an existing PostgreSQL database outside the IDP platform and want to move it onto the IDP-managed Aurora cluster, the general approach is to provision a new IDP database, migrate the data, and then update your application to point to the new connection details.
 
-Secrets can be deleted using the actions for setting secrets in the apps-repository. (Check that you want to remove the secret in the relevant action. You will not need to provide the secrets path.)
+KOA has documented their migration experience in a playbook that is a useful reference: [Postgres DB IDP Migration Playbook](https://jira-jppol.atlassian.net/wiki/spaces/KOA/pages/4238114819/Postgres+DB+IDP+Migration+Playbook).
 
 ## Common errors
 
