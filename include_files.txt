@@ -41,6 +41,8 @@
 ./schemas/idp-blackbox-probe/latest.json
 ./schemas/idp-dynamodb/latest.json
 ./schemas/idp-dynamodb/v2.1.8.json
+./schemas/idp-managed-customer-alerts/v1.0.0.json
+./schemas/idp-managed-customer-alerts/latest.json
 ./schemas/idp-redis/v0.8.0.json
 ./schemas/idp-redis/latest.json
 ./schemas/argo-workflow-job/latest.json
