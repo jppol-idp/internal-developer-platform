@@ -1,0 +1,158 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "IDP Managed Customer Alerts Values",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "idp_aws_account": {
+      "description": "Injected by ArgoCD/ApplicationSet. Not consumed by the chart.",
+      "anyOf": [{"type": "string"}, {"type": "integer"}]
+    },
+    "idp_oidc_provider_url": {
+      "description": "Injected by ArgoCD/ApplicationSet. Not consumed by the chart.",
+      "type": "string"
+    },
+    "nameOverride": {"type": "string"},
+    "fullnameOverride": {"type": "string"},
+    "namespace": {
+      "type": "string",
+      "description": "Customer namespace the alerts are scoped to. Defaults to the release namespace (apps-idp folder convention)."
+    },
+    "interval": {
+      "type": "string",
+      "description": "Evaluation interval for alert rule groups (e.g. `1m`, `30s`)."
+    },
+    "folder": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "create": {
+          "type": "boolean",
+          "description": "Create a dedicated GrafanaFolder. Set to false to reuse an existing one via `folderRef`."
+        },
+        "title": {
+          "type": "string",
+          "description": "Folder title shown in Grafana. Defaults to `idp-managed-customer-alerts-<namespace>`."
+        }
+      }
+    },
+    "folderRef": {
+      "type": "string",
+      "description": "Name of an existing GrafanaFolder CR. Only used when `folder.create` is false."
+    },
+    "slack": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "create": {
+          "type": "boolean",
+          "description": "Create a GrafanaContactPoint for Slack. Set to false when reusing an existing one via `existingReceiverName`."
+        },
+        "receiverName": {
+          "type": "string",
+          "description": "Contact point display name used as the routing key (`notificationSettings.receiver`). Defaults to `\"Slack - <namespace>\"`."
+        },
+        "webhookUrl": {
+          "type": "string",
+          "description": "Slack webhook URL. Prefer `webhookSecretRef` over inlining the URL in values.yaml."
+        },
+        "webhookSecretRef": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Reference to a Kubernetes Secret key holding the webhook URL. Takes precedence over `webhookUrl`.",
+          "properties": {
+            "name": {"type": "string"},
+            "key": {"type": "string"}
+          }
+        },
+        "mentionChannel": {
+          "type": "string",
+          "enum": ["", "here", "channel"],
+          "description": "Slack mention strategy applied to every alert."
+        },
+        "existingReceiverName": {
+          "type": "string",
+          "description": "Reuse an existing GrafanaContactPoint (e.g. `\"Slack - KOA dev\"`). When set, no contact point is rendered by this chart."
+        }
+      }
+    },
+    "standardAlerts": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "IDP-managed standard alert set. Each entry can be enabled/disabled independently. PromQL is not customer-overridable by design.",
+      "properties": {
+        "oomkilled": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "severity": {"$ref": "#/definitions/severity"}
+          }
+        },
+        "containerRestartLoop": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "severity": {"$ref": "#/definitions/severity"},
+            "restartThreshold": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Minimum number of restarts within 5 minutes required to trigger."
+            }
+          }
+        },
+        "podPendingWarning": {"$ref": "#/definitions/durationAlert"},
+        "podPendingMajor": {"$ref": "#/definitions/durationAlert"},
+        "podTerminatingWarning": {"$ref": "#/definitions/durationAlert"},
+        "podTerminatingMajor": {"$ref": "#/definitions/durationAlert"},
+        "pvcUsage": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "warningPercent": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 99,
+              "description": "Usage percentage triggering the `warning` alert."
+            },
+            "criticalPercent": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 99,
+              "description": "Usage percentage triggering the `critical` alert."
+            }
+          }
+        },
+        "selfTest": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Always-firing self-test alert. Enable temporarily after first deploy to verify end-to-end Slack routing and see the real notification template, then disable.",
+          "properties": {
+            "enabled": {"type": "boolean"}
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "severity": {
+      "type": "string",
+      "enum": ["info", "warning", "major", "critical"]
+    },
+    "durationAlert": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "severity": {"$ref": "#/definitions/severity"},
+        "durationSeconds": {
+          "type": "integer",
+          "minimum": 60,
+          "description": "Minimum duration (seconds) the pod must spend in the target state before the alert fires."
+        }
+      }
+    }
+  }
+}
