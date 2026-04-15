@@ -31,7 +31,10 @@
 ./.gitignore
 ./schemas/crossplane-route53-records/latest.json
 ./schemas/crossplane-route53-records/v3.0.5.json
+./schemas/idp-s3-bucket/v0.5.2.json
+./schemas/idp-s3-bucket/v0.5.1.json
 ./schemas/idp-s3-bucket/latest.json
+./schemas/idp-s3-bucket/v0.5.0.json
 ./schemas/idp-s3-bucket/v0.4.5.json
 ./schemas/idp-blackbox-probe/v1.0.0.json
 ./schemas/idp-blackbox-probe/latest.json
@@ -41,6 +44,7 @@
 ./schemas/idp-redis/latest.json
 ./schemas/argo-workflow-job/latest.json
 ./schemas/argo-workflow-job/v1.0.2.json
+./schemas/idp-advanced/v3.1.2.json
 ./schemas/idp-advanced/latest.json
 ./schemas/idp-advanced/v3.1.1.json
 ./schemas/idp-oidc-middleware/v0.3.0.json
