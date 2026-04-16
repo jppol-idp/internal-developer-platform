@@ -164,6 +164,8 @@ Automated snapshots are taken daily by the Aurora cluster between 02:00 and 04:0
 
 ### Disaster recovery from snapshot using pgAdmin
 
+KOA has documented their restore experience in a playbook that is a useful reference: [Disaster db restore IDP](https://jira-jppol.atlassian.net/wiki/spaces/KOA/pages/4229365770/Disaster+db+restore+IDP).
+
 To restore a database from a snapshot using pgAdmin, follow these steps:
 
 1. **Contact the IDP team** via the [idp-team Slack channel](https://jppol.slack.com/archives/C09JUREPVBP) and request a restore.
