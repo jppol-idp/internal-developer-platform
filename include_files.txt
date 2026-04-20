@@ -48,6 +48,7 @@
 ./schemas/idp-managed-customer-alerts/v1.1.0.json
 ./schemas/idp-managed-customer-alerts/v2.1.0.json
 ./schemas/idp-managed-customer-alerts/latest.json
+./schemas/idp-managed-customer-alerts/v2.4.0.json
 ./schemas/idp-managed-customer-alerts/v2.0.0.json
 ./schemas/idp-redis/v0.8.0.json
 ./schemas/idp-redis/latest.json
