@@ -2,12 +2,14 @@
 ./.github/workflows/publish-to-confluence.yml.disabled
 ./_includes/footer_custom.html
 ./assets/shipit.png
+./assets/idp-managed-alerts-pod-pending-example.png
 ./assets/karthago_transparent.png
 ./assets/onboarding-grafana-drilldown-logs.png
 ./assets/onboarding-grafana-drilldown-metrics.png
 ./assets/alert-step2.png
 ./assets/oidc-middleware-argocd-tree.png
 ./assets/jira-renovate-example.png
+./assets/idp-managed-alerts-argocd-example.png
 ./assets/idp_light.png
 ./assets/idp-architecture.png
 ./assets/argocd-application-with-labels.png
@@ -90,6 +92,7 @@
 ./how-to/pgadmin.md
 ./how-to/kubernetes-namespace-access.md
 ./how-to/oidc-middleware.md
+./how-to/idp-managed-alerts.md
 ./how-to/prometheus-scraping.md
 ./index.public.md
 ./onboarding/index.md

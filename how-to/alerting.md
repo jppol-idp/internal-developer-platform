@@ -1,6 +1,6 @@
 ---
 title: Working with Alerting
-nav_order: 18
+nav_order: 19
 parent: How to...
 domain: public
 permalink: /alerting
@@ -455,16 +455,16 @@ With the grafana-operator approach, deleting alerts is straightforward: simply r
 
 ## Requesting a Slack Contact Point
 
-Each team must have a dedicated Slack contact point (webhook) for their alert notifications. To set up a proper Slack contact point, you need:
+Each team has a dedicated Slack contact point per environment that IDP provisions on your behalf. Webhooks and the Slack app are centrally governed by the IDP team — you don't need to bring your own webhook URL.
 
-1. **A Slack channel** where alerts will be sent. This can be an existing team channel or a dedicated alerts channel.
-2. **A Slack webhook integration URL** for that channel, which allows Grafana to post messages to the channel.
+To request contact points, reach out to the IDP team on Slack with:
 
-If your team does not already have a Slack contact point set up for your desired channel, please request one by contacting the IDP team with the following information:
+- Your team or product name
+- The Slack channel alerts should post to, per environment (e.g. `#myteam-dev-alerts`, `#myteam-test-alerts`, `#myteam-prod-alerts`)
 
-- The name of your Slack channel (e.g., `#teamname-environment-alerts`)
+The IDP team sets up the webhook, creates the `GrafanaContactPoint` in your cluster(s), and lets you know the exact receiver name (typically `"Slack - <Team> <env>"`) to use in your alert rules.
 
-The IDP team will configure the Slack webhook integration and set up the contact point in Grafana. Alerts will only be delivered to channels with a properly configured contact point.
+The same contact point serves all three sources of alerts — [`idp-managed-customer-alerts`](/idp-managed-alerts) (IDP's curated standard alerts), `idp-grafana-alarm` (your own alerts-as-code), and any manual alerts you create in the Grafana UI — so all alerts routed to the contact point share the same Slack channel and message format.
 
 ## References
 

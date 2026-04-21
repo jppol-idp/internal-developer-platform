@@ -1,6 +1,6 @@
 ---
 title: Working with Redis
-nav_order: 22
+nav_order: 23
 parent: How to...
 domain: public
 permalink: /how-to-redis
