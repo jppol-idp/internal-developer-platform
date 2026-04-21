@@ -89,7 +89,7 @@ IDP will configure the contact point in Grafana and let you know the exact `cont
 
 ## Step 2: Deploy the chart in your apps repo
 
-In your `apps-<team>` repo, create a directory per cluster under `apps/<cluster>/idp-managed-alerts/` — one per environment your team runs in:
+In your `apps-<team>` repo, create a directory under `apps/<namespace>/idp-managed-alerts/` — one per namespace you want the alerts to cover (typically one per environment):
 
 **`application.yaml`:**
 
