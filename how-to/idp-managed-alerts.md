@@ -222,6 +222,8 @@ This is expected Grafana behaviour, not an incident recurring. Alert state is ke
 
 If the timestamps on the resolved/refire pair are within a minute of each other and tied to a chart bump, it's this behaviour. Nothing to action — the underlying condition never changed.
 
+## Changing the Slack channel
+
 The default is one channel per environment — `#myteam-dev-alerts`, `#myteam-test-alerts`, `#myteam-prod-alerts` — which keeps noisy non-prod alerts out of the prod channel. If that suits you, no action needed.
 
 If you'd rather consolidate (e.g. dev and test into a shared non-prod channel, or everything into one), how you do it depends on where your environments run:
