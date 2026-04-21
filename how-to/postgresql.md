@@ -15,8 +15,6 @@ This guide shows how to add a PostgreSQL database to your application using the 
 
 One Aurora Serverless v2 cluster is provisioned per Kubernetes cluster. Each Aurora cluster will therefore contain multiple tenants. To ensure a level of separation between tenants, databases are prefixed with the tenants' Kubernetes namespace, and the roles provisioned with each database are only granted privileges to the database they belong to.
 
-If you are interested in getting started with Postgres, please reach out in your idp onboarding Slack channel and ask to have it enabled.
-
 ---
 
 ## Table of contents
