@@ -1,5 +1,6 @@
 ./.github/workflows/gh-pages.yml
 ./.github/workflows/publish-to-confluence.yml.disabled
+./_includes/edit_on_github.html
 ./_includes/footer_custom.html
 ./assets/shipit.png
 ./assets/idp-managed-alerts-pod-pending-example.png
