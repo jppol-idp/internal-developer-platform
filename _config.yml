@@ -12,9 +12,9 @@ remote_theme: just-the-docs/just-the-docs
 
 aux_links:
   # linker til den originale, da ændringer herfra overskriver den anden
-  GitHub: https://github.com/jppol-idp/docs
+  #GitHub: https://github.com/jppol-idp/docs
   #GitHub: https://github.com/jppol-idp/internal-developer-platform
-  Slack: https://jppol.slack.com/archives/C09JUREPVBP
+  Support: https://jppol.slack.com/archives/C09JUREPVBP
 
 #logo: https://github.com/user-attachments/assets/fb6cfda7-7660-477f-8a7a-41e7a6977f47
 #logo: assets/karthago.png
@@ -67,7 +67,7 @@ favicon_ico: "/assets/shipit.png"
 
 # Footer "Edit this page on GitHub" link text
 gh_edit_link: true # show or hide edit this page link
-gh_edit_link_text: "Edit this page on GitHub."
+gh_edit_link_text: "Edit this page on GitHub - help us improve this user guide"
 gh_edit_repository: "https://github.com/jppol-idp/docs" # the github URL for your repo
 gh_edit_branch: "main" # the branch that your docs is served from
 #gh_edit_source: docs # the source that your files originate from
