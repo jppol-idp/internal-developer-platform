@@ -35,6 +35,7 @@
 ./schemas/crossplane-route53-records/latest.json
 ./schemas/crossplane-route53-records/v3.0.5.json
 ./schemas/idp-s3-bucket/v0.5.2.json
+./schemas/idp-s3-bucket/v0.6.0.json
 ./schemas/idp-s3-bucket/v0.5.1.json
 ./schemas/idp-s3-bucket/latest.json
 ./schemas/idp-s3-bucket/v0.5.0.json
