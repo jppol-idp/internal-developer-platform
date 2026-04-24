@@ -1,0 +1,145 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "IDP Managed Customer Alerts Values",
+  "type": "object",
+  "required": ["contactPointRef"],
+  "properties": {
+    "idp_aws_account": {
+      "description": "Injected by ArgoCD/ApplicationSet. Not consumed by the chart.",
+      "anyOf": [{"type": "string"}, {"type": "integer"}]
+    },
+    "idp_oidc_provider_url": {
+      "description": "Injected by ArgoCD/ApplicationSet. Not consumed by the chart.",
+      "type": "string"
+    },
+    "clusterName": {
+      "description": "Injected by ArgoCD/ApplicationSet. Used as the `cluster` label on every alert so they surface in the central alert overview dashboard alongside other Grafana-forwarded alerts.",
+      "type": "string"
+    },
+    "nameOverride": {"type": "string"},
+    "fullnameOverride": {"type": "string"},
+    "namespace": {
+      "type": "string",
+      "description": "Customer namespace the alerts are scoped to. Defaults to the release namespace (apps-idp folder convention)."
+    },
+    "interval": {
+      "type": "string",
+      "description": "Evaluation interval for alert rule groups (e.g. `1m`, `30s`)."
+    },
+    "folder": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "create": {
+          "type": "boolean",
+          "description": "Create a dedicated GrafanaFolder. Set to false to reuse an existing one via `folderRef`."
+        },
+        "title": {
+          "type": "string",
+          "description": "Folder title shown in Grafana. Defaults to `idp-managed-customer-alerts-<namespace>`."
+        }
+      }
+    },
+    "folderRef": {
+      "type": "string",
+      "description": "Name of an existing GrafanaFolder CR. Only used when `folder.create` is false."
+    },
+    "contactPointRef": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Receiver name of an existing GrafanaContactPoint (the `spec.name` field), e.g. `\"Slack - KOA dev\"`. Required. The chart does not create contact points — they are managed centrally in `idp-eks-tooling`."
+    },
+    "standardAlerts": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "IDP-managed standard alert set. Each entry can be enabled/disabled independently. PromQL is not customer-overridable by design.",
+      "properties": {
+        "oomkilled": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "severity": {"$ref": "#/definitions/severity"}
+          }
+        },
+        "containerRestartLoop": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "severity": {"$ref": "#/definitions/severity"},
+            "restartThreshold": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Minimum number of restarts within 5 minutes required to trigger."
+            }
+          }
+        },
+        "podPendingWarning": {"$ref": "#/definitions/durationAlert"},
+        "podPendingMajor": {"$ref": "#/definitions/durationAlert"},
+        "podTerminatingWarning": {"$ref": "#/definitions/durationAlert"},
+        "podTerminatingMajor": {"$ref": "#/definitions/durationAlert"},
+        "pvcUsage": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "warningPercent": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 99,
+              "description": "Usage percentage triggering the `warning` alert."
+            },
+            "criticalPercent": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 99,
+              "description": "Usage percentage triggering the `critical` alert."
+            }
+          }
+        },
+        "argocdAppUnhealthy": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "ArgoCD Application targeting the customer namespace is OutOfSync or Degraded/Missing/Unknown.",
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "severity": {"$ref": "#/definitions/severity"},
+            "forDuration": {
+              "type": "string",
+              "pattern": "^[0-9]+[smh]$",
+              "description": "Duration the unhealthy state must persist before the alert fires (e.g. `15m`). Increase this to tolerate longer in-flight syncs."
+            }
+          }
+        },
+        "selfTest": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Always-firing self-test alert. Enable temporarily after first deploy to verify end-to-end Slack routing and see the real notification template, then disable.",
+          "properties": {
+            "enabled": {"type": "boolean"}
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "severity": {
+      "type": "string",
+      "enum": ["info", "warning", "major", "critical"]
+    },
+    "durationAlert": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "severity": {"$ref": "#/definitions/severity"},
+        "durationSeconds": {
+          "type": "integer",
+          "minimum": 60,
+          "description": "Minimum duration (seconds) the pod must spend in the target state before the alert fires."
+        }
+      }
+    }
+  }
+}
