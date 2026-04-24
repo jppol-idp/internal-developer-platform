@@ -51,6 +51,7 @@
 ./schemas/idp-dynamodb/latest.json
 ./schemas/idp-dynamodb/v2.1.9.json
 ./schemas/idp-dynamodb/v2.1.8.json
+./schemas/idp-managed-customer-alerts/v2.7.0.json
 ./schemas/idp-managed-customer-alerts/v1.0.0.json
 ./schemas/idp-managed-customer-alerts/v2.5.0.json
 ./schemas/idp-managed-customer-alerts/v1.1.1.json
