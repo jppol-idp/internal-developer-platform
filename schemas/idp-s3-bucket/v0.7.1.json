@@ -1,0 +1,104 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://charts.example.com/idp-s3-bucket/values.schema.json",
+  "title": "idp-s3-bucket values",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "global": {
+      "type": "object",
+      "description": "Allows the chart to be used as a sub chart, in which case the main charts settings is made available in this object."
+    },
+    "idp_oidc_provider_url" : {
+      "type": ["string", "number"],
+      "description": "only here for compatibility issues"
+    },
+    "idp_aws_account" : {
+      "type": ["string", "number"],
+      "description": "only here for compatibility issues"
+    },
+    "ingress": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Injected by ApplicationSet — not used by this chart"
+    },
+    "managementPolicies": {
+      "type": "string",
+      "enum": ["Control", "Observe"],
+      "description": "Controls whether Crossplane manages the full lifecycle of the resources or only observes them. Applies to S3 bucket resources, the IAM Policy and the RolePolicyAttachment."
+    },
+    "deletionPolicy": {
+      "type": "string",
+      "enum": ["Orphan", "Delete"],
+      "description": "Controls what happens when resources are deleted from Kubernetes. 'Delete' attempts to remove the AWS resource (S3 buckets cannot be deleted when non-empty). 'Orphan' leaves the AWS resource in place."
+    },
+    "buckets": {
+      "type": "array",
+      "description": "List of S3 buckets to manage. Each bucket can grant the namespace S3 access role (idp_ns_s3_access-<namespace>) read or write permissions via the 'access' setting and can grant namespaced deployment IRSA roles access via serviceAccountReadRoles/serviceAccountWriteRoles.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the bucket. Must be a valid Kubernetes resource name (DNS-1123 label): lowercase alphanumeric and '-', 3-63 chars.",
+            "minLength": 3,
+            "maxLength": 63,
+            "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
+          },
+          "region": {
+            "type": "string",
+            "description": "The AWS region of the bucket.",
+            "default": "eu-west-1"
+          },
+          "publicRead": {
+            "type": "boolean",
+            "description": "Expose objects publicly via BucketPolicy (GetObject on bucket/*). Requires PublicAccessBlock.blockPublicPolicy=false.",
+            "default": false
+          },
+          "access": {
+            "type": "string",
+            "enum": ["none", "read", "write"],
+            "description": "Access level to grant the namespace S3 access role (idp_ns_s3_access-<namespace>). 'none' = no access, 'read' = s3:GetObject + s3:ListBucket, 'write' = read permissions plus s3:PutObject + s3:DeleteObject.",
+            "default": "write"
+          },
+          "serviceAccountReadRoles": {
+            "type": "array",
+            "description": "List of deployment names whose namespaced IRSA role should receive a read policy (s3:GetObject + s3:ListBucket) for this bucket. Each value resolves to <deployment>-<namespace>. If a value already ends with -<namespace>, it is used as-is.",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true,
+            "default": []
+          },
+          "serviceAccountWriteRoles": {
+            "type": "array",
+            "description": "List of deployment names whose namespaced IRSA role should receive a read/write policy (s3:GetObject + s3:ListBucket + s3:PutObject + s3:DeleteObject) for this bucket. Each value resolves to <deployment>-<namespace>. If a value already ends with -<namespace>, it is used as-is. Write implies read on the same role.",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true,
+            "default": []
+          },
+          "tags": {
+            "type": "array",
+            "description": "Additional tags to set on the bucket",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "key": { "type": "string" },
+                "value": { "type": "string" }
+              },
+              "required": ["key", "value"]
+            }
+          }
+        },
+        "required": ["name"]
+      }
+    }
+  }
+}
