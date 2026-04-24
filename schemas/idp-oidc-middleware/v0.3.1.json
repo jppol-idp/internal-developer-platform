@@ -1,0 +1,338 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["domain"],
+  "properties": {
+    "domain": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Application domain (required). Used to generate PostLogoutRedirectUri."
+    },
+    "nameOverride": {
+      "type": "string",
+      "description": "Override the generated resource names."
+    },
+    "fullnameOverride": {
+      "type": "string",
+      "description": "Override the full resource name."
+    },
+    "provider": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "tenantId": {
+          "type": "string",
+          "description": "Azure AD / Entra ID tenant ID."
+        },
+        "url": {
+          "type": "string",
+          "description": "Full provider URL (overrides tenantId-based URL)."
+        },
+        "usePkce": {
+          "type": "boolean",
+          "description": "Use PKCE for token exchange."
+        },
+        "tokenValidation": {
+          "type": "string",
+          "enum": ["IdToken", "AccessToken", "Introspection"],
+          "description": "Token validation method."
+        },
+        "scopes": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "OIDC scopes."
+        },
+        "tokenRenewalThreshold": {
+          "type": ["number", "string"],
+          "description": "Fraction of token lifetime before renewal (0.5 - 1.0)."
+        },
+        "validateIssuer": {
+          "type": ["boolean", "string"],
+          "description": "Validate the token issuer against provider URL."
+        },
+        "validIssuer": {
+          "type": "string",
+          "description": "Custom issuer value to validate against."
+        },
+        "validateAudience": {
+          "type": ["boolean", "string"],
+          "description": "Validate the token audience."
+        },
+        "validAudience": {
+          "type": "string",
+          "description": "Custom audience value to validate against."
+        },
+        "insecureSkipVerify": {
+          "type": ["boolean", "string"],
+          "description": "Skip TLS certificate verification (testing only!)."
+        },
+        "useClaimsFromUserInfo": {
+          "type": ["boolean", "string"],
+          "description": "Fetch claims from UserInfo endpoint instead of token."
+        }
+      }
+    },
+    "sessionCookie": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Secure": {
+          "type": "boolean",
+          "description": "Cookie secure flag (HTTPS only)."
+        },
+        "HttpOnly": {
+          "type": "boolean",
+          "description": "Cookie HttpOnly flag."
+        },
+        "SameSite": {
+          "type": "string",
+          "enum": ["default", "lax", "strict", "none"],
+          "description": "Cookie SameSite policy."
+        },
+        "Path": {
+          "type": "string",
+          "description": "Cookie path."
+        },
+        "MaxAge": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Cookie max age in seconds (0 = session cookie)."
+        },
+        "Domain": {
+          "type": "string",
+          "description": "Cookie domain (for cross-subdomain SSO)."
+        }
+      }
+    },
+    "callbackUri": {
+      "type": "string",
+      "description": "OAuth2 callback path."
+    },
+    "loginUri": {
+      "type": "string",
+      "description": "URL that initiates authorization. If empty, any request can trigger auth flow."
+    },
+    "postLoginRedirectUri": {
+      "type": "string",
+      "description": "Fixed redirect URL after successful login."
+    },
+    "validPostLoginRedirectUris": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Allowed post-login redirect URIs (whitelist)."
+    },
+    "logoutUri": {
+      "type": "string",
+      "description": "OAuth2 logout path."
+    },
+    "postLogoutRedirectUri": {
+      "type": "string",
+      "description": "Post-logout redirect URL (defaults to https://<domain>/login)."
+    },
+    "validPostLogoutRedirectUris": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Allowed post-logout redirect URIs (whitelist)."
+    },
+    "unauthorizedBehavior": {
+      "type": "string",
+      "enum": ["", "Auto", "Redirect", "Unauthorized", "Forbidden"],
+      "description": "Behavior on unauthorized requests."
+    },
+    "headers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "value"],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Header name."
+          },
+          "value": {
+            "type": "string",
+            "description": "Header value (Go template expression)."
+          }
+        }
+      },
+      "description": "Headers forwarded to the backend after authentication."
+    },
+    "authorizationHeader": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Header name (e.g. Authorization). Leave empty to disable."
+        }
+      }
+    },
+    "authorizationCookie": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Cookie name. Leave empty to disable."
+        }
+      }
+    },
+    "authorization": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "checkOnEveryRequest": {
+          "type": "boolean",
+          "description": "Check authorization on every request (not just at login)."
+        },
+        "assertClaims": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Claim name to assert (e.g. groups, roles)."
+              },
+              "anyOf": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "User must have at least one of these values."
+              },
+              "allOf": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "User must have all of these values."
+              }
+            }
+          },
+          "description": "Assert specific claims for access control."
+        }
+      }
+    },
+    "errorPages": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "unauthenticated": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "filePath": {
+              "type": "string",
+              "description": "Path to custom HTML error page."
+            },
+            "redirectTo": {
+              "type": "string",
+              "description": "Redirect URL instead of showing error page."
+            }
+          }
+        },
+        "unauthorized": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "filePath": {
+              "type": "string",
+              "description": "Path to custom HTML error page."
+            },
+            "redirectTo": {
+              "type": "string",
+              "description": "Redirect URL instead of showing error page."
+            }
+          }
+        }
+      }
+    },
+    "bypassPaths": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Paths that bypass authentication."
+    },
+    "bypassAuthenticationRule": {
+      "type": "string",
+      "description": "Raw bypass rule (overrides bypassPaths)."
+    },
+    "logLevel": {
+      "type": "string",
+      "enum": ["DEBUG", "INFO", "WARN", "ERROR", "debug", "info", "warn", "error"],
+      "description": "Log level for the OIDC plugin."
+    },
+    "cookieNamePrefix": {
+      "type": "string",
+      "description": "Cookie name prefix (defaults to _<release-name>_)."
+    },
+    "requestedResources": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Extra OAuth resources to request."
+    },
+    "forceSync": {
+      "type": "string",
+      "description": "Force sync annotation for ExternalSecret."
+    },
+    "externalSecret": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Create an ExternalSecret resource."
+        },
+        "remoteSecretName": {
+          "type": "string",
+          "description": "AWS Secrets Manager secret name (mode 1; defaults to release name)."
+        },
+        "remoteSecretPath": {
+          "type": "string",
+          "description": "Full AWS Secrets Manager path (mode 1; overrides remoteSecretName)."
+        },
+        "refreshInterval": {
+          "type": "string",
+          "description": "Refresh interval for the ExternalSecret."
+        },
+        "keys": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "JSON property names inside the single AWS secret (mode 1).",
+          "properties": {
+            "clientId": {
+              "type": "string",
+              "description": "Property name for the OIDC client ID."
+            },
+            "clientSecret": {
+              "type": "string",
+              "description": "Property name for the OIDC client secret."
+            },
+            "sessionSecret": {
+              "type": "string",
+              "description": "Property name for the session encryption secret."
+            }
+          }
+        },
+        "separateSecrets": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Three separate AWS secrets, one per value (mode 2). Matches the per-namespace GitHub Action output. When any field is set, mode 2 is used; all three must be set together.",
+          "properties": {
+            "clientId": {
+              "type": "string",
+              "description": "Full AWS path to the client_id secret."
+            },
+            "clientSecret": {
+              "type": "string",
+              "description": "Full AWS path to the client_secret secret."
+            },
+            "sessionSecret": {
+              "type": "string",
+              "description": "Full AWS path to the session_secret secret."
+            }
+          }
+        }
+      }
+    }
+  }
+}

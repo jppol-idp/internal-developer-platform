@@ -1,0 +1,1206 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Helm values schema",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "replicaCount": {
+      "type": "integer",
+      "description": "Set the number of replicas for the deployment"
+    },
+    "deploymentStrategy": {
+      "type": "object",
+      "description": "Deployment strategy configuration. For single-replica deployments with zero-downtime updates, use RollingUpdate with maxSurge: 1 and maxUnavailable: 0",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "RollingUpdate",
+            "Recreate"
+          ]
+        },
+        "rollingUpdate": {
+          "type": "object",
+          "properties": {
+            "maxSurge": {
+              "type": [
+                "string",
+                "integer"
+              ]
+            },
+            "maxUnavailable": {
+              "type": [
+                "string",
+                "integer"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "managementPolicies": {
+      "type": "string",
+      "enum": [
+        "Control",
+        "Observe"
+      ],
+      "description": "Should records be observed or controlled. (Zones are always observe only.)"
+    },
+    "deletionPolicy": {
+      "type": "string",
+      "enum": [
+        "Orphan",
+        "Delete"
+      ],
+      "description": "Should records be deleted or left orphan if a record is removed or chart is uninstalled?"
+    },
+    "forceSync": {
+      "type": "string",
+      "description": "Change value to instruct the system to reread secret value from AWS secrets manager"
+    },
+    "image": {
+      "type": "object",
+      "properties": {
+        "repository": {
+          "type": "string",
+          "description": "This is the image repository to pull from. 'nginx' is the default and only needed for automated chart-testing"
+        },
+        "pullPolicy": {
+          "type": "string",
+          "enum": [
+            "Always",
+            "Never",
+            "IfNotPresent"
+          ],
+          "description": "This is the image pull policy. The options are Always, Never, and IfNotPresent. 'IfNotPresent' is the default."
+        },
+        "tag": {
+          "type": "string",
+          "description": "This is the image tag to pull. 'stable-alpine' is the default and only needed for automated chart-testing"
+        }
+      },
+      "required": [
+        "repository",
+        "pullPolicy",
+        "tag"
+      ]
+    },
+    "nameOverride": {
+      "type": "string",
+      "description": "This is to override the chart name."
+    },
+    "fullnameOverride": {
+      "type": "string"
+    },
+    "podAnnotations": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "podAnnotations is a map of key-value pairs to add to the pods"
+    },
+    "podLabels": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "podLabels is a map of key-value pairs to add to the pods"
+    },
+    "podSecurityContext": {
+      "type": "object"
+    },
+    "securityContext": {
+      "type": "object"
+    },
+    "compute": {
+      "type": "object",
+      "properties": {
+        "arch": {
+          "type": "string",
+          "enum": [
+            "amd64",
+            "arm64"
+          ],
+          "description": "Specify architecture for the deployment. Valid options are 'amd64' and 'arm64'. Default is amd64"
+        },
+        "spot": {
+          "type": "boolean",
+          "description": "Allow the deployment to run on spot instances. This is valid for all architectures and GPU deployments."
+        },
+        "gpu": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable or disable GPU support"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "nvidia",
+                "amd"
+              ]
+            },
+            "count": {
+              "type": "integer",
+              "description": "Number of GPUs to request"
+            }
+          }
+        }
+      }
+    },
+    "serviceAccount": {
+      "type": "object",
+      "properties": {
+        "create": {
+          "type": "boolean",
+          "description": "Specifies whether a service account should be created"
+        },
+        "irsa": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Specifies whether to use IRSA for the service account"
+            },
+            "iamPolicyStatements": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "Effect": {
+                    "type": "string"
+                  },
+                  "Action": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "Resource": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "description": "Specifies the IAM policy to attach to the service account"
+            }
+          }
+        }
+      }
+    },
+    "external_secrets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "env_name",
+          "secretsmanager_name"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "env_name": {
+            "type": "string"
+          },
+          "secretsmanager_name": {
+            "type": "string"
+          },
+          "property": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "externalSecrets links AWS Secrets Manager secrets to pod environment variables. Each entry needs `env_name` (the env var name in the container) and `secretsmanager_name` (the AWS secret at `customer/<namespace>/<secretsmanager_name>`). Optionally set `property` to pluck a single key from a JSON-formatted AWS secret \u2014 this enables the consolidated pattern, where multiple env vars share one AWS secret. Naming behavior of the rendered ExternalSecret CR:  - Without `property`: CR name uses `secretsmanager_name` (matches 3.0.x \u2014 upgrades from older versions are byte-identical, no rename).  - With `property`: CR name uses `env_name` (always unique, allows entries to share `secretsmanager_name` without colliding). Migration note: switching an existing entry from the classic to the consolidated pattern (adding `property` and changing `secretsmanager_name`) renames the CR. ArgoCD will fail to sync the new ExternalSecret with \"target is owned by another ExternalSecret\" because the previous ExternalSecret still owns the target K8s Secret. Resolution: manually delete the old ExternalSecret CRs in the app namespace before/during the sync \u2014 the K8s Secret is GC'd via ownerReference and immediately recreated by the new ExternalSecret. Plain version upgrades that do not change values are unaffected."
+    },
+    "env": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "oneOf": [
+          {
+            "required": [
+              "name",
+              "value"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "required": [
+              "name",
+              "valueFrom"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "valueFrom": {
+                "type": "object",
+                "required": [
+                  "secretKeyRef"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "secretKeyRef": {
+                    "type": "object",
+                    "required": [
+                      "name",
+                      "key"
+                    ],
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "key": {
+                        "type": "string"
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "description": "Environment variables to be passed to the container"
+    },
+    "service": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "ClusterIP",
+            "NodePort",
+            "LoadBalancer"
+          ]
+        },
+        "port": {
+          "type": "integer"
+        },
+        "metrics": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable or disable a separate port for metrics"
+            },
+            "port": {
+              "type": "integer",
+              "description": "Port number for metrics endpoint"
+            },
+            "name": {
+              "type": "string",
+              "description": "Name for the metrics port (defaults to \"metrics\")"
+            }
+          },
+          "description": "Optional metrics port configuration"
+        }
+      },
+      "description": "Servicetype and port for the service"
+    },
+    "serviceMonitor": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable or disable ServiceMonitor creation"
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Labels to add to the ServiceMonitor resource"
+        },
+        "interval": {
+          "type": "string",
+          "description": "Interval at which metrics should be scraped"
+        },
+        "scrapeTimeout": {
+          "type": "string",
+          "description": "Timeout after which the scrape is ended"
+        },
+        "portName": {
+          "type": "string",
+          "description": "Port name to scrape metrics from when service.metrics.enabled is false (when using the main service port instead of a dedicated metrics port)"
+        },
+        "path": {
+          "type": "string",
+          "description": "Path where metrics are exposed, defaults to /metrics"
+        },
+        "scheme": {
+          "type": "string",
+          "enum": [
+            "http",
+            "https"
+          ],
+          "description": "Scheme to use for scraping, defaults to http"
+        },
+        "relabelings": {
+          "type": "array"
+        },
+        "metricRelabelings": {
+          "type": "array"
+        },
+        "targetLabels": {
+          "type": "array"
+        },
+        "endpointAdditionalParams": {
+          "type": "object"
+        }
+      },
+      "description": "ServiceMonitor configuration for Prometheus Operator"
+    },
+    "ingress": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable or disable ingress"
+        },
+        "fqdn": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Hostnames connected to the ingress. Note that all hostnames are prepended with 'internal-' or 'internal.' when bound to the private ingress."
+        },
+        "public": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable or disable the public ingress"
+            },
+            "httpCertChallenge": {
+              "type": "boolean",
+              "description": "If the fqdn is from a domain not hosted in the account, set this to true. When in doubt leave it as false."
+            },
+            "ipAllowList": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "IP CIDR ranges to allow. Generates IPAllowList Middleware CRD."
+            },
+            "annotations": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Annotations to add to the public ingress"
+            },
+            "middlewares": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Additional middleware references. Format: namespace-name@kubernetescrd"
+            }
+          },
+          "description": "Public ingress configuration"
+        },
+        "private": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable or disable the private ingress"
+            },
+            "wildcardCertificate": {
+              "type": "boolean",
+              "description": "When true, private ingresses use 'internal-' + fqdn with wildcard cert. When false, 'internal.' + fqdn with individual cert."
+            },
+            "ipAllowList": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "IP CIDR ranges to allow. Generates IPAllowList Middleware CRD."
+            },
+            "annotations": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Annotations to add to the private ingress"
+            },
+            "middlewares": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Additional middleware references. Format: namespace-name@kubernetescrd"
+            }
+          },
+          "description": "Private ingress configuration"
+        }
+      },
+      "description": "Ingress configuration (traefik-only) @default -- Ingress configuration"
+    },
+    "vpa": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable or disable VPA"
+        },
+        "updatePolicy": {
+          "type": "string",
+          "enum": [
+            "Auto",
+            "Initial",
+            "Off"
+          ],
+          "description": "VPA update policy. Valid options are 'Auto', 'Initial', and 'Off'. Default is 'Off'"
+        }
+      },
+      "description": "vertical pod autoscaler"
+    },
+    "storage": {
+      "type": "object",
+      "description": "Storage configuration."
+    },
+    "volumes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "volumeMounts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "mountPath"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "mountPath": {
+            "type": "string"
+          },
+          "readOnly": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "properties": {
+        "limits": {
+          "type": "object",
+          "properties": {
+            "cpu": {
+              "type": "string",
+              "pattern": "^[0-9]+m?$"
+            },
+            "memory": {
+              "type": "string",
+              "pattern": "^([0-9]+\\.)?[0-9]+(Ei|Pi|Ti|Gi|Mi|Ki|E|P|T|G|M|K)?$",
+              "description": "Memory resource limits"
+            }
+          }
+        },
+        "requests": {
+          "type": "object",
+          "properties": {
+            "cpu": {
+              "type": "string",
+              "pattern": "^[0-9]+m?$",
+              "description": "CPU resource requests"
+            },
+            "memory": {
+              "type": "string",
+              "pattern": "^([0-9]+\\.)?[0-9]+(Ei|Pi|Ti|Gi|Mi|Ki|E|P|T|G|M|K)?$",
+              "description": "Memory resource requests"
+            }
+          }
+        }
+      },
+      "description": "Resource limits and requests. This is a map of key-value pairs to add to the pods."
+    },
+    "livenessProbe": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "httpGet": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "port": {
+              "type": [
+                "string",
+                "integer"
+              ]
+            },
+            "scheme": {
+              "type": "string",
+              "enum": [
+                "HTTP",
+                "HTTPS"
+              ]
+            },
+            "httpHeaders": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "value"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tcpSocket": {
+          "type": "object",
+          "properties": {
+            "port": {
+              "type": [
+                "string",
+                "integer"
+              ]
+            },
+            "host": {
+              "type": "string"
+            }
+          }
+        },
+        "exec": {
+          "type": "object",
+          "properties": {
+            "command": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "grpc": {
+          "type": "object",
+          "properties": {
+            "port": {
+              "type": "integer"
+            },
+            "service": {
+              "type": "string"
+            }
+          }
+        },
+        "initialDelaySeconds": {
+          "type": "integer"
+        },
+        "periodSeconds": {
+          "type": "integer",
+          "description": "periodSeconds: The time (in seconds) that Kubernetes should wait before reprobing a container"
+        },
+        "timeoutSeconds": {
+          "type": "integer"
+        },
+        "successThreshold": {
+          "type": "integer"
+        },
+        "failureThreshold": {
+          "type": "integer"
+        }
+      },
+      "description": "livenessProbe - Used to determine if a container is running"
+    },
+    "readinessProbe": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "httpGet": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "port": {
+              "type": [
+                "string",
+                "integer"
+              ]
+            },
+            "scheme": {
+              "type": "string",
+              "enum": [
+                "HTTP",
+                "HTTPS"
+              ]
+            },
+            "httpHeaders": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "value"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tcpSocket": {
+          "type": "object",
+          "properties": {
+            "port": {
+              "type": [
+                "string",
+                "integer"
+              ]
+            },
+            "host": {
+              "type": "string"
+            }
+          }
+        },
+        "exec": {
+          "type": "object",
+          "properties": {
+            "command": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "grpc": {
+          "type": "object",
+          "properties": {
+            "port": {
+              "type": "integer"
+            },
+            "service": {
+              "type": "string"
+            }
+          }
+        },
+        "initialDelaySeconds": {
+          "type": "integer"
+        },
+        "periodSeconds": {
+          "type": "integer"
+        },
+        "timeoutSeconds": {
+          "type": "integer"
+        },
+        "successThreshold": {
+          "type": "integer"
+        },
+        "failureThreshold": {
+          "type": "integer"
+        }
+      },
+      "description": "readinessProbe - Used to determine if a container is ready to serve requests"
+    },
+    "startupProbe": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "httpGet": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "port": {
+              "type": [
+                "string",
+                "integer"
+              ]
+            },
+            "scheme": {
+              "type": "string",
+              "enum": [
+                "HTTP",
+                "HTTPS"
+              ]
+            },
+            "httpHeaders": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "value"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tcpSocket": {
+          "type": "object",
+          "properties": {
+            "port": {
+              "type": [
+                "string",
+                "integer"
+              ]
+            },
+            "host": {
+              "type": "string"
+            }
+          }
+        },
+        "exec": {
+          "type": "object",
+          "properties": {
+            "command": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "grpc": {
+          "type": "object",
+          "properties": {
+            "port": {
+              "type": "integer"
+            },
+            "service": {
+              "type": "string"
+            }
+          }
+        },
+        "initialDelaySeconds": {
+          "type": "integer"
+        },
+        "periodSeconds": {
+          "type": "integer"
+        },
+        "timeoutSeconds": {
+          "type": "integer"
+        },
+        "successThreshold": {
+          "type": "integer"
+        },
+        "failureThreshold": {
+          "type": "integer"
+        }
+      },
+      "description": "If this is provided, liveness and readiness checks are disabled until the startup probe succeeds"
+    },
+    "terminationGracePeriodSeconds": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "Duration in seconds the pod needs to terminate gracefully"
+    },
+    "lifecycle": {
+      "type": "object",
+      "properties": {
+        "preStop": {
+          "type": "object",
+          "properties": {
+            "exec": {
+              "type": "object",
+              "properties": {
+                "command": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "httpGet": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "port": {
+                  "type": [
+                    "string",
+                    "integer"
+                  ]
+                },
+                "scheme": {
+                  "type": "string",
+                  "enum": [
+                    "HTTP",
+                    "HTTPS"
+                  ]
+                },
+                "host": {
+                  "type": "string"
+                },
+                "httpHeaders": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "name",
+                      "value"
+                    ],
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "value": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "tcpSocket": {
+              "type": "object",
+              "properties": {
+                "port": {
+                  "type": [
+                    "string",
+                    "integer"
+                  ]
+                },
+                "host": {
+                  "type": "string"
+                }
+              }
+            },
+            "sleep": {
+              "type": "object",
+              "properties": {
+                "seconds": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              },
+              "required": [
+                "seconds"
+              ]
+            }
+          }
+        },
+        "postStart": {
+          "type": "object",
+          "properties": {
+            "exec": {
+              "type": "object",
+              "properties": {
+                "command": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "httpGet": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "port": {
+                  "type": [
+                    "string",
+                    "integer"
+                  ]
+                },
+                "scheme": {
+                  "type": "string",
+                  "enum": [
+                    "HTTP",
+                    "HTTPS"
+                  ]
+                },
+                "host": {
+                  "type": "string"
+                },
+                "httpHeaders": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "name",
+                      "value"
+                    ],
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "value": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "tcpSocket": {
+              "type": "object",
+              "properties": {
+                "port": {
+                  "type": [
+                    "string",
+                    "integer"
+                  ]
+                },
+                "host": {
+                  "type": "string"
+                }
+              }
+            },
+            "sleep": {
+              "type": "object",
+              "properties": {
+                "seconds": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              },
+              "required": [
+                "seconds"
+              ]
+            }
+          }
+        }
+      },
+      "description": "- echo \"Container started\""
+    },
+    "autoscaling": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable or disable autoscaling"
+        },
+        "minReplicas": {
+          "type": "integer",
+          "description": "Minimum number of pods. Only relevant if autoscaling is enabled"
+        },
+        "maxReplicas": {
+          "type": "integer",
+          "description": "Maximum number of pods. Only relevant if autoscaling is enabled"
+        },
+        "targetCPUUtilizationPercentage": {
+          "type": "integer",
+          "description": "Target CPU utilization percentage. Only relevant if autoscaling is enabled"
+        }
+      },
+      "description": "Autoscaling configuration"
+    },
+    "podDisruptionBudget": {
+      "type": "object",
+      "description": "PodDisruptionBudget configuration for ensuring availability during disruptions. By default, PDB is skipped for single-replica deployments to prevent blocking node drains",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable or disable PodDisruptionBudget"
+        },
+        "skipSingleReplica": {
+          "type": "boolean",
+          "description": "Skip PDB creation for single-replica deployments. Defaults to true"
+        },
+        "minAvailable": {
+          "type": [
+            "integer",
+            "string"
+          ]
+        },
+        "maxUnavailable": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "description": "Use either minAvailable or maxUnavailable, not both"
+        },
+        "unhealthyPodEvictionPolicy": {
+          "type": "string",
+          "enum": [
+            "IfHealthyBudget",
+            "AlwaysAllow"
+          ],
+          "description": "Policy for handling unhealthy pods during eviction (Kubernetes 1.26+)"
+        }
+      }
+    },
+    "nodeSelector": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Node selector"
+    },
+    "tolerations": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "description": "Tolerations"
+    },
+    "affinity": {
+      "type": "object",
+      "description": "Affinity"
+    },
+    "topologySpreadConstraints": {
+      "type": "array",
+      "description": "Topology spread constraints for pod distribution across nodes/zones",
+      "items": {
+        "type": "object",
+        "properties": {
+          "maxSkew": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "topologyKey": {
+            "type": "string"
+          },
+          "whenUnsatisfiable": {
+            "type": "string",
+            "enum": [
+              "DoNotSchedule",
+              "ScheduleAnyway"
+            ]
+          },
+          "labelSelector": {
+            "type": "object",
+            "properties": {
+              "matchLabels": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              },
+              "matchExpressions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "key": {
+                      "type": "string"
+                    },
+                    "operator": {
+                      "type": "string",
+                      "enum": [
+                        "In",
+                        "NotIn",
+                        "Exists",
+                        "DoesNotExist"
+                      ]
+                    },
+                    "values": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "minDomains": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "nodeAffinityPolicy": {
+            "type": "string",
+            "enum": [
+              "Honor",
+              "Ignore"
+            ]
+          },
+          "nodeTaintsPolicy": {
+            "type": "string",
+            "enum": [
+              "Honor",
+              "Ignore"
+            ]
+          }
+        },
+        "required": [
+          "maxSkew",
+          "topologyKey",
+          "whenUnsatisfiable"
+        ]
+      }
+    },
+    "idp_oidc_provider_url": {
+      "type": "string",
+      "description": "This value is set automatically by ArgoCD, but can be overridden here for local testing."
+    },
+    "idp_aws_account": {
+      "type": [
+        "number",
+        "string"
+      ],
+      "description": "This value is set automatically by ArgoCD, but can be overridden here for local testing."
+    },
+    "linkerd": {
+      "type": "object",
+      "description": "Linkerd service mesh configuration",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable Linkerd sidecar injection for pods"
+        }
+      }
+    }
+  }
+}
