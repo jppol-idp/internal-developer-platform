@@ -129,6 +129,28 @@ The Blackbox Exporter supports various probe types for different monitoring need
 
 For HTTP probes, simply provide the full URL. For TCP probes, use the format `tcp://host:port`.
 
+### Probing in-cluster services
+
+When probing a service that runs inside the same Kubernetes cluster, the URL must use the service's fully qualified domain name (FQDN). The short service name form is not accepted by the probe's URL validation.
+
+Use the FQDN form:
+
+```
+http://<service>.<namespace>.svc.cluster.local:<port>/<path>
+```
+
+For example, instead of:
+
+```
+http://access-service-koa-test-service:5000/healthz/live
+```
+
+use:
+
+```
+http://access-service-koa-test-service.koa-test.svc.cluster.local:5000/healthz/live
+```
+
 > **Note:** Need additional probe types? If you require custom probe configurations (such as treating HTTP 404 as a success indicator or other specific validation logic), please contact the IDP team directly. The IDP team can implement and support custom probe modules tailored to your specific monitoring requirements.
 
 ## Viewing Probe Results
