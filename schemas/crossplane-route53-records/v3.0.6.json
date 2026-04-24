@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "idp_oidc_provider_url" : {
+      "type": ["string", "number"],
+      "description": "only here for compatibility issues"
+    }, 
+    "idp_aws_account" : {
+      "type": ["string", "number"],
+      "description": "only here for compatibility issues"
+    },
+    "ingress": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Injected by ApplicationSet — not used by this chart."
+    },
+    "managementPolicies": {
+      "type": "string",
+      "enum": ["Control", "Observe"],
+      "description": "Should records be observed or controlled. (Zones are always observe only.)"
+    },
+    "deletionPolicy": {
+      "type": "string",
+      "enum": ["Orphan", "Delete"],
+      "description": "Should records be deleted or left orphan if a record is removed or chart is uninstalled?"
+    },
+    "records": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "zoneName": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9._-]+$"
+          },
+          "name": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9._-]+$"
+          },
+          "records": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "ttl": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "type": {
+            "type": "string",
+            "enum": ["A", "AAAA", "CNAME", "MX", "TXT", "SRV", "NS", "PTR", "SOA"]
+          }
+        },
+        "required": ["zoneName", "name", "records", "ttl", "type"]
+      }
+    },
+    "zones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string", "pattern": "^[a-zA-Z0-9._-]+$" }
+        },
+        "required": ["id", "name"]
+      }
+    }
+  },
+  "required": ["records"]
+}
