@@ -77,11 +77,11 @@ docker run app-name.py:0.1.0
 > 🚨 You typically don’t have permission to upload images directly — but Politiken’s GitHub organization does.
 
 This GitHub Action builds, tags, and uploads your image to ECR in our idp-shared account: 354918371398
-[https://github.com/Politiken/idp-test/blob/master/.github/workflows/build-push-deploy.yaml](https://github.com/Politiken/idp-test/blob/master/.github/workflows/build-push-deploy.yaml)
+[https://github.com/jppol-idp/tag-and-push-ecr/blob/main/action.yaml](https://github.com/jppol-idp/tag-and-push-ecr/blob/main/action.yaml)
 
 
 ```yaml
-uses: jppol-idp/tag-and-push-ecr@a7bb367d9e4393d243da605e4c4b700c18e2c34d
+uses: jppol-idp/tag-and-push-ecr@836010204ce0af876873b46acb7f4cd452d4e2eb
 namespace: pol
 image_tags: ${{ github.run_number }}
 ```
