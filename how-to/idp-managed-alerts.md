@@ -4,7 +4,7 @@ nav_order: 11
 parent: How to...
 domain: public
 permalink: /idp-managed-alerts
-last_reviewed_on: 2026-04-21
+last_reviewed_on: 2026-04-28
 review_in: 6 months
 ---
 
@@ -35,7 +35,7 @@ review_in: 6 months
 
 # What this is
 
-IDP maintains a curated set of standard infrastructure alerts that customer teams can opt into per namespace. The alerts cover common Kubernetes-level problems that apply to any workload — OOM kills, crashing containers, pods stuck pending or terminating, PVC disk usage, ArgoCD application health. They are not application-specific: each alert is defined once by IDP and shipped to every opted-in customer via a versioned Helm chart (`idp-managed-customer-alerts`).
+IDP maintains a curated set of standard infrastructure alerts that customer teams can opt into per namespace. The alerts cover common Kubernetes-level problems that apply to any workload — OOM kills, crashing containers, pods stuck pending or terminating, PVC disk usage, ArgoCD application health, and Kubernetes workload health (Deployment/StatefulSet replicas, rollouts, Jobs, HPA, PDB). They are not application-specific: each alert is defined once by IDP and shipped to every opted-in customer via a versioned Helm chart (`idp-managed-customer-alerts`).
 
 **What IDP owns:** the alert queries, the Slack message format, runbooks, and any future additions to the set. A chart version bump automatically improves every customer's alerts on the next sync.
 
@@ -55,6 +55,12 @@ Use this alongside your own team-specific alerts (built with [`idp-grafana-alarm
 | `podTerminatingMajor` | major | A pod is stuck in `Terminating` longer than the configured duration (default 15 min) | enabled, severity, `durationSeconds` |
 | `pvcUsage` | warning / critical | PVC disk usage crosses `warningPercent` (default 80%) or `criticalPercent` (default 90%) | enabled, thresholds |
 | `argocdAppUnhealthy` | warning | Any ArgoCD `Application` targeting your namespace is `OutOfSync`, `Degraded`, `Missing`, or `Unknown` for longer than `forDuration` (default 15 min) | enabled, severity, `forDuration` |
+| `kubeDeploymentReplicasMismatch` | warning | A Deployment has fewer available replicas than its spec for longer than `forDuration` (default 15 min). Typical causes: failing `readinessProbe`, image pull error, app crashing on startup. **Disabled by default** — overlaps with `containerRestartLoop` / `podPendingWarning` | enabled, severity, `forDuration` |
+| `kubeStatefulSetReplicasMismatch` | warning | A StatefulSet has fewer ready replicas than desired for longer than `forDuration` (default 15 min). Typical causes: PVC pending, failing `readinessProbe`, pod crashing on startup | enabled, severity, `forDuration` |
+| `kubeDeploymentRolloutStuck` | warning | A Deployment rollout has not made progress for longer than `forDuration` (default 15 min) — the new ReplicaSet's pods aren't going Ready. Typical causes: new `image.tag` fails `readinessProbe` or crashes on startup. **Disabled by default** — overlaps with `argocdAppUnhealthy` | enabled, severity, `forDuration` |
+| `kubeJobFailed` | warning | A Kubernetes Job hit its backoff limit and the failed Job object still exists `forDuration` later (default 15 min). Add `ttlSecondsAfterFinished` on the Job spec to auto-clean failures | enabled, severity, `forDuration` |
+| `kubeHpaMaxedOut` | warning | An HPA has been pinned at `maxReplicas` for longer than `forDuration` (default 15 min) — the workload cannot scale further. **Disabled by default** to avoid noise from intentionally maxed-out workloads (e.g. predictors at steady state) | enabled, severity, `forDuration` |
+| `kubePdbNotEnoughHealthyPods` | warning | A PodDisruptionBudget has fewer healthy pods than desired for longer than `forDuration` (default 15 min) — node drains targeting the workload are now blocked, which delays IDP cluster maintenance. **Disabled by default** — overlaps with `containerRestartLoop` / `podPendingWarning` | enabled, severity, `forDuration` |
 
 Slack messages include a title with severity emoji and alert name, a bold summary with the offending pod/PVC/app identifier, a runbook section, and links to the relevant Grafana dashboard, the alert in Grafana, and ArgoCD. The pod-pending and restart-loop alerts additionally decode the container's waiting reason (e.g. `CreateContainerConfigError`, `ImagePullBackOff`) so you can triage before opening Grafana.
 
@@ -100,7 +106,7 @@ description: IDP-managed standard alerts for <namespace>
 version: 0.1.0
 helm:
   chart: helm/idp-managed-customer-alerts
-  chartVersion: "2.4.0"  # see latest at https://github.com/jppol-idp/helm-idp/releases
+  chartVersion: "2.9.0"  # see latest at https://github.com/jppol-idp/helm-idp/releases
 ```
 
 **`values.yaml`:**
