@@ -28,7 +28,30 @@ One Aurora Serverless v2 cluster is provisioned per Kubernetes cluster. Each Aur
 
 ## Define your Database
 
-In your apps repository add a new subfolder in the relevant namespace folder.
+In your apps repository, add a subfolder for the database under the relevant namespace folder. If you are deploying both an application and a database together, two layouts work well:
+
+**App and database as siblings inside a service folder:**
+```
+apps/team-dev/my-service/
+├── app/
+│   ├── application.yaml
+│   └── values.yaml
+└── db/
+    ├── application.yaml
+    └── values.yaml
+```
+
+**App and database as separate top-level folders:**
+```
+apps/team-dev/my-service/
+├── application.yaml
+└── values.yaml
+apps/team-dev/my-service-db/
+├── application.yaml
+└── values.yaml
+```
+
+Both patterns are equally valid — pick whichever fits your team's folder conventions.
 
 Now define a `values.yaml` file describing the database you want to provision:
 
