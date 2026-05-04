@@ -4,6 +4,8 @@ nav_order: 2
 parent: Onboarding
 domain: public
 permalink: /codetodeploy
+last_reviewed_on: 2026-04-05
+review_in: 3 months
 ---
 
 
@@ -13,19 +15,19 @@ permalink: /codetodeploy
 ---
 **By the end of this session, you will have:**
 
-- [x] Access to IDP
-- [x] Your code packaged as a container
-- [x] Deployed via GitOps with visibility in ArgoCD
-- [x] Monitoring via Prometheus, logging via Loki, and visualization in Grafana
-- [x] You comply with the platform’s security requirements
-- [x] You are ready to use IDP in your daily work
+- Access to IDP
+- Your code packaged as a container
+- Deployed via GitOps with visibility in ArgoCD
+- Monitoring via Prometheus, logging via Loki, and visualization in Grafana
+- You comply with the platform’s security requirements
+- You are ready to use IDP in your daily work
 
 ---
 
 > 🚨 The examples use `Politiken`-specific domains and variables.  
 > Make sure to **replace all values** with values relevant to your own organization.
 > 
-> Example: `https://github.com/jppol-idp/apps-pol` → `https://github.com/jppol-idp/apps-yourdomain`
+> Example: `https://github.com/Politiken` → `https://github.com/jppol-idp`
 
 ---
 
@@ -36,7 +38,7 @@ Before you begin, make sure you have the following in place:
 
 - [ ] Access to your code repository, e.g., [https://github.com/Politiken](https://github.com/Politiken)
 - [ ] Access to your IDP deployment repository, e.g., [https://github.com/jppol-idp/apps-pol](https://github.com/jppol-idp/apps-pol) ([access management](https://github.com/orgs/jppol-idp/teams/apps-pol/members))
-- [ ] Access to #idp-support on [Slack](https://ekstrabladet.slack.com/archives/C08HWLGQCTE)
+- [ ] Access to your onboarding channel on Slack `#idp-TEAM-onboarding` and `#idp-announcements`
 - [ ] Access to IDP tools, e.g., [https://argocd.pol-test.idp.jppol.dk](https://argocd.pol-test.idp.jppol.dk), [https://grafana.pol-test.idp.jppol.dk](https://grafana.pol-test.idp.jppol.dk)
 - [ ] Docker or similar installed
 
@@ -44,7 +46,7 @@ Before you begin, make sure you have the following in place:
 
 ## 🪛 Step-by-Step: Deploy Your First Workload
 
-### 1. 📁 Create an app in your code repository (se example [https://github.com/Politiken/idp-test](https://github.com/Politiken/idp-test))
+### 1. 📁 Create an app in your code repository (se example [https://github.com/jppol-idp/generic-service](https://github.com/jppol-idp/generic-service))
 Tip: Name the app after yourself to make it easy to identify.
 
 ```bash
@@ -74,9 +76,9 @@ docker run app-name.py:0.1.0
 
 ### 3. Upload your image to the IDP ECR repository
 
-> 🚨 You typically don’t have permission to upload images directly — but Politiken’s GitHub organization does.
+> 🚨 You typically don’t have permission to upload images directly — but your GitHub organization does.
 
-This GitHub Action builds, tags, and uploads your image to ECR in our idp-shared account: 354918371398
+This GitHub Action tags and pushes your image to ECR in our idp-shared account: 354918371398
 [https://github.com/jppol-idp/tag-and-push-ecr/blob/main/action.yaml](https://github.com/jppol-idp/tag-and-push-ecr/blob/main/action.yaml)
 
 
@@ -86,18 +88,17 @@ namespace: pol
 image_tags: ${{ github.run_number }}
 ```
 
-The ECR repository allows GitHub Actions from Politiken’s organization to upload images here:
-arn:aws:ecr:eu-west-1:354918371398:repository/pol/*
+The ECR repository allows GitHub Actions from your organization to upload images to a namespaced registry. For instance, Actions from Politiken's organization is allowed to push images to: `arn:aws:ecr:eu-west-1:354918371398:repository/pol/*`.
 
+For an example on how to use it, view the [generic-service source repository](https://github.com/jppol-idp/generic-service).
 
 __Automatic deployment__
 
-The IDP cluster can update to the latest version of the images built, optionally limiting to tags matching certain SemVer 
-og Regex patterns.
+The ECR repository uses immutable tags, meaning you can't use `latest` as a tag for your images.
 
-This feature is enabled in `application.yaml` with a set of annotations. Enabling this feature will limit the need to 
-modify the deploy repository, as you only need to modify it in case of entirely new deployments or when tweaking the 
-configuration. [You can read more about auto updating images here.](https://public.docs.idp.jppol.dk/how-to-auto-update)
+But, the IDP cluster can update to the latest version of the images built, optionally limiting to tags matching certain SemVer or Regex patterns.
+
+This feature is enabled in `application.yaml` with a set of annotations. Enabling this feature will limit the need to modify the deploy repository, as you only need to modify it in case of entirely new deployments or when tweaking the configuration. [You can read more about auto updating images here.](https://public.docs.idp.jppol.dk/how-to-auto-update)
 
 ---
 ### 4. Create deployment configuration
@@ -122,7 +123,7 @@ version: 0.1.0    # <-- version af deployment definition
 
 helm:
   chart: helm/idp-advanced
-  chartVersion: "0.1.14"    # <-- version af helm chart
+  chartVersion: "3.1.2"    # <-- version af helm chart
 ```
 
 > The chart helm/idp-advanced refers to [jppol-idp/helm-idp-advanced](https://github.com/jppol-idp/helm-idp/blob/main/charts/idp-advanced/Chart.yaml)
@@ -136,7 +137,7 @@ image:
   tag: "0.1.0"
 ```
 
-> You can go here and [find a list of all configurable variables](https://github.com/jppol-idp/helm-idp/blob/main/charts/idp-advanced/README.md)
+> You can go here and [find a list of all configurable variables](https://github.com/jppol-idp/helm-idp/blob/main/charts/idp-advanced/README.md) or find the [generic service in apps-demo](https://github.com/jppol-idp/apps-demo/tree/main/apps/demo-dev/generic-service) for a more complete example that covers most common needs.
 
 ---
 
@@ -169,7 +170,7 @@ Go and drilldown and filter your logs with Loki
 
 You're now up and running! 💪
 
-You are **always** very welcome to ask questions in [Slack](https://ekstrabladet.slack.com/archives/C08HWLGQCTE) - we're happy to help!
+You are **always** very welcome to ask questions in your onboarding channel on Slack - we're happy to help!
 
 Also, feel free to explore our [FAQ](faq) for answers to frequently asked questions and onboarding guidance.
 
