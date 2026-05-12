@@ -93,6 +93,7 @@
 ./schemas/idp-postgresql/v1.0.2.json
 ./schemas/argo-cronworkflow-job/v1.2.1.json
 ./schemas/argo-cronworkflow-job/v1.2.0.json
+./schemas/argo-cronworkflow-job/v1.2.2.json
 ./schemas/argo-cronworkflow-job/latest.json
 ./schemas/argo-cronworkflow-job/v1.2.3.json
 ./architecture-decision-records/img/idp_diagram.png
