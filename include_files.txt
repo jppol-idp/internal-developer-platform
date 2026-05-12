@@ -76,6 +76,7 @@
 ./schemas/argo-workflow-job/v1.0.2.json
 ./schemas/idp-advanced/v3.1.2.json
 ./schemas/idp-advanced/latest.json
+./schemas/idp-advanced/v3.1.4.json
 ./schemas/idp-advanced/v3.1.1.json
 ./schemas/idp-advanced/v3.1.3.json
 ./schemas/idp-oidc-middleware/v0.3.0.json
