@@ -4,7 +4,7 @@ nav_order: 11
 parent: How to...
 domain: public
 permalink: /idp-managed-alerts
-last_reviewed_on: 2026-04-28
+last_reviewed_on: 2026-05-13
 review_in: 6 months
 ---
 
@@ -61,6 +61,7 @@ Use this alongside your own team-specific alerts (built with [`idp-grafana-alarm
 | `kubeJobFailed` | warning | A Kubernetes Job hit its backoff limit and the failed Job object still exists `forDuration` later (default 15 min). Add `ttlSecondsAfterFinished` on the Job spec to auto-clean failures | enabled, severity, `forDuration` |
 | `kubeHpaMaxedOut` | warning | An HPA has been pinned at `maxReplicas` for longer than `forDuration` (default 15 min) — the workload cannot scale further. **Disabled by default** to avoid noise from intentionally maxed-out workloads (e.g. predictors at steady state) | enabled, severity, `forDuration` |
 | `kubePdbNotEnoughHealthyPods` | warning | A PodDisruptionBudget has fewer healthy pods than desired for longer than `forDuration` (default 15 min) — node drains targeting the workload are now blocked, which delays IDP cluster maintenance. **Disabled by default** — overlaps with `containerRestartLoop` / `podPendingWarning` | enabled, severity, `forDuration` |
+| `lokiLineTooLong` | warning | A container in your namespace has logged ≥ `lineCountThreshold` lines larger than 5 MB within a 10-minute window. Lines this large are dropped by the log shipper before they reach Loki, so the entries are permanently lost from Grafana | enabled, severity, `lineCountThreshold` |
 
 Slack messages include a title with severity emoji and alert name, a bold summary with the offending pod/PVC/app identifier, a runbook section, and links to the relevant Grafana dashboard, the alert in Grafana, and ArgoCD. The pod-pending and restart-loop alerts additionally decode the container's waiting reason (e.g. `CreateContainerConfigError`, `ImagePullBackOff`) so you can triage before opening Grafana.
 
@@ -106,7 +107,7 @@ description: IDP-managed standard alerts for <namespace>
 version: 0.1.0
 helm:
   chart: helm/idp-managed-customer-alerts
-  chartVersion: "2.9.0"  # see latest at https://github.com/jppol-idp/helm-idp/releases
+  chartVersion: "2.10.1"  # see latest at https://github.com/jppol-idp/helm-idp/releases
 ```
 
 **`values.yaml`:**
@@ -187,6 +188,11 @@ standardAlerts:
   # ArgoCD apps often deploy slowly in prod — give them longer
   argocdAppUnhealthy:
     forDuration: 30m
+
+  # Raise the oversized-line threshold if a workload has a known, tolerable rate
+  # of >5 MB log lines you cannot eliminate. Default 1 fires on any drop.
+  lokiLineTooLong:
+    lineCountThreshold: 5
 ```
 
 The PromQL itself is not exposed — if you need a query change, open a request with the IDP team.
