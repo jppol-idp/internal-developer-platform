@@ -4,7 +4,7 @@ nav_order: 22
 parent: How to...
 domain: public
 permalink: /how-to-postgresql
-last_reviewed_on: 2026-01-28
+last_reviewed_on: 2026-05-13
 review_in: 3 months
 ---
 # Working with Postgres
@@ -31,6 +31,7 @@ One Aurora Serverless v2 cluster is provisioned per Kubernetes cluster. Each Aur
 In your apps repository, add a subfolder for the database under the relevant namespace folder. If you are deploying both an application and a database together, two layouts work well:
 
 **App and database as siblings inside a service folder:**
+
 ```
 apps/team-dev/my-service/
 ├── app/
@@ -42,6 +43,7 @@ apps/team-dev/my-service/
 ```
 
 **App and database as separate top-level folders:**
+
 ```
 apps/team-dev/my-service/
 ├── application.yaml
@@ -61,7 +63,7 @@ postgresqlDatabases:
     mode: standard
 ```
 
-Mode can be either `standard` or `protected`. Using mode protected enables deletion protection. **Deletion protection should be enabled for production databases.** Enabling deletion protection will ensure the database in the Aurora cluster is not deleted if the database definition in the apps repository is deleted. If a protected database is accidentally deleted from the apps repo, follow the guide in [backup and restore](#restore-protected-database-which-has-been-removed-from-apps-repo). For a list of all possible configuration options in values.yaml see [README](https://github.com/jppol-idp/helm-idp/blob/main/charts/idp-postgresql/README.md).
+Mode can be either `standard` or `protected`. Using mode protected enables deletion protection. **Deletion protection should be enabled for production databases.** Enabling deletion protection will ensure the database in the Aurora cluster is not deleted if the database definition in the apps repository is deleted. If a protected database is accidentally deleted from the apps repo, follow the guide in [backup and restore](#protected-database-removed-from-apps-repo). For a list of all possible configuration options in values.yaml see [README](https://github.com/jppol-idp/helm-idp/blob/main/charts/idp-postgresql/README.md).
 
 Next you need to create an `application.yaml` in the same subfolder in order to instruct ArgoCD how to create your app and deploy the chart:
 
@@ -189,7 +191,7 @@ KOA has documented their restore experience in a playbook that is a useful refer
 
 To restore a database from a snapshot using pgAdmin, follow these steps:
 
-1. **Contact the IDP team** via the [idp-team Slack channel](https://jppol.slack.com/archives/C09JUREPVBP) and request a restore.
+1. **Contact the IDP team** in your onboarding Slack channel and request a restore.
 2. **Find a suitable snapshot** together with the IDP team.
 3. **IDP initializes a restore cluster** from the selected snapshot.
 4. **Connect to the restore cluster** using pgAdmin:
@@ -213,48 +215,17 @@ To restore a database from a snapshot using pgAdmin, follow these steps:
 
 pgAdmin is likely not a suitable tool for restoring large databases. The restore procedure for large databases is a work in progress.
 
-### Restore protected database which has been removed from apps repo
+### Protected database removed from apps repo
 
-*The import of protected databases is not yet an automated process as of idp-postgresql helm chart version 1.0.1*
+*Automatic re-import of protected databases is being worked on. Until it is available, the process below requires manual intervention from the IDP team.*
 
-If a deletion protected database has accidentally been deleted from your apps repo, the actual database in the Aurora cluster and the other resources have not been deleted. Only the Kubernetes objects which represents the resources have been deleted.
+When a protected database is removed from the apps repo — accidentally or temporarily — the following is **preserved**: the database itself, all data, and the credentials stored in AWS. What is lost is the connection between the platform and the database, meaning the Kubernetes secrets in your namespace will be gone and the platform will stop managing the database.
 
-To "restore" the protected database in this context means to bring it under management again. This scenario can be compared to deleting the Terraform state without letting Terraform reconcile the infrastructure, and then importing the infrastructure into the state to be able to control it with Terraform again.
+Re-adding the database definition to the apps repo does not automatically restore this connection.
 
-The first step is to contact IDP as some of these steps requires elevated privileges.
+**What to do:** Contact the IDP team in your onboarding Slack channel with the database name and namespace.
 
-The service using the database only strictly needs the secrets in Kubernetes to connect to the database. As mentioned previously, there is currently no automated way to import protected databases. The quick fix is to create 3 externalsecrets (one for each role) so that the service is still able to connect to the database after a restart. Create the externalsecrets similar to:
-
-```bash
-apiVersion: external-secrets.io/v1
-kind: ExternalSecret
-metadata:
-  name: [namespace]-[database]-[read/write/admin]
-spec:
-  refreshInterval: 1h
-  secretStoreRef:
-    name: aws-secrets
-    kind: ClusterSecretStore
-  target:
-    name: [namespace]-[database]-[read/write/admin]
-  data:
-    - secretKey: username
-      remoteRef:
-        key: customer/[customer]/[database]-[read/write/admin]
-        property: username
-    - secretKey: password
-      remoteRef:
-        key: customer/[customer]/[database]-[read/write/admin]
-        property: password
-    - secretKey: endpoint
-      remoteRef:
-        key: customer/[customer]/[database]-[read/write/admin]
-        property: endpoint
-    - secretKey: port
-      remoteRef:
-        key: customer/[customer]/[database]-[read/write/admin]
-        property: port
-```
+The easiest path is a credential rotation — the IDP team resets the database passwords and writes new credentials to AWS and your Kubernetes secrets. There is no data loss, but **the passwords will change**. Restart your application pods once the IDP team confirms the fix is complete to pick up the new credentials.
 
 ## SSL configuration
 
