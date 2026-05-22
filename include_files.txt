@@ -29,6 +29,7 @@
 ./schemas/idp-grafana-alarm/v1.1.2.json
 ./schemas/idp-grafana-alarm/latest.json
 ./schemas/idp-grafana-alarm/v1.1.1.json
+./schemas/idp-managed-customer-alerts/v2.10.1.json
 ./schemas/idp-managed-customer-alerts/v2.9.1.json
 ./schemas/idp-managed-customer-alerts/v2.2.0.json
 ./schemas/idp-managed-customer-alerts/v2.3.0.json
