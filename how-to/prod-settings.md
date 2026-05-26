@@ -54,7 +54,7 @@ Again the pod is guaranteed to be allocated the amount of memory from the reques
 
 The pod will be allow to use additional memory available ram until it reaches the memory from the limits block. 
 
-If a pod reaches `limit` it will be _terminated_ by kubernetes, and and OutOfMemory (OOM) error will be recorded. 
+If a pod reaches `limit` it will be _terminated_ by kubernetes, and OutOfMemory (OOM) error will be recorded. 
 
 That is: Memory limits are enforced by killing the pod. CPU limits are enforced by throttling. 
 
