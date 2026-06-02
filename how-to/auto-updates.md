@@ -66,3 +66,49 @@ To enable this feature you should start by removing the `image` section of `valu
 line `argocd_image_updater_write_back_target: values-aiu.yaml`. 
 
 Completing these steps will cause AIU to only write back to `values-aiu.yaml`. 
+
+# Working with Argo Workflows and other non-standard CRDs
+Argo Image Updater can update various kinds of objects, but will in such cases need more assistance 
+from the user. 
+
+The example below demonstrates AIU with the Argo Workflows cron chart provided by IDP. (Both applications.yaml 
+and values.yaml in the example are snippets.)
+
+You should notice the presence of the two fields `argocd_image_updater_helm_image_spec` and `argocd_image_updater_force_update`.
+Together these fields points AIU to look for image specification in a non-standard path (using the image\_spec field) and 
+tells AIU to complete the update using "force\_update".) Note that the JsonPath is _not_ rooted with a dot.
+
+Application file
+
+```yaml
+(...)
+helm:
+  chart: helm/argo-cronworkflow-job
+  chartVersion: "1.2.3"
+argocd_image_updater_ecr_image: idp/demonstrate-cron
+argocd_image_updater_update_strategy: newest-build
+argocd_image_updater_allow_tags: regexp:^dev-.*
+argocd_image_updater_force_update: "true"
+argocd_image_updater_helm_image_spec: "spec.workflowSpec.templates[0].container.image"
+```
+
+Values file
+```yaml
+ (...)
+spec:
+ (...)
+  startingDeadlineSeconds: 60
+  workflowSpec:
+    entrypoint: delete-pending-deletion
+    templates:
+    - name: delete-pending-deletion
+      inputs: {}
+      outputs: {}
+      metadata: {}
+      container:
+        name: "cron-delete-pending-deletion"
+        image: 354918371398.dkr.ecr.eu-west-1.amazonaws.com/idp/demonstrate-cron:dev-1777465563
+ (...)
+```
+
+
