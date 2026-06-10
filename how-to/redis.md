@@ -4,7 +4,7 @@ nav_order: 23
 parent: How to...
 domain: public
 permalink: /how-to-redis
-last_reviewed_on: 2025-12-01
+last_reviewed_on: 2026-06-10
 review_in: 6 months
 ---
 
@@ -30,6 +30,7 @@ Deploy Redis in your IDP cluster. The `idp-redis` Helm chart supports two deploy
   - [Which service to use](#which-service-to-use)
   - [Connecting with tools](#connecting-with-tools-redis-insights-redisinsight-redis-cli)
   - [Connecting from your application](#connecting-from-your-application)
+- [Handling failover](#handling-failover-important)
 - [Authentication (optional)](#authentication-optional)
   - [Method 1: AWS Secrets Manager via ExternalSecret](#method-1-aws-secrets-manager-via-externalsecret-recommended-for-production)
   - [Method 2: Existing Kubernetes Secret](#method-2-existing-kubernetes-secret-alternative)
@@ -278,7 +279,7 @@ The service you connect to depends on your deployment mode and use case:
 **Important**:
 - Use `-master` for writes or when you need consistent reads
 - Use `-replica` for read-heavy workloads to distribute load
-- **Do NOT use `-sentinel` for data operations** - it's only for monitoring and failover coordination
+- **Do not run data commands (GET/SET) directly against port 26379** - it serves Sentinel commands only. A *Sentinel-aware client* still connects to `-sentinel:26379`, but only to discover the master; it then sends data to the master on 6379. This is the recommended setup for production — see [Handling failover](#handling-failover-important).
 
 ### Connecting with tools (Redis Insights, RedisInsight, redis-cli)
 
@@ -328,23 +329,59 @@ r_read = redis.Redis(
 )
 ```
 
-**Using Sentinel for automatic failover** (advanced):
+**Using Sentinel for automatic failover** (recommended for production):
+
+In replication mode a Sentinel-aware client follows the master automatically when a failover happens. Connect to the Sentinel service for discovery — the client opens its actual data connection to whichever pod is currently the master:
+
 ```python
 from redis.sentinel import Sentinel
+from redis.retry import Retry
+from redis.backoff import ExponentialBackoff
+from redis.exceptions import ReadOnlyError, ConnectionError, TimeoutError
 
-# Connect to sentinel for automatic failover handling
-sentinel = Sentinel([
-    ('my-redis-deployment-sentinel', 26379)
-], decode_responses=True)
+# Connect to sentinel for automatic failover handling.
+# Create this ONCE at startup and reuse it - the pool handles reconnection.
+sentinel = Sentinel(
+    [('my-redis-deployment-sentinel', 26379)],
+    socket_timeout=0.5,
+    decode_responses=True,
+)
 
-# Get master for writes (master name is 'myMaster')
-master = sentinel.master_for('myMaster', socket_timeout=0.1)
+# Re-resolve the master and retry on failover-related errors
+retry = Retry(ExponentialBackoff(cap=2.0, base=0.1), retries=5)
 
-# Get slave for reads
-slave = sentinel.slave_for('myMaster', socket_timeout=0.1)
+# Master client for writes (master name is 'myMaster')
+master = sentinel.master_for(
+    'myMaster',
+    socket_timeout=0.5,
+    retry=retry,
+    retry_on_error=[ReadOnlyError, ConnectionError, TimeoutError],
+)
+
+# Replica client for reads
+slave = sentinel.slave_for('myMaster', socket_timeout=0.5)
 ```
 
 **Note**: When using Sentinel in your application, the master name is configured as `myMaster` (not the default `mymaster`).
+
+The `retry_on_error=[ReadOnlyError, ...]` is the important part: after a failover the client re-asks Sentinel for the new master and retries, instead of staying stuck on a demoted replica. See [Handling failover](#handling-failover-important) for why this matters.
+
+## Handling failover (important)
+
+In replication mode the master can change at any time — Sentinel promotes a replica to master whenever the current master becomes unavailable (a crash, but also routine events like a node being recycled). When this happens, **the old master is demoted to a read-only replica**.
+
+The `-master` service always points at the current master, but a Kubernetes service only governs *new* connections. If your application is holding an existing connection to the pod that just got demoted, that connection stays open and every write returns:
+
+```
+READONLY You can't write against a read only replica.
+```
+
+The application will keep failing until it drops the connection and reconnects — a restart/redeploy "fixes" it only because it forces fresh connections. Your client needs to handle this itself:
+
+- **Treat `READONLY` as a reconnect trigger.** On a `READONLY` error, drop the connection and reconnect so you re-resolve to the current master. In most clients this is a built-in retry option (e.g. `retry_on_error=[ReadOnlyError]` in `redis-py`, or reconnect-on-error logic in `ioredis`).
+- **Prefer a Sentinel-aware client** (see the [Sentinel example](#using-sentinel-for-automatic-failover-recommended-for-production) above). It discovers master changes proactively via Sentinel and resets connections for you, rather than waiting for the first failed write.
+
+This applies to **every** client, not just during node consolidation — failover is a normal part of running in replication mode, so the client must be able to recover from it.
 
 ## Authentication (optional)
 
@@ -472,6 +509,10 @@ Redis Operator is configuring pods. Wait 30-60 seconds for all pods to be Ready.
 ### Sentinel not deploying (replication mode)
 
 Ensure all Redis pods are `Running` first. Sentinel waits for Redis to be ready.
+
+### Writes fail with `READONLY You can't write against a read only replica`
+
+A failover happened and your application is still holding a connection to the pod that was demoted to a replica. Redis is healthy — this is a client-side connection issue. Make your client reconnect on `READONLY` or use a Sentinel-aware client; see [Handling failover](#handling-failover-important). A redeploy clears it temporarily by forcing new connections, but the fix is in the client.
 
 ## Support
 
