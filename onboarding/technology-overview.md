@@ -41,9 +41,8 @@ We strictly follow **GitOps** principles, meaning every change is stored as a co
 - NoSQL support with **DynamoDB**
 - Scalable relational databases via **PostgreSQL** on **AWS Aurora V2**
 
-## Eventing & Workflows
+## Workflows
 
-- Event-driven workflows via **Argo Events**
 - Workflow orchestration with **Argo Workflows**
 
 ## Observability
