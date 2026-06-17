@@ -4,8 +4,8 @@ nav_order: 17
 parent: How to...
 domain: public
 permalink: /prometheus-metrics
-last_reviewed_on: 2025-09-23
-review_in: 3 months
+last_reviewed_on: 2026-06-17
+review_in: 6 months
 ---
 # Prometheus Metrics Scraping
 
@@ -48,21 +48,49 @@ Consider these implications when designing your metrics exposure strategy with t
 
 **Configuration Steps:**
 
-1. Add the following to the service section:
-    ```yaml
-    service:
-      ...existing content...
-      metrics:
-        enabled: true
-    ```
-2. Add or enable the serviceMonitor section:
-    ```yaml
-    serviceMonitor:
-      enabled: true
-    ```
-3. If using non-standard ports or paths, refer to:
-   - The idp-advanced default-values.yaml
-   - The idp-advanced README.md for additional parameters
+The chart supports two modes. Pick the one that matches where your application exposes metrics.
+
+#### Mode A: Metrics on a dedicated port (recommended)
+
+Use this when your application serves `/metrics` on a separate port (e.g. `9090`), distinct from the port serving normal traffic.
+
+```yaml
+service:
+  ...existing content...
+  port: 80          # your application traffic port
+  metrics:
+    enabled: true
+    port: 9090      # the port your app exposes metrics on — MUST differ from service.port
+serviceMonitor:
+  enabled: true
+```
+
+This creates a dedicated service port named `metrics`, and the ServiceMonitor scrapes that port.
+
+**Why a separate port is preferred:** A dedicated metrics port keeps `/metrics` off the port you expose publicly. If your application is reachable through an Ingress, that Ingress routes to your traffic port (e.g. `80`/`3000`) — so if metrics live on that same port, anyone who can reach the public URL can also fetch `/metrics`. Metrics often leak internal details (hostnames, dependency endpoints, queue depths, error counts, request volumes) that should not be world-readable. By serving metrics on a separate port (e.g. `9090`) that the Ingress does not route to, Prometheus can still scrape it in-cluster via the ServiceMonitor, while it stays unreachable from outside. If you must keep metrics on the application port, ensure your application or middleware blocks external access to `/metrics`.
+
+> **Warning:** `service.metrics.port` must not equal `service.port`. If both share the same number, Kubernetes collapses them into a single port (keeping the `http` one), the `metrics` port is never created, and the ServiceMonitor finds no target — so no metrics reach Grafana even though port-forwarding the endpoint works fine.
+
+#### Mode B: Metrics on the application port
+
+Use this when your application serves `/metrics` on the **same** port as normal traffic (a single port for everything).
+
+```yaml
+service:
+  ...existing content...
+  port: 3000        # single port serving both traffic and /metrics
+  metrics:
+    enabled: false  # do NOT enable a dedicated metrics port
+serviceMonitor:
+  enabled: true
+  portName: http    # scrape the main service port (named "http")
+```
+
+When `service.metrics.enabled` is `false`, the ServiceMonitor scrapes the port named by `serviceMonitor.portName` (defaults to `http`), which is the main service port.
+
+If using non-standard ports or paths, refer to:
+- The idp-advanced default-values.yaml
+- The idp-advanced README.md for additional parameters
 
 ### Option 2: Using Custom Chart with ServiceMonitor
 Create a serviceMonitor object for your deployment:
@@ -182,6 +210,7 @@ Once metrics are being scraped by Prometheus, you can verify them in Grafana:
 Common issues:
 
 ### ServiceMonitor Issues:
+- **Metrics not appearing in Grafana (but port-forward to /metrics works):** The ServiceMonitor references a service port *by name* that does not exist. With the idp-advanced chart this usually means `service.metrics.enabled: true` was set while `service.metrics.port` equals `service.port` — the duplicate port collapses and the `metrics` port is never created. Either give the metrics port a distinct number (Mode A) or disable `service.metrics` and set `serviceMonitor.portName: http` (Mode B). Verify with `kubectl get svc <name> -o yaml` and `kubectl get servicemonitor <name> -o yaml` that the ServiceMonitor's `endpoints[].port` name matches an existing service port name.
 - **Metrics not appearing in Grafana:** Verify serviceMonitor labels match your service labels
 - **Connection refused when port-forwarding:** Check if the metrics port is correctly specified in your service
 
