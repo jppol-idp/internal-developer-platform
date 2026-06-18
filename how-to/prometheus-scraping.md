@@ -4,7 +4,7 @@ nav_order: 17
 parent: How to...
 domain: public
 permalink: /prometheus-metrics
-last_reviewed_on: 2026-06-17
+last_reviewed_on: 2026-06-18
 review_in: 6 months
 ---
 # Prometheus Metrics Scraping
@@ -15,7 +15,7 @@ review_in: 6 months
 - [Configuration Options](#configuration-options)
   - [Option 1: Using idp-advanced Helm Chart](#option-1-using-idp-advanced-helm-chart)
   - [Option 2: Using Custom Chart with ServiceMonitor](#option-2-using-custom-chart-with-servicemonitor)
-  - [Option 3: Using PodMonitor](#option-3-using-podmonitor)
+  - [Option 3: Using Custom Chart with PodMonitor](#option-3-using-custom-chart-with-podmonitor)
 - [ServiceMonitor vs PodMonitor for Multi-Replica Deployments](#servicemonitor-vs-podmonitor-for-multi-replica-deployments)
 - [Validation](#validation)
 - [Troubleshooting](#troubleshooting)
@@ -32,23 +32,20 @@ We recommend exposing Prometheus metrics on port **9090** under the path **/metr
 
 ### Option 1: Using idp-advanced Helm Chart
 **Requirements:**
-- Minimum version 1.5.0 of the idp-advanced helm chart
+- Minimum version 1.5.0 of the idp-advanced helm chart for ServiceMonitor
+- Minimum version 3.5.0 of the idp-advanced helm chart for PodMonitor
 
-**Important Note:**
-The idp-advanced helm chart currently only supports setting up ServiceMonitor (not PodMonitor). This is significant when running multiple replicas of an application behind a single service:
+**Choosing between ServiceMonitor and PodMonitor:**
+The idp-advanced chart supports both ServiceMonitor and PodMonitor. The choice matters when running multiple replicas of an application behind a single service:
 
-- When using ServiceMonitor, Prometheus scrapes metrics through the service, which load balances requests across all pods
-- This means metrics from different pods may be intermixed across scrape intervals
-- For cumulative metrics (counters) or gauges representing the system state, this is typically fine
-- For metrics that need to be tracked per-instance (like individual pod resource usage or pod-specific metrics), the service abstraction may obscure which pod generated which metric
+- With a **ServiceMonitor**, Prometheus scrapes metrics through the service, which load-balances requests across all pods. Metrics from different pods may be intermixed across scrape intervals. For cumulative metrics (counters) or gauges representing the system state, this is typically fine.
+- With a **PodMonitor**, Prometheus discovers and scrapes each pod individually, so per-instance metrics (like individual pod resource usage) stay attributable to the pod that produced them.
 
-Consider these implications when designing your metrics exposure strategy with the idp-advanced chart. If you need pod-level metrics granularity, you may need to:
-- Add pod identification labels to your metrics
-- Bug the IDP team to get podMonitor functionality implemented in chart
+If you only need service-level metrics, use a ServiceMonitor. If you need pod-level granularity, use a PodMonitor. See [ServiceMonitor vs PodMonitor for Multi-Replica Deployments](#servicemonitor-vs-podmonitor-for-multi-replica-deployments) for details. Enable either `serviceMonitor` or `podMonitor` for a given application — not both, or metrics will be scraped twice.
 
 **Configuration Steps:**
 
-The chart supports two modes. Pick the one that matches where your application exposes metrics.
+For **ServiceMonitor**, the chart supports two modes. Pick the one that matches where your application exposes metrics. For **PodMonitor**, see [the PodMonitor section below](#podmonitor).
 
 #### Mode A: Metrics on a dedicated port (recommended)
 
@@ -88,6 +85,40 @@ serviceMonitor:
 
 When `service.metrics.enabled` is `false`, the ServiceMonitor scrapes the port named by `serviceMonitor.portName` (defaults to `http`), which is the main service port.
 
+#### PodMonitor
+
+To scrape pods directly instead of going through the service, enable a `podMonitor` (chart version 3.5.0 or later). This is the better choice when you need per-pod metrics across multiple replicas — see [the comparison below](#servicemonitor-vs-podmonitor-for-multi-replica-deployments).
+
+The PodMonitor references the **container** port by name, so no extra service port is required. The same two port modes apply.
+
+Metrics on a dedicated port (recommended):
+
+```yaml
+service:
+  ...existing content...
+  port: 80          # your application traffic port
+  metrics:
+    enabled: true
+    port: 9090      # the port your app exposes metrics on — MUST differ from service.port
+podMonitor:
+  enabled: true
+```
+
+Metrics on the application port:
+
+```yaml
+service:
+  ...existing content...
+  port: 3000        # single port serving both traffic and /metrics
+  metrics:
+    enabled: false  # do NOT enable a dedicated metrics port
+podMonitor:
+  enabled: true
+  portName: http    # scrape the main container port (named "http")
+```
+
+Enable either `serviceMonitor` or `podMonitor` for a given application — not both, or metrics will be scraped twice.
+
 If using non-standard ports or paths, refer to:
 - The idp-advanced default-values.yaml
 - The idp-advanced README.md for additional parameters
@@ -118,8 +149,8 @@ kind: List
 metadata: {}
 ```
 
-### Option 3: Using PodMonitor
-A PodMonitor allows Prometheus to directly target pods instead of going through a service. This is useful in scenarios where:
+### Option 3: Using Custom Chart with PodMonitor
+If you maintain your own chart (rather than using idp-advanced), you can define a PodMonitor directly. A PodMonitor allows Prometheus to target pods instead of going through a service. This is useful in scenarios where:
 
 - You have pods without a corresponding service
 - You want to monitor individual pod metrics separately
@@ -158,7 +189,7 @@ When using a ServiceMonitor with multiple replicas:
 - Pod-specific metrics will be mixed, making it difficult to track individual pod behavior
 - Example: If you have 3 replicas and Prometheus scrapes every 30s, it might scrape Pod A, then Pod C, then Pod B in consecutive scrapes
 
-### PodMonitor Behavior (Requires custom implementation)
+### PodMonitor Behavior (Available in idp-advanced chart)
 When using a PodMonitor with multiple replicas:
 
 - Prometheus discovers and scrapes each pod individually
@@ -175,7 +206,7 @@ Consider your specific metric requirements:
   - Individual pod identity doesn't matter
   - You want simpler configuration
 
-- Consider custom PodMonitor implementation when:
+- Use PodMonitor when:
   - You need to track metrics from specific pods
   - You're troubleshooting issues with specific replicas
   - You need to monitor individual pod behavior
