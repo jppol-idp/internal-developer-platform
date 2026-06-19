@@ -168,3 +168,10 @@ When at least one bucket declares `access: read` or `access: write`, the chart a
 
 If no bucket opts the developer role in (all are `access: none`), no developer-role policy or attachment is rendered. Buckets may still create workload-role policies independently via `serviceAccountReadRoles` / `serviceAccountWriteRoles`.
 
+
+# Lifecycle policies and versioning
+S3 supports lifecycle policies that can transition older object to cheaper storage clases (infrequent access, glacier etc) or delete old versions entirely. 
+
+S3 also supports versioning where changed objects are kept when an object is modified.
+
+From version 0.8.0 of the chart `idp-s3-bucket` these settings are available for all buckets created using the chart. Configuration is made on a per-bucket basis. Please refer to the [documentation here, for further details](https://github.com/jppol-idp/helm-idp/tree/main/charts/idp-s3-bucket#lifecycle-configuration)
