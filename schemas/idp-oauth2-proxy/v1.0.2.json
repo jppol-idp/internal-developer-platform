@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://charts.example.com/idp-oauth2-proxy/values.schema.json",
+  "title": "idp-oauth2-proxy values",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "domain": {
+      "type": "string"
+    },
+    "oauth2Proxy": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "entraId": {
+        "type": "object",
+        "properties": {
+          "clientId": {
+            "type": "string"
+          },
+          "clientSecret": {
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string"
+          }
+        }
+      },
+      "config": {
+        "type": "object",
+        "properties": {
+          "cookieSecret": {
+            "type": "secret"
+          }
+        }
+      }
+    },
+    "redis": {
+      "type": "object",
+      "properties": {
+        "persistance": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "global": {
+      "type": "object"
+    }
+  }
+}

@@ -1,0 +1,175 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://charts.example.com/idp-s3-bucket/values.schema.json",
+  "title": "idp-s3-bucket values",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "aws": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string"
+        },
+        "region": {
+          "type": "string"
+        },
+        "clusterName": {
+          "type": "string"
+        }
+      }
+    },
+    "image": {
+      "type": "object",
+      "properties": {
+        "registry": {
+          "type": "string"
+        },
+        "repository": {
+          "type": "string"
+        },
+        "tag": {
+          "type": "string"
+        },
+        "pullPolicy": {
+          "type": "string"
+        }
+      }
+    },
+    "schedule": {
+      "type": "string"
+    },
+    "config": {
+      "type": "object",
+      "properties": {
+        "notreadyThresholdMinutes": {
+          "type": "integer"
+        },
+        "minHealthyNodes": {
+          "type": "integer"
+        },
+        "dryRun": {
+          "type": "boolean"
+        },
+        "skipKarpenterNodes": {
+          "type": "boolean"
+        },
+        "logLevel": {
+          "type": "string"
+        }
+      }
+    },
+    "cronjob": {
+      "successfulJobsHistoryLimit": {
+        "type": "integer"
+      },
+      "failedJobsHistoryLimit": {
+        "type": "integer"
+      },
+      "concurrencyPolicy": {
+        "type": "string"
+      },
+      "backoffLimit": {
+        "type": "integer"
+      },
+      "ttlSecondsAfterFinished": {
+        "type": "integer"
+      },
+      "restartPolicy": {
+        "type": "string"
+      }
+    },
+    "serviceAccount": {
+      "name": {
+        "type": "string"
+      },
+      "annotations": {
+        "type": "object"
+      }
+    },
+    "resources": {
+      "requests": {
+        "type": "object",
+        "properties": {
+          "cpu": {
+            "type": "string"
+          },
+          "memory": {
+            "type": "string"
+          }
+        }
+      },
+      "limits": {
+        "type": "object",
+        "properties": {
+          "cpu": {
+            "type": "string"
+          },
+          "memory": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securityContext": {
+      "type": "object",
+      "properties": {
+        "runAsNonRoot": {
+          "type": "boolean"
+        },
+        "runAsUser": {
+          "type": "integer"
+        },
+        "allowPrivilegeEscalation": {
+          "type": "boolean"
+        },
+        "readOnlyRootFilesystem": {
+          "type": "boolean"
+        },
+        "capabilities": {
+          "drop": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "affinity": {
+      "type": "object",
+      "properties": {
+        "nodeAffinity": {
+          "type": "object",
+          "properties": {
+            "requiredDuringSchedulingIgnoredDuringExecution": {
+              "type": "object",
+              "properties": {
+                "nodeSelectorTerms": {
+                  "type": "array",
+                  "items": {
+                    "matchExpressions": {
+                      "key": {
+                        "type": "string"
+                      },
+                      "operator": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "nodeSelector": {},
+    "tolerations": {},
+    "labels": {},
+    "annotations": {},
+    "global": {
+      "type": "object"
+    }
+  }
+}

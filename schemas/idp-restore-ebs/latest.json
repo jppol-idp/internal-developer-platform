@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://charts.example.com/idp-s3-bucket/values.schema.json",
+  "title": "Chart for restoring EBS volumes into a container.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "size": {
+      "type": "string"
+    },
+    "storageClassName": {
+      "type": "string"
+    },
+    "volumeHandle": {
+      "type": "string"
+    },
+    "global": {
+      "type": "object",
+      "description": "Included to allow chart to be used as subchart as helm will inject .global from the top chart."
+    },
+    "awsZone": {
+      "type": "string"
+    },
+    "pvName": {
+      "type": "string"
+    }
+  }
+}
