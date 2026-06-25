@@ -122,7 +122,6 @@ jobs:
           cd public_repo
           mv _config.public.yml _config.yml  # Ensure Just the Docs config is copied
           mv README.public.md README.md  # Ensure also the README is proper
-          mv index.public.md index.md
           if [[ -n "$(git status --porcelain)" ]]; then
             git add .
             git commit -m "Sync public docs - $(date)"

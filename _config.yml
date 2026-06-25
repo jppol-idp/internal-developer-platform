@@ -1,5 +1,7 @@
 title: IDP docs
 public_only: true
+exclude:
+  - index.md
 #description: A starter template for a Jeykll site using the Just the Docs theme!
 #layout: default
 #theme: just-the-docs
