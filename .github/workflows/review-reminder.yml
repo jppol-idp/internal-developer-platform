@@ -36,9 +36,11 @@ jobs:
             --output overdue.json | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Create Jira tasks
-        if: ${{ github.event.inputs.dry_run != 'true' }}
         env:
           JIRA_EMAIL: "alni@jppol.dk"
           JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }} # alni's personal API token, expires 2027-06-22
           JIRA_ASSIGNEES: "alni@jppol.dk, kasper.kn.nielsen@jppol.dk, morten.faester@jppol.dk" # comma-separated, assigned round-robin
-        run: python scripts/docs-review/create-jira-task.py overdue.json | tee -a "$GITHUB_STEP_SUMMARY"
+        run: |
+          python scripts/docs-review/create-jira-task.py overdue.json \
+            ${{ github.event.inputs.dry_run == 'true' && '--dry-run' || '' }} \
+            | tee -a "$GITHUB_STEP_SUMMARY"
