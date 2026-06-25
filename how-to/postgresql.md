@@ -4,6 +4,7 @@ nav_order: 22
 parent: How to...
 domain: public
 permalink: /how-to-postgresql
+layout: last-reviewed
 last_reviewed_on: 2026-05-13
 review_in: 3 months
 ---

@@ -1,0 +1,26 @@
+services:
+  internal:
+    build: .
+    ports:
+      - "8080:8080"
+      - "35729:35729"
+    volumes:
+      - .:/srv/jekyll
+    command: bundle exec jekyll serve --port 8080 --host 0.0.0.0 --force_polling --livereload
+
+  public:
+    build: .
+    ports:
+      - "8081:8081"
+      - "35730:35730"
+    volumes:
+      - .:/srv/jekyll
+    command: >
+      bundle exec jekyll serve
+      --config _config.yml,_config.public.yml
+      --port 8081
+      --host 0.0.0.0
+      --force_polling
+      --livereload
+      --livereload-port 35730
+      --destination /tmp/_site_public

@@ -4,6 +4,7 @@ nav_order: 19
 parent: How to...
 domain: public
 permalink: /alerting
+layout: last-reviewed
 last_reviewed_on: 2026-04-09
 review_in: 6 months
 ---

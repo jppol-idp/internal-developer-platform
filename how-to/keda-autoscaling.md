@@ -4,6 +4,7 @@ nav_order: 12
 parent: How to...
 domain: public
 permalink: /keda-autoscaling
+layout: last-reviewed
 last_reviewed_on: 2026-01-07
 review_in: 6 months
 ---

@@ -4,6 +4,7 @@ nav_order: 1
 parent: How to...
 domain: public
 permalink: /how-to-oidc-middleware
+layout: last-reviewed
 last_reviewed_on: 2026-04-10
 review_in: 6 months
 ---

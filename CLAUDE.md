@@ -14,12 +14,12 @@ This is a Jekyll-based documentation site for an Internal Developer Platform (ID
 
 The site is organized into major sections:
 - `/how-to/` - How-to guides (mostly public)
-- `/architecture-decision-records/` - ADRs for technology and architectural decisions
-- `/dokumentation/` - General documentation
+- `/background/architecture-decision-records/` - ADRs for technology and architectural decisions
+- `/documentation/` - General documentation
 - `/onboarding/` - Onboarding content
-- `/referater/` - Meeting minutes
-- `/baggrund/` - Background/context documents
-- `/ecosystem/` - Information about related systems
+- `/background/meeting-minutes/` - Meeting minutes
+- `/background/` - Background/context documents
+- `/internal/ecosystem/` - Information about related systems
 - `/_includes/` - Jekyll include templates
 
 The site uses YAML frontmatter with these key fields:
@@ -95,7 +95,7 @@ This is a key how-to guide documenting the IDP Redis Helm chart deployment. When
 This is a how-to guide documenting the Docker Hub image caching solution via AWS ECR. When updating this documentation:
 
 - **Source of truth**: `/how-to/docker-hub-image-caching.md` documents the ECR pull-through cache implementation
-- **Internal details**: `/dokumentation/ecr-pull-through-cache.md` contains technical implementation details for the team
+- **Internal details**: `/documentation/ecr-pull-through-cache.md` contains technical implementation details for the team
 - **Key implementation details**:
   - Developers explicitly update Docker Hub image references to ECR cache URLs
   - Official Docker Hub images require the `/library/` prefix (e.g., `nginx:latest` → `.../docker-hub/library/nginx:latest`)

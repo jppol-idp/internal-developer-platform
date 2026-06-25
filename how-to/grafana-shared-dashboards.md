@@ -4,6 +4,7 @@ nav_order: 8
 parent: How to...
 domain: public
 permalink: /grafana-shared-dashboards
+layout: last-reviewed
 last_reviewed_on: 2026-04-10
 review_in: 6 months
 ---

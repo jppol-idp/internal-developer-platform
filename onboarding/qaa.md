@@ -4,7 +4,9 @@ nav_order: 3
 parent: Onboarding
 domain: public
 permalink: /qaa
-
+layout: last-reviewed
+last_reviewed_on: 2026-01-12
+review_in: 6 months
 ---
 
 # Q&A - IDP 🚀
@@ -213,4 +215,3 @@ Add this bot to the slack channel(s) as well.
 > Please [share feedback and improvements with us in Slack](https://jppol.slack.com/archives/C09JUREPVBP). 
 
 ---
-*Sidst opdateret: 08-september-2025*

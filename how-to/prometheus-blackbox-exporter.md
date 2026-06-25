@@ -4,6 +4,7 @@ nav_order: 16
 parent: How to...
 domain: public
 permalink: /prometheus-blackbox-probes
+layout: last-reviewed
 last_reviewed_on: 2025-10-01
 review_in: 6 months
 ---

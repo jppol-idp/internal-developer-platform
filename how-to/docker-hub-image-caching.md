@@ -4,6 +4,7 @@ nav_order: 7
 parent: How to...
 domain: public
 permalink: /docker-hub-image-caching
+layout: last-reviewed
 last_reviewed_on: 2025-11-03
 review_in: 6 months
 ---
@@ -136,7 +137,7 @@ This should show an ECR URL starting with `354918371398.dkr.ecr.eu-west-1.amazon
 ## Additional Information
 
 For technical details about the implementation, see:
-- [Technical Documentation](/dokumentation/ecr-pull-through-cache)
+- [Technical Documentation](/documentation/ecr-pull-through-cache)
 - [JIRA: IDP-656](https://jira-jppol.atlassian.net/browse/IDP-656)
 
 For questions or issues, contact the platform team via:

@@ -98,13 +98,13 @@ jobs:
         run: |
           # Get all files except .md files and specific directories
           find . -type f ! -name "*.md" \
-            ! -path "./referater/*" \
+            ! -path "./background/meeting-minutes/*" \
             ! -path "./one-mans-trash/*" \
             ! -path "./.git/*" \
             ! -path "./public_repo/*" > include_files.txt
           # Add .md files that contain 'domain: public'
           grep -rl 'domain: public' --include="*.md" . \
-          | grep -vE '^\.\/(referater|one-mans-trash|\.git|public_repo)' >> include_files.txt
+          | grep -vE '^\.\/(background\/meeting-minutes|one-mans-trash|\.git|public_repo)' >> include_files.txt
           # Add the only two files withtout metadata
           echo "./README.public.md" >> include_files.txt
           echo "./README.md" >> include_files.txt

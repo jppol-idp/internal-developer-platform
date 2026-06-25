@@ -4,6 +4,7 @@ nav_order: 17
 parent: How to...
 domain: public
 permalink: /prometheus-metrics
+layout: last-reviewed
 last_reviewed_on: 2026-06-18
 review_in: 6 months
 ---

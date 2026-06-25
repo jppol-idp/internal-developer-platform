@@ -4,6 +4,7 @@ nav_order: 2
 parent: Onboarding
 domain: public
 permalink: /codetodeploy
+layout: last-reviewed
 last_reviewed_on: 2026-04-05
 review_in: 3 months
 ---
@@ -178,4 +179,3 @@ Also, feel free to explore our [FAQ](faq) for answers to frequently asked questi
 
 
 ---
-*Last updated: 2025-06-23*

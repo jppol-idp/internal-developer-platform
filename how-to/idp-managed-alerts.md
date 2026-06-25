@@ -4,6 +4,7 @@ nav_order: 11
 parent: How to...
 domain: public
 permalink: /idp-managed-alerts
+layout: last-reviewed
 last_reviewed_on: 2026-05-13
 review_in: 6 months
 ---

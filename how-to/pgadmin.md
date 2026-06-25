@@ -4,6 +4,7 @@ nav_order: 14
 parent: How to...
 domain: public
 permalink: /how-to-pgadmin
+layout: last-reviewed
 last_reviewed_on: 2026-01-16
 review_in: 6 months
 ---

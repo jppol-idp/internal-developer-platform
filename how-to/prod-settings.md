@@ -4,6 +4,7 @@ nav_order: 15
 parent: How to...
 domain: public
 permalink: /how-to-configure-production
+layout: last-reviewed
 last_reviewed_on: 2026-01-29
 review_in: 6 months
 ---

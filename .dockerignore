@@ -1,0 +1,5 @@
+_site/
+.git/
+devbox.json
+devbox.lock
+include_files.txt
