@@ -3,7 +3,6 @@ title: Working with S3 Buckets
 nav_order: 24
 parent: How to...
 domain: public
-permalink: /how-to-s3
 layout: last-reviewed
 last_reviewed_on: 2026-04-05
 review_in: 6 months

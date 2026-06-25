@@ -3,7 +3,6 @@ title: Reading ingress access logs in Grafana
 nav_order: 18
 parent: How to...
 domain: public
-permalink: /ingress-access-logs
 layout: last-reviewed
 last_reviewed_on: 2026-04-10
 review_in: 6 months

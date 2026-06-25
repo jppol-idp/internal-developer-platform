@@ -2,6 +2,9 @@
 ./_layouts/last-reviewed.html
 ./background/architecture-decision-records/img/idp_diagram.png
 ./background/architecture-decision-records/img/tgw.png
+./scripts/docs-review/requirements.txt
+./scripts/docs-review/check-review-dates.py
+./scripts/docs-review/create-jira-task.py
 ./scripts/sort-nav-order.sh
 ./include_files.txt
 ./template
@@ -150,6 +153,7 @@
 ./_config.public.yml
 ./.github/workflows/publish-to-confluence.yml.disabled
 ./.github/workflows/gh-pages.yml
+./.github/workflows/review-reminder.yml
 ./_includes/footer_custom.html
 ./onboarding/qaa.md
 ./onboarding/technology-overview.md

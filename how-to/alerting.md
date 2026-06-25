@@ -3,7 +3,6 @@ title: Working with Alerting
 nav_order: 19
 parent: How to...
 domain: public
-permalink: /alerting
 layout: last-reviewed
 last_reviewed_on: 2026-04-09
 review_in: 6 months
@@ -465,7 +464,7 @@ To request contact points, reach out to the IDP team on Slack with:
 
 The IDP team sets up the webhook, creates the `GrafanaContactPoint` in your cluster(s), and lets you know the exact receiver name (typically `"Slack - <Team> <env>"`) to use in your alert rules.
 
-The same contact point serves all three sources of alerts — [`idp-managed-customer-alerts`](/idp-managed-alerts) (IDP's curated standard alerts), `idp-grafana-alarm` (your own alerts-as-code), and any manual alerts you create in the Grafana UI — so all alerts routed to the contact point share the same Slack channel and message format.
+The same contact point serves all three sources of alerts — [`idp-managed-customer-alerts`](/how-to/idp-managed-alerts.html) (IDP's curated standard alerts), `idp-grafana-alarm` (your own alerts-as-code), and any manual alerts you create in the Grafana UI — so all alerts routed to the contact point share the same Slack channel and message format.
 
 ## References
 

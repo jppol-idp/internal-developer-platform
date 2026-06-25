@@ -3,7 +3,6 @@ title: Technology overview
 nav_order: 1 
 parent: Onboarding
 domain: public
-permalink: /technology
 layout: last-reviewed
 last_reviewed_on: 2026-06-12
 review_in: 6 months

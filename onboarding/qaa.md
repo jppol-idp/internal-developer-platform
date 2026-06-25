@@ -3,7 +3,6 @@ title: Q&A
 nav_order: 3 
 parent: Onboarding
 domain: public
-permalink: /qaa
 layout: last-reviewed
 last_reviewed_on: 2026-01-12
 review_in: 6 months

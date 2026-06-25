@@ -2,7 +2,6 @@
 title: How to...
 nav_order: 9
 domain: public
-permalink: /howto
 last_reviewed_on: 2026-04-10
 review_in: 6 months
 ---

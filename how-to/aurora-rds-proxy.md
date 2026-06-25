@@ -3,7 +3,6 @@ title: Aurora RDS Proxy – Local Access Setup Guide
 nav_order: 3
 parent: How to...
 domain: public
-permalink: /how-to-proxy-rds
 layout: last-reviewed
 last_reviewed_on: 2026-01-29
 review_in: 3 months

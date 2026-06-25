@@ -3,7 +3,6 @@ title: Docker Hub Image Caching
 nav_order: 7
 parent: How to...
 domain: public
-permalink: /docker-hub-image-caching
 layout: last-reviewed
 last_reviewed_on: 2025-11-03
 review_in: 6 months

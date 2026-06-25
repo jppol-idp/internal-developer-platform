@@ -3,7 +3,6 @@ title: IDE autocomplete and validation for values.yaml
 nav_order: 10
 parent: How to...
 domain: public
-permalink: /values-yaml-ide-schema
 layout: last-reviewed
 last_reviewed_on: 2026-04-15
 review_in: 6 months

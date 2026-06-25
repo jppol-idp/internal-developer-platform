@@ -3,7 +3,6 @@ title: Manifest
 nav_exclude: true
 nav_order: 0
 domain: public
-permalink: /manifest
 layout: created-on
 created_on: 2025-03-25
 ---

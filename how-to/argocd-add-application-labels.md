@@ -3,7 +3,6 @@ title: Add Labels to ArgoCD Applications
 nav_order: 2
 parent: How to...
 domain: public
-permalink: /argocd-application-labels
 layout: last-reviewed
 last_reviewed_on: 2025-09-30
 review_in: 6 months

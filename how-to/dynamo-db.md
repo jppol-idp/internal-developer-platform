@@ -3,7 +3,6 @@ title: Working with DynamoDB
 nav_order: 21
 parent: How to...
 domain: public
-permalink: /how-to-dynamodb
 layout: last-reviewed
 last_reviewed_on: 2025-09-17
 review_in: 6 months

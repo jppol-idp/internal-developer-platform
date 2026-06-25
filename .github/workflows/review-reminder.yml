@@ -1,0 +1,44 @@
+name: Docs review reminder
+
+on:
+  schedule:
+    - cron: "0 8 * * 1" # Every Monday 08:00 UTC (09:00 CET / 10:00 CEST)
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: "Max overdue pages to create Jira tasks for"
+        default: "3"
+      dry_run:
+        description: "Dry run — print batch without creating Jira issue"
+        type: boolean
+        default: false
+
+jobs:
+  reminder:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r scripts/docs-review/requirements.txt
+
+      - name: Find overdue pages
+        run: |
+          python scripts/docs-review/check-review-dates.py \
+            --limit "${{ github.event.inputs.limit || '3' }}" \
+            -d documentation \
+            -d how-to \
+            -d onboarding \
+            --output overdue.json | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Create Jira tasks
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        env:
+          JIRA_EMAIL: "alni@jppol.dk"
+          JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }} # alni's personal API token, expires 2027-06-22
+          JIRA_ASSIGNEES: "alni@jppol.dk, kasper.kn.nielsen@jppol.dk, morten.faester@jppol.dk" # comma-separated, assigned round-robin
+        run: python scripts/docs-review/create-jira-task.py overdue.json | tee -a "$GITHUB_STEP_SUMMARY"

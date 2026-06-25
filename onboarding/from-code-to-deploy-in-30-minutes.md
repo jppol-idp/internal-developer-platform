@@ -3,7 +3,6 @@ title: From code to deploy in 30 minutes
 nav_order: 2 
 parent: Onboarding
 domain: public
-permalink: /codetodeploy
 layout: last-reviewed
 last_reviewed_on: 2026-04-05
 review_in: 3 months

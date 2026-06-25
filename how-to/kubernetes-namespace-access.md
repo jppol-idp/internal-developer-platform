@@ -3,7 +3,6 @@ title: Kubernetes Namespace Access via AWS SSO
 nav_order: 13
 parent: How to...
 domain: public
-permalink: /kubernetes-namespace-access
 layout: last-reviewed
 last_reviewed_on: 2025-11-28
 review_in: 3 months

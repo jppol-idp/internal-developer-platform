@@ -3,7 +3,6 @@ title: Manifest
 nav_order: 2
 parent: Background
 domain: public
-permalink: /manifest-idp
 layout: created-on
 created_on: 2025-06-23
 ---

@@ -13,18 +13,18 @@ The IDP is JP/Politikens Hus's shared platform for deploying and running
 applications on Kubernetes. It provides container deployment, observability,
 DNS, databases, and more - so your team can focus on building products.
 
-- [Manifest](/manifest-idp) - what the IDP is and what it stands for
+- [Manifest](/background/manifest-idp.html) - what the IDP is and what it stands for
 - [Service Level Agreement](https://jira-jppol.atlassian.net/wiki/spaces/IDP/folder/3680632849?atlOrigin=eyJpIjoiNzU2YjYxNjkzZWJiNDFlMjlkZDI5YTE4OWM0YjNlM2UiLCJwIjoiYyJ9) - our SLA with your team
 
 ## Getting started
 
-- [From code to deploy in 30 minutes](/codetodeploy) - deploy your first container
-- [Technology overview](/technology) - what the platform is built on
-- [Q&A](/qaa) - common questions answered
+- [From code to deploy in 30 minutes](/onboarding/from-code-to-deploy-in-30-minutes.html) - deploy your first container
+- [Technology overview](/onboarding/technology-overview.html) - what the platform is built on
+- [Q&A](/onboarding/qaa.html) - common questions answered
 
 ## How-to guides
 
-Step-by-step guides for working with specific platform features: [How to...](/howto)
+Step-by-step guides for working with specific platform features: [How to...](/how-to/)
 
 ## Support
 

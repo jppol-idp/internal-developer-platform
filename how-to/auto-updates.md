@@ -3,7 +3,6 @@ title: Auto updating deployments
 nav_order: 4
 parent: How to...
 domain: public
-permalink: /how-to-auto-update
 layout: last-reviewed
 last_reviewed_on: 2025-09-10
 review_in: 6 months

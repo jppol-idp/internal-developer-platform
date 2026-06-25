@@ -3,7 +3,6 @@ title: Working with DNS
 nav_order: 20
 parent: How to...
 domain: public
-permalink: /how-to-dns
 layout: last-reviewed
 last_reviewed_on: 2025-10-02
 review_in: 6 months

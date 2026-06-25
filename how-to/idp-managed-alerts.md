@@ -3,7 +3,6 @@ title: IDP-Managed Alerts
 nav_order: 11
 parent: How to...
 domain: public
-permalink: /idp-managed-alerts
 layout: last-reviewed
 last_reviewed_on: 2026-05-13
 review_in: 6 months
@@ -42,7 +41,7 @@ IDP maintains a curated set of standard infrastructure alerts that customer team
 
 **What you control:** which alerts are enabled for your namespace, their severity, and numeric thresholds (restart counts, pending durations, PVC usage percentages). You do **not** edit the underlying queries — that keeps the managed set consistent across the platform.
 
-Use this alongside your own team-specific alerts (built with [`idp-grafana-alarm`](/alerting#setting-up-alerts-as-code-helm-chart) or the Grafana UI) — both route to the same Slack channel.
+Use this alongside your own team-specific alerts (built with [`idp-grafana-alarm`](/how-to/alerting.html#setting-up-alerts-as-code-helm-chart) or the Grafana UI) — both route to the same Slack channel.
 
 # Standard alert set
 
@@ -275,7 +274,7 @@ Not sure whether something is a bug, a misconfiguration, or just how the alerts 
 # Relationship to other alerting options
 
 - **This chart (`idp-managed-customer-alerts`)** — opinionated, curated, IDP-maintained. Opt in, override thresholds, get platform-wide improvements for free.
-- **[`idp-grafana-alarm`](/alerting#setting-up-alerts-as-code-helm-chart)** — generic building block for your own team-specific alerts (export YAML from Grafana, paste into values). You write the PromQL.
+- **[`idp-grafana-alarm`](/how-to/alerting.html#setting-up-alerts-as-code-helm-chart)** — generic building block for your own team-specific alerts (export YAML from Grafana, paste into values). You write the PromQL.
 - **Grafana UI** — ad-hoc or exploratory alerts. Route them to the same contact point and they share the Slack format with the managed alerts.
 
 All three can run side-by-side in the same namespace.
@@ -284,4 +283,4 @@ All three can run side-by-side in the same namespace.
 
 - [Chart source and releases](https://github.com/jppol-idp/helm-idp/tree/main/charts/idp-managed-customer-alerts)
 - [values.yaml schema (latest)](https://public.docs.idp.jppol.dk/schemas/idp-managed-customer-alerts/latest.json) — pin a specific version in your values.yaml `$schema` comment
-- [Working with Alerting](/alerting) — general Grafana alerting guide and `idp-grafana-alarm` usage
+- [Working with Alerting](/how-to/alerting.html) — general Grafana alerting guide and `idp-grafana-alarm` usage
