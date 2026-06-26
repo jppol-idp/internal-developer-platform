@@ -64,6 +64,13 @@ def find_active_sprint_id(client: JIRA) -> "int | None":
     return sprints[0].id
 
 
+def _write_results(path: "str | None", dry_run: bool, results: list) -> None:
+    if not path:
+        return
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump({"dry_run": dry_run, "results": results}, f, indent=2)
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Create one Jira task per doc from a JSON batch, assigned round-robin."
@@ -71,6 +78,8 @@ def main():
     parser.add_argument("batch_file", help="Path to the JSON batch file produced by check-review-dates.py")
     parser.add_argument("--dry-run", action="store_true",
                         help="Print tasks without creating them")
+    parser.add_argument("--results-file", metavar="FILE",
+                        help="Write a JSON summary of actions taken to this file")
     args = parser.parse_args()
 
     with open(args.batch_file, encoding="utf-8") as f:
@@ -86,11 +95,15 @@ def main():
     if not assignee_emails:
         sys.exit("Error: JIRA_ASSIGNEES must be set (comma-separated list of emails)")
 
+    results = []
+
     if args.dry_run:
         print("\n### Tasks (dry run)")
         for i, doc in enumerate(batch):
             assignee = assignee_emails[i % len(assignee_emails)]
             print(f"- [{doc['title']}]({doc['url']}) would be assigned to {assignee}")
+            results.append({"title": doc["title"], "url": doc["url"], "assignee": assignee, "status": "would_create"})
+        _write_results(args.results_file, args.dry_run, results)
         return
 
     email = os.environ.get("JIRA_EMAIL")
@@ -110,6 +123,7 @@ def main():
 
         if assignee_id in busy_ids:
             print(f"- Skipped [{doc['title']}]({doc['url']}) — {assignee_email} already has an open review task")
+            results.append({"title": doc["title"], "url": doc["url"], "assignee": assignee_email, "status": "skipped_busy"})
             continue
 
         summary = f"Review docs: {doc['title']}"
@@ -122,6 +136,7 @@ def main():
         existing = resp.json().get("issues", [])
         if existing:
             print(f"- Skipped [{doc['title']}]({doc['url']}) — {existing[0]['key']} already open")
+            results.append({"title": doc["title"], "url": doc["url"], "assignee": assignee_email, "status": "skipped_duplicate", "existing_key": existing[0]["key"]})
             continue
 
         issue = client.create_issue(fields={
@@ -135,6 +150,9 @@ def main():
         if sprint_id:
             client.add_issues_to_sprint(sprint_id, [issue.key])
         print(f"- Created [{issue.key}]({JIRA_URL}/browse/{issue.key}) [{doc['title']}]({doc['url']}) assigned to {assignee_email}")
+        results.append({"title": doc["title"], "url": doc["url"], "assignee": assignee_email, "status": "created", "jira_key": issue.key})
+
+    _write_results(args.results_file, args.dry_run, results)
 
 
 if __name__ == "__main__":

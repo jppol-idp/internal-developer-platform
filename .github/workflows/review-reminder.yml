@@ -42,5 +42,71 @@ jobs:
           JIRA_ASSIGNEES: "alni@jppol.dk, kasper.kn.nielsen@jppol.dk, morten.faester@jppol.dk" # comma-separated, assigned round-robin
         run: |
           python scripts/docs-review/create-jira-task.py overdue.json \
+            --results-file results.json \
             ${{ github.event.inputs.dry_run == 'true' && '--dry-run' || '' }} \
             | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Summarize
+        if: always()
+        run: |
+          python3 - << 'EOF'
+          import json, os, pathlib
+
+          overdue_path = pathlib.Path("overdue.json")
+          results_path = pathlib.Path("results.json")
+          summary_path = pathlib.Path(os.environ["GITHUB_STEP_SUMMARY"])
+
+          if not overdue_path.exists() or not results_path.exists():
+              summary_path.open("a").write("\n> Summary unavailable — earlier step did not produce output files.\n")
+              pathlib.Path("slack-payload.json").write_text(json.dumps({"text": "Docs review reminder failed — no output files produced."}))
+              raise SystemExit(0)
+
+          overdue = json.loads(overdue_path.read_text())
+          data = json.loads(results_path.read_text())
+          results = data["results"]
+          dry_run = data["dry_run"]
+
+          label = "dry run" if dry_run else "live"
+          total = overdue["total_overdue"]
+          selected = len(overdue["batch"])
+
+          MD_STATUS = {
+              "created":           lambda r: f"[{r['jira_key']}](https://jira-jppol.atlassian.net/browse/{r['jira_key']})",
+              "would_create":      lambda r: "would create",
+              "skipped_busy":      lambda r: "skipped — already has open task",
+              "skipped_duplicate": lambda r: f"skipped — [{r['existing_key']}](https://jira-jppol.atlassian.net/browse/{r['existing_key']}) already open",
+          }
+          SLACK_STATUS = {
+              "created":           lambda r: f"created <https://jira-jppol.atlassian.net/browse/{r['jira_key']}|{r['jira_key']}>",
+              "would_create":      lambda r: "would create",
+              "skipped_busy":      lambda r: "skipped — already has open task",
+              "skipped_duplicate": lambda r: f"skipped — <https://jira-jppol.atlassian.net/browse/{r['existing_key']}|{r['existing_key']}> already open",
+          }
+
+          md_lines = ["---", "## Run summary", f"**{selected} of {total} overdue documents selected** · {label}", ""]
+          slack_lines = []
+          for r in results:
+              md_lines.append(f"- [{r['title']}]({r['url']}) → {r['assignee']} · {MD_STATUS.get(r['status'], lambda r: r['status'])(r)}")
+              slack_lines.append(f"- <{r['url']}|{r['title']}> → {r['assignee']} · {SLACK_STATUS.get(r['status'], lambda r: r['status'])(r)}")
+
+          summary_path.open("a").write("\n".join(md_lines) + "\n")
+
+          slack_body = f"*{selected} of {total} overdue documents selected* · {label}"
+          if slack_lines:
+              slack_body += "\n\n" + "\n".join(slack_lines)
+          pathlib.Path("slack-payload.json").write_text(json.dumps({
+              "text": f"Docs review reminder: {selected} of {total} selected · {label}",
+              "blocks": [
+                  {"type": "section", "text": {"type": "mrkdwn", "text": "*Docs review reminder*"}},
+                  {"type": "section", "text": {"type": "mrkdwn", "text": slack_body}},
+              ],
+          }))
+          EOF
+
+      - name: Post summary to Slack
+        if: always()
+        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload-file-path: slack-payload.json
