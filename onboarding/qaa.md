@@ -139,56 +139,6 @@ The key annotation for whitelisting is:
 
 > 🚨 In the future, it will also be possible to grant access from other AWS accounts via a transit gateway.
 
----
-
-### 7. 🪣 How do I spin up an S3 bucket?
-We have this repository: [https://github.com/jppol-idp/helm-idp/tree/main/charts/idp-s3-bucket](https://github.com/jppol-idp/helm-idp/tree/main/charts/idp-s3-bucket)
-
-Create a folder similar to other folders in your app cluster.
-
-In your application.yaml file you'll need something like this:
-
-```yaml
-apiVersion: v2
-name: ear-service
-description: Dev test application
-version: 0.1.0
-
-helm:
-  chart: helm/idp-s3-bucket
-  chartVersion: "0.1.0"
-```
-(This is where you reference another chart.)
-
-You can base your values on the examples in the repo.  
-
-
-```yaml
-# -- Default values for helm-idp-s3-bucket.
-# -- This is a YAML-formatted file.
-# -- Declare variables to be passed into your templates.
-
-buckets:
-    # -- (string) The name of the bucket
-    # @default -- "none"
-  - name: "bucket-name"
-    # -- Optional: The region of the bucket. default to 'eu-west-1'
-    region: "eu-west-1"
-    # -- Optional: The ACL of the bucket. default to 'private'.
-    # Valid values: private, public-read, public-read-write, aws-exec-read, authenticated-read, bucket-owner-read, bucket-owner-full-control, log-delivery-write
-    acl: "private"
-    # -- Optional: The tags of the bucket. default tag 'crossplane: "true"' will always be set.
-    tags:
-      - key: "Name"
-        value: "bucket-name"
-#  - name: "jppol-idp-tjallo-tjalde"
-```
-
-The most important thing is to change the `bucket-name`.
-
-You can define multiple buckets in the file if needed.
-
-You’ll need to grant access via IRSA in the application's `values.yaml` file for each application.
 
 ---
 
