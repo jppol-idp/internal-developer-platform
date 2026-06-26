@@ -18,13 +18,30 @@ jobs:
           webhook-type: incoming-webhook
           payload: |
             {
+              "text": "Review requested on ${{ github.repository }}",
               "blocks": [
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "Review requested: *<${{ github.event.pull_request.html_url }}|${{ github.event.pull_request.title }}>*\nReviewer: `${{ github.event.requested_reviewer.login || github.event.requested_team.name }}` | Author: `${{ github.event.pull_request.user.login }}`"
+                    "text": "*Review requested on ${{ github.repository }}*"
                   }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*<${{ github.event.pull_request.html_url }}|#${{ github.event.pull_request.number }} ${{ github.event.pull_request.title }}>* (${{ github.event.pull_request.user.login }})"
+                  }
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "Waiting on ${{ github.event.requested_reviewer.login || github.event.requested_team.name }}"
+                    }
+                  ]
                 }
               ]
             }
