@@ -151,6 +151,7 @@
 ./docker-compose.yml
 ./_plugins/exclude_private.rb
 ./_config.public.yml
+./.github/workflows/notify-review-requested.yml
 ./.github/workflows/publish-to-confluence.yml.disabled
 ./.github/workflows/gh-pages.yml
 ./.github/workflows/review-reminder.yml

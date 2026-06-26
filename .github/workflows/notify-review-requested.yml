@@ -1,0 +1,30 @@
+name: Notify Slack on review requested
+
+on:
+  pull_request:
+    types: [review_requested]
+
+permissions: {}
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.user.type != 'Bot'
+    steps:
+      - name: Post to Slack
+        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Review requested: *<${{ github.event.pull_request.html_url }}|${{ github.event.pull_request.title }}>*\nReviewer: `${{ github.event.requested_reviewer.login || github.event.requested_team.name }}` | Author: `${{ github.event.pull_request.user.login }}`"
+                  }
+                }
+              ]
+            }
