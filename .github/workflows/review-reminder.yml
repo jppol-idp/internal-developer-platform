@@ -48,6 +48,8 @@ jobs:
 
       - name: Summarize
         if: always()
+        env:
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           python3 - << 'EOF'
           import json, os, pathlib
@@ -91,6 +93,7 @@ jobs:
 
           summary_path.open("a").write("\n".join(md_lines) + "\n")
 
+          run_url = os.environ["RUN_URL"]
           slack_body = f"*{selected} of {total} overdue documents selected* · {label}"
           if slack_lines:
               slack_body += "\n\n" + "\n".join(slack_lines)
@@ -99,6 +102,7 @@ jobs:
               "blocks": [
                   {"type": "section", "text": {"type": "mrkdwn", "text": "*Docs review reminder*"}},
                   {"type": "section", "text": {"type": "mrkdwn", "text": slack_body}},
+                  {"type": "context", "elements": [{"type": "mrkdwn", "text": f"<{run_url}|View full run summary>"}]},
               ],
           }))
           EOF
