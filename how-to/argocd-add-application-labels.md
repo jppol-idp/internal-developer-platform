@@ -37,8 +37,8 @@ labels:
   team: frontend-team
 helm:
   chart: helm/idp-advanced
-  chartVersion: "1.5.0"
-slack_channel: my-team-slack
+  chartVersion: "3.6.0"
+slackChannel: my-team-slack
 ```
 
 ## How Labels Appear in ArgoCD
