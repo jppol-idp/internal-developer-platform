@@ -113,16 +113,15 @@ slackTriggers:
 
 - **Public channels** work out of the box. Just set `slackChannel` — nothing else to do.
 - **Private channels** need one extra step — the bot must be a member before it can post there.
-  Add it to the channel once:
+  Add it to the channel once, using **either** method:
 
-  1. In the channel, open the channel name → **Integrations** → **Add apps**
-     (or type `/invite @IDP ArgoCD Notifications`).
-  2. Search for **IDP ArgoCD Notifications** — the app with the octopus icon, described as the
-     main Slack app used by all IDP clusters for ArgoCD notifications. Don't pick the similarly
-     named plain **ArgoCD** app.
-  3. Click **Add**.
+  - **Quickest:** in the channel, type `/invite @IDP ArgoCD Notifications` and pick the app with
+    the octopus icon.
+  - **Via the menu:** open the channel name → **Integrations** → **Add apps**, search for
+    **IDP ArgoCD Notifications** (the octopus icon — not the similarly named plain **ArgoCD**
+    app), and click **Add**.
 
-  Notifications are then delivered the same way as for public channels.
+  Either way, notifications are then delivered the same as for public channels.
 
 ## Notes
 
