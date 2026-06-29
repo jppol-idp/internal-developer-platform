@@ -10,9 +10,9 @@ review_in: 6 months
 
 # ArgoCD Slack Notifications
 
-Get notified in Slack when your application is deployed, fails to sync, or becomes
-unhealthy. Everything is configured from your own `application.yaml` in Git — you don't
-need to raise a ticket with the IDP team.
+Get notified in Slack when your application fails to sync or becomes unhealthy — and,
+if you opt in, when it's deployed. Everything is configured from your own
+`application.yaml` in Git — you don't need to raise a ticket with the IDP team.
 
 ## Quick start
 
@@ -112,9 +112,17 @@ slackTriggers:
 ## Public vs. private channels
 
 - **Public channels** work out of the box. Just set `slackChannel` — nothing else to do.
-- **Private channels** require one extra step: invite the **IDP ArgoCD Notifications** bot to
-  the channel once. In the channel, type `/invite` and select the IDP ArgoCD Notifications app
-  from the list. After that, notifications are delivered the same way.
+- **Private channels** need one extra step — the bot must be a member before it can post there.
+  Add it to the channel once:
+
+  1. In the channel, open the channel name → **Integrations** → **Add apps**
+     (or type `/invite @IDP ArgoCD Notifications`).
+  2. Search for **IDP ArgoCD Notifications** — the app with the octopus icon, described as the
+     main Slack app used by all IDP clusters for ArgoCD notifications. Don't pick the similarly
+     named plain **ArgoCD** app.
+  3. Click **Add**.
+
+  Notifications are then delivered the same way as for public channels.
 
 ## Notes
 
