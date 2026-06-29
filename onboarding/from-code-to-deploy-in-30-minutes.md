@@ -46,7 +46,7 @@ Before you begin, make sure you have the following in place:
 
 ## 🪛 Step-by-Step: Deploy Your First Workload
 
-### 1. 📁 Create an app in your code repository (se example [https://github.com/jppol-idp/generic-service](https://github.com/jppol-idp/generic-service))
+### 1. 📁 Create an app in your code repository (see example [https://github.com/jppol-idp/generic-service](https://github.com/jppol-idp/generic-service))
 Tip: Name the app after yourself to make it easy to identify.
 
 ```bash
@@ -123,7 +123,7 @@ version: 0.1.0    # <-- version af deployment definition
 
 helm:
   chart: helm/idp-advanced
-  chartVersion: "3.1.2"    # <-- version af helm chart
+  chartVersion: "3.6.0"    # <-- version af helm chart
 ```
 
 > The chart helm/idp-advanced refers to [jppol-idp/helm-idp-advanced](https://github.com/jppol-idp/helm-idp/blob/main/charts/idp-advanced/Chart.yaml)
@@ -142,7 +142,7 @@ image:
 ---
 
 ### 5. 📦 Commit and push to your GitOps repo and see deployment in ArgoCD
-After committing your chart.yaml and values.yaml files to your "apps-pol" github repository deployment will start.
+After committing your application.yaml and values.yaml files to your "apps-pol" github repository deployment will start.
 
 Check in ArgoCD if your app has been synchronised and deployed and a certificate been issued.  
 
@@ -154,7 +154,7 @@ Go to ArgoCD for deployment [https://argocd.pol-test.idp.jppol.dk](https://argoc
 Metrics are automatically exposed with Prometheus and Loki and are visible in Grafana.
 
 Go to Grafana for monitoring
-[(https://grafana.pol-test.idp.jppol.dk)](https://grafana.pol-test.idp.jppol.dk)
+[https://grafana.pol-test.idp.jppol.dk](https://grafana.pol-test.idp.jppol.dk)
 
 Go to drilldown to see your Prometheus stats
 ![image](https://public.docs.idp.jppol.dk/assets/onboarding-grafana-drilldown-metrics.png)
