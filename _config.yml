@@ -22,6 +22,14 @@ aux_links:
 #logo: https://github.com/user-attachments/assets/fb6cfda7-7660-477f-8a7a-41e7a6977f47
 #logo: assets/karthago.png
 
+callouts:
+  warning:
+    title: Warning
+    color: yellow
+  note:
+    title: Note
+    color: blue
+
 mermaid:
   # Version of mermaid library
   # Pick an available version from https://cdn.jsdelivr.net/npm/mermaid/
