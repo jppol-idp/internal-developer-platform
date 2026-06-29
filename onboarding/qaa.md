@@ -42,27 +42,6 @@ env:
     value: "8080"
 ```
 
-Secrets should be stored in Secrets Manager.
-
-You should set secrets via actions in your app repository and expose the values to the application as environment parameters by adding a block like this to your values.yaml file:
-
-```yaml
-external_secrets:
-  - env_name: VALUE_FOR_ENVIRONMENT1
-    secretsmanager_name: NAME_IN_SSM1
-  - env_name: MEDIELOGIN_CLIENT_SECRET
-    secretsmanager_name: medielogin_client_secret
-```
-
-The application will then have the following environment variables available: VALUE_FOR_ENVIRONMENT1 and MEDIELOGIN_CLIENT_SECRET.
-
-Kubernetes fetches the values from Secrets Manager, so the application code does not need to perform the lookup itself.
-
-For more details on how to implement secrets, please refer to the application's repository under each respective namespace.
-
-For `pol-dev`, the list is here:  
-[https://github.com/jppol-idp/apps-pol/blob/main/apps/pol-dev/secrets.md](https://github.com/jppol-idp/apps-pol/blob/main/apps/pol-dev/secrets.md)
-
 ---
 
 ### 3. 🔗 How do we give our IDP containers access to our managed service outside of IDP?
