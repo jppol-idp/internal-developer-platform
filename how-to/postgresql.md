@@ -4,7 +4,7 @@ nav_order: 22
 parent: How to...
 domain: public
 layout: last-reviewed
-last_reviewed_on: 2026-05-13
+last_reviewed_on: 2026-06-29
 review_in: 3 months
 ---
 # Working with Postgres
@@ -75,7 +75,7 @@ version: 0.1.0
 slackChannel: my-slack-channel
 helm:
   chart: helm/idp-postgresql
-  chartVersion: "1.0.1" # Check https://github.com/jppol-idp/helm-idp/tree/main/charts/idp-postgresql for the latest version
+  chartVersion: "1.0.4" # Check https://github.com/jppol-idp/helm-idp/tree/main/charts/idp-postgresql for the latest version
 ```
 
 Once this is committed, ArgoCD will automatically deploy the database. Expect the database to be fully ready in 1-3 minutes.
@@ -95,6 +95,9 @@ The `read` role is granted read privileges (SELECT) on all tables created by the
 The `write` role is granted write privileges (SELECT, INSERT, UPDATE, DELETE, TRUNCATE) on all tables created by the admin user in the public schema.
 
 The credentials for the roles are stored as AWS secrets along with the connection details. The secrets are stored as `customer/[namespace]/[role]`.
+
+{: .note }
+> After a new database is provisioned, the read and write users require a one-time `USAGE` grant on the `public` schema before they can access any tables. See [permission denied for schema public](#permission-denied-for-schema-public) for how to apply it.
 
 ## Connect to Postgres
 
@@ -250,6 +253,43 @@ If you have an existing PostgreSQL database outside the IDP platform and want to
 KOA has documented their migration experience in a playbook that is a useful reference: [Postgres DB IDP Migration Playbook](https://jira-jppol.atlassian.net/wiki/spaces/KOA/pages/4238114819/Postgres+DB+IDP+Migration+Playbook).
 
 ## Common errors
+
+### permission denied for schema public
+
+If the read or write user gets:
+
+```
+permission denied for schema public
+```
+
+This is a known limitation: when a new database is provisioned, the read and write users are not automatically granted `USAGE` on the `public` schema. This is a one-time step you need to perform yourself using the admin user.
+
+Connect to the database as the admin user, then apply the grant using either pgAdmin or SQL.
+
+**Via pgAdmin:**
+
+1. In the browser tree, expand your database and navigate to *Schemas* → *public*.
+2. Right-click *public* and select *Properties*.
+3. Go to the *Security* tab.
+4. Add a row for `[namespace]-[database]-read` with the `USAGE` privilege.
+5. Add a row for `[namespace]-[database]-write` with the `USAGE` privilege.
+6. Click *Save*.
+
+**Via SQL** (using [pgAdmin](#connect-via-pgadmin) or a [local database tool](#connect-via-local-development-environment-or-database-tool)):
+
+```sql
+GRANT USAGE ON SCHEMA public TO "[namespace]-[database]-read";
+GRANT USAGE ON SCHEMA public TO "[namespace]-[database]-write";
+```
+
+For example, for `my-db` in the `team-dev` namespace:
+
+```sql
+GRANT USAGE ON SCHEMA public TO "team-dev-my-db-read";
+GRANT USAGE ON SCHEMA public TO "team-dev-my-db-write";
+```
+
+This only needs to be done once per database.
 
 ### no pg_hba.conf entry for host
 
