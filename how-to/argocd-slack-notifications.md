@@ -4,7 +4,7 @@ nav_order: 3
 parent: How to...
 domain: public
 permalink: /argocd-slack-notifications
-last_reviewed_on: 2026-06-26
+last_reviewed_on: 2026-06-29
 review_in: 6 months
 ---
 
@@ -26,7 +26,7 @@ version: 0.1.0
 slackChannel: my-team-alerts
 helm:
   chart: helm/idp-advanced
-  chartVersion: "3.1.2"
+  chartVersion: "3.5.1" # check latest at github.com/jppol-idp/helm-idp/releases
 ```
 
 Commit and let ArgoCD sync. By default you'll get a Slack message **only when something
@@ -110,14 +110,9 @@ slackTriggers:
 ## Public vs. private channels
 
 - **Public channels** work out of the box. Just set `slackChannel` — nothing else to do.
-- **Private channels** require one extra step: invite the IDP notification bot to the
-  channel once, by running this in the channel:
-
-  ```
-  /invite @IDP ArgoCD Notifications
-  ```
-
-  After that, notifications are delivered the same way.
+- **Private channels** require one extra step: invite the **IDP ArgoCD Notifications** bot to
+  the channel once. In the channel, type `/invite` and select the IDP ArgoCD Notifications app
+  from the list. After that, notifications are delivered the same way.
 
 ## Notes
 
