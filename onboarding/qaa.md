@@ -22,7 +22,7 @@ Is your team not yet set up in the IDP? Reach out to us – we’ll have a chat.
 
 ---
 
-### 2. 🤫 How should we handle config and secrets?
+### 2. 🤫 How should we handle config?
 
 We recommend placing configuration as environment variables, which can be defined in the `values.yaml` file:
 
