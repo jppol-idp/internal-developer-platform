@@ -172,6 +172,6 @@ You're now up and running! 💪
 
 You are **always** very welcome to ask questions in your onboarding channel on Slack - we're happy to help!
 
-Also, feel free to explore our [FAQ](faq) for answers to frequently asked questions and onboarding guidance.
+Also, feel free to explore our [How to section](https://public.docs.idp.jppol.dk/how-to/) and [FAQ](faq) for answers to frequently asked questions and onboarding guidance.
 
 ---
