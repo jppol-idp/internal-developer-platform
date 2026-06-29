@@ -14,4 +14,4 @@ We use GitHub Actions and External Secrets to sync secrets from AWS Secrets Mana
 Within each namespace in your IDP apps repository, you'll find a context-specific README.
 
 Example
-`https://github.com/jppol-idp/apps-\<team\>/blob/main/apps/\<team\>-dev/secrets.md`
+`https://github.com/jppol-idp/apps-<team>/blob/main/apps/<team>-dev/secrets.md`
