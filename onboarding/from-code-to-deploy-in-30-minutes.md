@@ -98,7 +98,7 @@ The ECR repository uses immutable tags, meaning you can't use `latest` as a tag 
 
 But, the IDP cluster can update to the latest version of the images built, optionally limiting to tags matching certain SemVer or Regex patterns.
 
-This feature is enabled in `application.yaml` with a set of annotations. Enabling this feature will limit the need to modify the deploy repository, as you only need to modify it in case of entirely new deployments or when tweaking the configuration. [You can read more about auto updating images here.](https://public.docs.idp.jppol.dk/how-to-auto-update)
+This feature is enabled in `application.yaml` with a set of annotations. Enabling this feature will limit the need to modify the deploy repository, as you only need to modify it in case of entirely new deployments or when tweaking the configuration. [You can read more about auto updating images here.](https://public.docs.idp.jppol.dk/how-to/auto-updates.html)
 
 ---
 ### 4. Create deployment configuration
@@ -173,8 +173,5 @@ You're now up and running! 💪
 You are **always** very welcome to ask questions in your onboarding channel on Slack - we're happy to help!
 
 Also, feel free to explore our [FAQ](faq) for answers to frequently asked questions and onboarding guidance.
-
----
-
 
 ---
