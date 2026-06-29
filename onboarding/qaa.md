@@ -21,16 +21,8 @@ If you or your team have any questions or run into issues, send us a [Slack mess
 Is your team not yet set up in the IDP? Reach out to us – we’ll have a chat.
 
 ---
-### 2. 🧩 What values can I set in my Helm chart?
 
-You can find the [list of configurable variables](https://github.com/jppol-idp/helm-idp/tree/main/charts/idp-advanced) (login required - it's auto-generated in our internal docs). 
-Scroll to the right to see the comments for each value and its variables:
-
-You can also [see examples of them in use](https://github.com/jppol-idp/helm-idp/blob/main/charts/idp-advanced/values.yaml) (login required) 
-
----
-
-### 3. 🤫 How should we handle config and secrets?
+### 2. 🤫 How should we handle config and secrets?
 
 We recommend placing configuration as environment variables, which can be defined in the `values.yaml` file:
 
@@ -73,7 +65,7 @@ For `pol-dev`, the list is here: 
 
 ---
 
-### 4. 🔗 How do we give our IDP containers access to our managed service outside of IDP?
+### 3. 🔗 How do we give our IDP containers access to our managed service outside of IDP?
 
 You can find the IP addresses in the README. For `pol-dev`, the list is here:  
 [https://github.com/jppol-idp/apps-pol/blob/main/apps/pol-dev/README.md](https://github.com/jppol-idp/apps-pol/blob/main/apps/pol-dev/README.md)
@@ -86,7 +78,7 @@ Note: It’s not a range, but specific addresses (i.e., a /32 "range").
 
 ---
 
-### 5. 🌐 How do we set up custom domains?
+### 4. 🌐 How do we set up custom domains?
 
 You bind domains using the `fqdn` field in your `values.yaml` file.
 
@@ -110,7 +102,7 @@ Once that’s in place, you can add the address in the `values.yaml` file, and c
 
 ---
 
-### 6. 🔐 How do we restrict external access to our API endpoints?
+### 5. 🔐 How do we restrict external access to our API endpoints?
 
 If the service should only be accessible internally within the _cluster_, you should disable public Nginx so it’s only available via private Nginx.
 
