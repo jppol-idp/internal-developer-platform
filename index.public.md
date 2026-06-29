@@ -24,7 +24,7 @@ DNS, databases, and more - so your team can focus on building products.
 
 ## How-to guides
 
-Step-by-step guides for working with specific platform features: [How to...](/how-to/)
+- [How to guides...](/how-to/) - are step-by-step guides for working with specific platform features
 
 ## Support
 
