@@ -186,6 +186,7 @@
 ./how-to/prometheus-blackbox-exporter.md
 ./how-to/index.md
 ./how-to/redis.md
+./how-to/argocd-slack-notifications.md
 ./how-to/postgresql.md
 ./CLAUDE.md
 ./README.public.md

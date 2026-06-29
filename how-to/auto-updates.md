@@ -1,6 +1,6 @@
 ---
 title: Auto updating deployments
-nav_order: 4
+nav_order: 5
 parent: How to...
 domain: public
 layout: last-reviewed
