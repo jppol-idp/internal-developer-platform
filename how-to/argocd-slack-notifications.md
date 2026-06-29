@@ -87,6 +87,7 @@ slackChannel: my-team-alerts
 slackTriggers:
   - on-sync-failed
   - on-health-degraded
+  - on-sync-status-unknown
 ```
 
 **Failures plus a message on every deployment:**
@@ -96,6 +97,7 @@ slackChannel: my-team-alerts
 slackTriggers:
   - on-sync-failed
   - on-health-degraded
+  - on-sync-status-unknown
   - on-deployed
 ```
 
