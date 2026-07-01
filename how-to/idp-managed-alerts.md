@@ -4,7 +4,7 @@ nav_order: 11
 parent: How to...
 domain: public
 layout: last-reviewed
-last_reviewed_on: 2026-05-13
+last_reviewed_on: 2026-06-30
 review_in: 6 months
 ---
 
@@ -64,6 +64,8 @@ Use this alongside your own team-specific alerts (built with [`idp-grafana-alarm
 | `lokiLineTooLong` | warning | A container in your namespace has logged ≥ `lineCountThreshold` lines larger than 5 MB within a 10-minute window. Lines this large are dropped by the log shipper before they reach Loki, so the entries are permanently lost from Grafana | enabled, severity, `lineCountThreshold` |
 
 Slack messages include a title with severity emoji and alert name, a bold summary with the offending pod/PVC/app identifier, a runbook section, and links to the relevant Grafana dashboard, the alert in Grafana, and ArgoCD. The pod-pending and restart-loop alerts additionally decode the container's waiting reason (e.g. `CreateContainerConfigError`, `ImagePullBackOff`) so you can triage before opening Grafana.
+
+For the pod- and workload-level alerts, the runbook links straight to a per-namespace **logs dashboard** with the affected namespace and pod pre-filled, so you can read the relevant logs without writing a Loki query yourself. It's filterable by severity and free-text and defaults to the last hour, with an "Open in Explore" button when you want to dig further.
 
 # What the alerts look like in Slack
 
