@@ -68,7 +68,7 @@ Use `vpa` (desribed below) to make measurements.
 Specifying carefully crafted values for requests and limits ensures a cost-effective use of the resources while 
 also ensuring performance. 
 
-## Redundancy and scaling
+## Set redundancy and scaling
 > *Never go to production without specifying redundancy for your pods.*
 > You can use _either_ replicaCount for a fixed size deployment,  autoscaling to 
 > scale on various targets _or_ KEDA scaling to scale on Kubernetes events. 
@@ -79,9 +79,15 @@ in resource requirements. KEDA requires in depth knowledge of Kubernetes and ver
 
 Static sizes or autoscaling will likely fit most users.
 
-### Static sizes with replicaCount
+### Using replicaCount - for a static size
 Use `.replicaCount` to set a fixed number of pods to be running. The value should be two or greater, if the deployment 
 is a website or API where uptime is important. 
+
+A replicaCount example:
+```
+replicaCount: 2
+```
+
 
 ### Using autoscaling
 Use `.autoscaling` to make the deployment try to adjust the number of pods to some target value. 
@@ -107,12 +113,12 @@ reserved cpu.
 For websites a lower cpu target is often desirable, as the cpu consumption is very uneven, but all scaling 
 needs to be adjusted to the specific workload. 
 
-### KEDA - scaling by system events
-As an alternative to autoscaling, it is possible to use (KEDA Autoscaling)[./keda-autoscaling], which reacts to certain Kubernetes 
+### Using KEDA - scaling by system events
+As an alternative to autoscaling, it is possible to use [KEDA Autoscaling](./keda-autoscaling), which reacts to certain Kubernetes 
 events.
 
 
-## VPA
+## VPA - to see recommandations
 It is possible to have Kubernetes record memory and cpu consumption for the running pods. 
 
 This helps adjusting `resources` to appropriate levels. 
