@@ -16,10 +16,10 @@ This is a short checklist with a few remarks about production ready configuratio
 `helm-idp-advanced` helm chart. 
 
 ## Use the latest chart version!
-We continuosly improve the `helm-idp-advanced` chart. Please ensure you are running the most recent version before moving 
-to product. 
+We continuously improve the `helm-idp-advanced` chart. Please ensure you are running the most recent version before moving 
+to production. 
 
-In all apps-repositories you will find the action `update-idp-chart-version`. This chart 
+In all apps-repositories you will find the action `update-idp-chart-version`. This action 
 will check if there are references to an idp-maintained helm chart and make pull requests
 for each unupdated chart in each namespace. It is safe to run this action as all changes are 
 created as pull requests. 
@@ -29,7 +29,7 @@ created as pull requests.
 > *namespaces as this allows you to get an idea of reasonable values and ensures cost-efficient use of resources.*
 
 A resources block defines the minimum cpu and memory allocated to each running pod. It is also 
-possible - and advisible - to define a limit for resource consumption in the resources block. 
+possible - and advisable - to define a limit for resource consumption in the resources block. 
 
 An example:
 ```
@@ -46,7 +46,7 @@ This example instructs Kubernetes to allocate each pod 500 millicores - 0.5 cpu 
 
 The pod _can_ use up to 1000m - 1 cpu core - if available at the host. Kubernetes will throttle cpu usage and 
 prevent additional usage beyond 1000m. You can say that all pods are guaranteed to have `.resources.requests.cpu` 
-cpu available. If additional cpu is available at the host, all pods on the cpu will compete for this unallocatGed
+cpu available. If additional cpu is available at the host, all pods on the cpu will compete for these unallocated
 cpu resources until they reach limit. 
 
 ### Memory
@@ -58,12 +58,12 @@ If a pod reaches `limit` it will be _terminated_ by kubernetes, and OutOfMemory 
 
 That is: Memory limits are enforced by killing the pod. CPU limits are enforced by throttling. 
 
-If the difference between requests and limits are very large, there may arise situations where many pods on the same host 
-tries to reserve memory outside their individual allocations. In this case the _host_ may run out of memory. 
+If the difference between requests and limits is very large, there may arise situations where many pods on the same host 
+try to reserve memory outside their individual allocations. In this case the _host_ may run out of memory. 
 
-The limits should be adjusted to a realistic minium and limits should be used to accomodate very short spikes. 
+The limits should be adjusted to a realistic minimum and limits should be used to accommodate very short spikes. 
 
-Use `vpa` (desribed below) to make measurements. 
+Use `vpa` (described below) to make measurements. 
 
 Specifying carefully crafted values for requests and limits ensures a cost-effective use of the resources while 
 also ensuring performance. 
@@ -75,7 +75,7 @@ also ensuring performance.
 > *`.replicaCount`, `.autoScaling` and KEDA scaling are mutually exclusive.*
 
 While static sizes are simpler, they don't provide any adaptation to change in load or other fluctuations 
-in resource requirements. KEDA requires in depth knowledge of Kubernetes and very configurable. 
+in resource requirements. KEDA requires in-depth knowledge of Kubernetes and is very configurable. 
 
 Static sizes or autoscaling will likely fit most users.
 
@@ -89,7 +89,7 @@ replicaCount: 2
 ```
 
 
-### Using autoscaling
+### Using autoscaling - scaling by resource utilization
 Use `.autoscaling` to make the deployment try to adjust the number of pods to some target value. 
 
 >[!NOTE]
@@ -104,8 +104,8 @@ autoscaling:
   targetCPUUtilizationPercentage: 40
 ```
 This example instructs the pod scaling to add additional pods, when the average cpu utilization 
-compared to the reserved cpu amount exceeds 40%. This target may be too low depending of the 
-traffix pattern. 
+compared to the reserved cpu amount exceeds 40%. This target may be too low depending on the 
+traffic pattern. 
 
 If a deployment tends to fan out often, it might be preferable to increase both the target and the 
 reserved cpu.
@@ -114,11 +114,11 @@ For websites a lower cpu target is often desirable, as the cpu consumption is ve
 needs to be adjusted to the specific workload. 
 
 ### Using KEDA - scaling by system events
-As an alternative to autoscaling, it is possible to use [KEDA Autoscaling](./keda-autoscaling), which reacts to certain Kubernetes 
+As an alternative to autoscaling, it is possible to use [KEDA](./keda-autoscaling) (Kubernetes Event-Driven Autoscaling), which reacts to certain Kubernetes 
 events.
 
 
-## VPA - to see recommandations
+## VPA (Vertical Pod Autoscaler) - to see recommendations
 It is possible to have Kubernetes record memory and cpu consumption for the running pods. 
 
 This helps adjusting `resources` to appropriate levels. 
@@ -131,7 +131,7 @@ vpa:
 ```
 
 While a pod has been running for some time, it is possible to use the Grafana dashboard "Kubernetes / Autoscaling / Vertical Pod Autoscaler"
-with filtering on namespace and "VPA Pod Autoscaler", to see some recommandations. 
+with filtering on namespace and "VPA Pod Autoscaler", to see some recommendations. 
 
 The values shouldn't necessarily be entered directly into the resources block. It might be a good idea to round up the upper bound. 
 
