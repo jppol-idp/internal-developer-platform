@@ -13,8 +13,8 @@ review_in: 6 months
 Each cluster is connected to an AWS account which has got one or more associated 
 dns zones or domains. 
 
-Each namespace you can control using your teams apps-repository can modify dns 
-records within any zone in the zones clusters account. 
+Each namespace you control via your team's apps-repository can modify DNS 
+records within any zone in that cluster's account. 
 
 All available zones are listed in the `README.md` in the namespaces folder 
 in the apps repository.
@@ -23,7 +23,7 @@ Domains for an account may change. Please act responsibly while working with DNS
 there may be zones logically belonging to other teams also hosted in the 
 same cluster. Please don't experiment with such zones. 
 
-## How to control DNS.
+## How to control DNS
 ### As part of IDP advanced chart
 The most straightforward way to work with DNS is to use the idp-advanced chart
 where it is possible to list the fully qualified domain names desired for hosting each 
@@ -31,10 +31,10 @@ service. When using these settings all aspects of DNS (and issuing of certificat
 will be handled for you.  
 
 ### DNS records not belonging to a specific deployment. 
-It is posisble to set arbitrary records in a given dns zone without 
+It is possible to set arbitrary records in a given dns zone without 
 the records being related to web services or other deployments inside the cluster. 
 
-Here you can use the chart (`crossplane-route53-records`)[https://github.com/jppol-idp/helm-crossplane-route53]. 
+Here you can use the chart [`crossplane-route53-records`](https://github.com/jppol-idp/helm-idp/tree/main/charts/crossplane-route53-records). 
 
 This chart becomes relevant when you
 - Want to create validation records of type `TXT`
@@ -59,10 +59,10 @@ deletionPolicy: Delete         # Delete = allow deletions; Orphan = leave record
 - Zones are always rendered with `managementPolicies: ["Observe"]` and cannot be created by this chart; the IDP platform manages zones.
 
 Records can be created in one folder for all zones in the cluster, in one folder per namespace 
-or in a folder pr "purpose". 
+or in a folder per "purpose". 
 
-Each file contain a list of records referencing the domain ny name and setting values, type 
-and ttl per recor 
+Each file contains a list of records referencing the domain by name and setting values, type 
+and ttl per record 
 
 ### Examples 
 
@@ -81,14 +81,14 @@ helm:
 
 In the `values.yaml` file you can specify the needed records in the array `records`. 
 
-Each record should reference a zone using hte attribute `zoneName`. Simply use 
+Each record should reference a zone using the attribute `zoneName`. Simply use 
 the fully qualified domain name for any zone hosted in the cluster.
 
-You must also provide a ttl (in secords), the actual values in the `revords` array and 
+You must also provide a ttl (in seconds), the actual values in the `records` array and 
 of course the record type in `type`. 
 
 The `name` field should contain the subdomain part of a CNAME or A record. To create an 
-´A` record pointing `dns-example.idp-test.idp.jppol.dk` to the ip address `1.2.3.4` you 
+`A` record pointing `dns-example.idp-test.idp.jppol.dk` to the ip address `1.2.3.4` you 
 should use a record like 
 ```yaml
 records:
@@ -132,6 +132,5 @@ records:
 ```
 
 ### Conflicting records
-If you seta identical DNS records in both idp-advancd and the route53-chartIf 
-you set a certain DNS in both idp-advancd and the route53-chart the system backing idp-advanced 
-will compete with the systemn supporting route53. There is currently no detection of this.  
+If you set identical DNS records in both idp-advanced and the route53-chart, the system backing 
+idp-advanced will compete with the system supporting route53. There is currently no detection of this.  
