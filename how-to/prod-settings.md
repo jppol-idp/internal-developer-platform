@@ -63,7 +63,7 @@ try to reserve memory outside their individual allocations. In this case the _ho
 
 The limits should be adjusted to a realistic minimum and limits should be used to accommodate very short spikes. 
 
-Use `vpa` ([described below](#vpa-vertical-pod-autoscaler-to-see-recommendations)) to make measurements. 
+Use `vpa` ([described below](#vpa---to-see-recommendations)) to make measurements. 
 
 Specifying carefully crafted values for requests and limits ensures a cost-effective use of the resources while 
 also ensuring performance. 
@@ -118,8 +118,8 @@ As an alternative to autoscaling, it is possible to use [KEDA](./keda-autoscalin
 events.
 
 
-## VPA (Vertical Pod Autoscaler) - to see recommendations
-It is possible to have Kubernetes record memory and cpu consumption for the running pods. 
+## VPA - to see recommendations
+VPA (Vertical Pod Autoscaler) makes it possible to have Kubernetes record memory and cpu consumption for the running pods. 
 
 This helps adjusting `resources` to appropriate levels. 
 
