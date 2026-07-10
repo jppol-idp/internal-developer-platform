@@ -1,5 +1,5 @@
 ---
-title: Working with DNS
+title: DNS records and custom domains
 nav_order: 20
 parent: How to...
 domain: public
@@ -7,7 +7,7 @@ layout: last-reviewed
 last_reviewed_on: 2025-10-02
 review_in: 6 months
 ---
-# Working with DNS
+# DNS records and custom domains
 
 ## Which DNS domains (zones) can I control 
 Each cluster is connected to an AWS account which has got one or more associated 
@@ -25,10 +25,34 @@ same cluster. Please don't experiment with such zones.
 
 ## How to control DNS
 ### As part of IDP advanced chart
-The most straightforward way to work with DNS is to use the idp-advanced chart
-where it is possible to list the fully qualified domain names desired for hosting each 
-service. When using these settings all aspects of DNS (and issuing of certificates) 
-will be handled for you.  
+The most straightforward way to work with DNS is to use the idp-advanced chart,
+where you list the fully qualified domain names (FQDNs) you want for each
+service in the `fqdn` field of your `values.yaml`. When you use this field,
+DNS records are created automatically and a certificate is issued for the
+domain — DNS and certificate issuance are both handled for you.
+
+#### Which domains can I use?
+Each account only allows binding to a limited set of domains. The available
+domains for your namespace are listed in the README file in the apps
+repository, under your namespace. For `pol-dev`, see:
+[apps-pol/pol-dev/README.md](https://github.com/jppol-idp/apps-pol/blob/main/apps/pol-dev/README.md)
+
+The default domains are `pol-dev.idp.jppol.dk` and `pol-test.idp.jppol.dk`,
+but the list can be extended for your account — this requires some
+configuration on our side, so reach out on Slack if you need an additional
+domain enabled.
+
+Once a domain is available for your account, you can add subdomains under it
+in the `fqdn` field of each application's `values.yaml`.
+
+#### Using a domain hosted in another account or by another team
+It's also possible to point a domain that isn't on your account's list to
+your service, but it's more involved:
+
+1. Contact the owner of the root domain and ask them to create an A record
+   pointing to the load balancer addresses listed in your namespace's README.
+2. Once that record is in place, add the address in the `fqdn` field of your
+   `values.yaml`. Certificate issuance will then happen automatically.
 
 ### DNS records not belonging to a specific deployment. 
 It is possible to set arbitrary records in a given dns zone without 
