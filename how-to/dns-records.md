@@ -1,6 +1,6 @@
 ---
 title: DNS records and custom domains
-nav_order: 20
+nav_order: 6
 parent: How to...
 domain: public
 layout: last-reviewed
@@ -24,14 +24,13 @@ there may be zones logically belonging to other teams also hosted in the
 same cluster. Please don't experiment with such zones. 
 
 ## How to control DNS
-### As part of IDP advanced chart
 The most straightforward way to work with DNS is to use the idp-advanced chart,
 where you list the fully qualified domain names (FQDNs) you want for each
 service in the `fqdn` field of your `values.yaml`. When you use this field,
 DNS records are created automatically and a certificate is issued for the
 domain — DNS and certificate issuance are both handled for you.
 
-#### Which domains can I use?
+### Which domains can I use?
 Each account only allows binding to a limited set of domains. The available
 domains for your namespace are listed in the README file in the apps
 repository, under your namespace. For `pol-dev`, see:
@@ -45,7 +44,7 @@ domain enabled.
 Once a domain is available for your account, you can add subdomains under it
 in the `fqdn` field of each application's `values.yaml`.
 
-#### Using a domain hosted in another account or by another team
+### Using a domain hosted in another account or by another team
 It's also possible to point a domain that isn't on your account's list to
 your service, but it's more involved:
 
