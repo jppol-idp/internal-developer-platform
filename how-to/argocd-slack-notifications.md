@@ -4,6 +4,7 @@ nav_order: 3
 parent: How to...
 domain: public
 permalink: /argocd-slack-notifications
+layout: last-reviewed
 last_reviewed_on: 2026-06-29
 review_in: 6 months
 ---

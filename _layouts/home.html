@@ -1,0 +1,7 @@
+---
+layout: default
+---
+{% unless site.public_only %}
+<p class="text-small text-grey-dk-100 mt-2 mb-4">{% include domain_badge.html %}</p>
+{% endunless %}
+{{ content }}
