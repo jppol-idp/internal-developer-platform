@@ -73,6 +73,7 @@
 ./schemas/idp-redis/latest.json
 ./schemas/idp-redis/v0.8.0.json
 ./schemas/idp-redis/v0.8.1.json
+./schemas/idp-redis/v0.8.4.json
 ./schemas/idp-redis/v0.8.2.json
 ./schemas/idp-redis/v0.8.3.json
 ./schemas/idp-oidc-middleware/v0.3.3.json
