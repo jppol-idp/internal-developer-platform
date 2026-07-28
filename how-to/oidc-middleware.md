@@ -1,6 +1,6 @@
 ---
 title: Adding OIDC authentication to your app
-nav_order: 1
+nav_order: 2
 parent: How to...
 domain: public
 layout: last-reviewed

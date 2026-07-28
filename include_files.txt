@@ -177,6 +177,7 @@
 ./how-to/grafana-shared-dashboards.md
 ./how-to/argocd-add-application-labels.md
 ./how-to/alerting.md
+./how-to/network-access.md
 ./how-to/idp-managed-alerts.md
 ./how-to/pgadmin.md
 ./how-to/auto-updates.md

@@ -1,6 +1,6 @@
 ---
 title: Working with Redis
-nav_order: 23
+nav_order: 25
 parent: How to...
 domain: public
 layout: last-reviewed
