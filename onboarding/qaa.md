@@ -13,16 +13,7 @@ If you or your team have any questions or run into issues, send us a [Slack mess
 
 ---
 
-### 1. 🔑 How do I get access to IDP?
-- You need to be granted the correct AD group permissions.
-- Requst needs to go via Servicedesk and a ServiceNow form.
-- Request access from IDP support and we will request on your behalf.  
-
-Is your team not yet set up in the IDP? Reach out to us – we’ll have a chat.
-
----
-
-### 2. 🤫 How should we handle config?
+### 1. 🤫 How should we handle config?
 
 We recommend placing configuration as environment variables, which can be defined in the `values.yaml` file:
 
