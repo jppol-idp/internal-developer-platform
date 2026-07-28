@@ -92,8 +92,8 @@ replicaCount: 2
 ### Using autoscaling - scaling by resource utilization
 Use `.autoscaling` to make the deployment try to adjust the number of pods to some target value. 
 
->[!NOTE]
->Autoscaling works in conjunction with and relative to `.resources`.
+{: .note }
+> Autoscaling works in conjunction with and relative to `.resources`.
 
 An autoscaling example:
 ```
