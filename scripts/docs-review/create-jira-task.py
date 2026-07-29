@@ -34,22 +34,16 @@ def resolve_account_ids(client: JIRA, emails: list) -> list:
     return ids
 
 
-def assignees_with_open_task(client: JIRA, account_ids: list) -> set:
-    ids_csv = ", ".join(f'"{aid}"' for aid in account_ids)
-    jql = (
-        f'project = "{JIRA_PROJECT}" AND labels = "Docs" '
-        f'AND assignee in ({ids_csv}) AND status = "To Do"'
-    )
+def open_docs_tasks(client: JIRA) -> list:
+    # JQL `summary = "..."` silently matches nothing on this text-indexed field (verified
+    # against the live instance) — don't filter/compare summaries in JQL, only in Python.
+    jql = f'project = "{JIRA_PROJECT}" AND labels = "Docs" AND statusCategory != Done'
     resp = client._session.post(
         f"{JIRA_URL}/rest/api/3/search/jql",
-        json={"jql": jql, "maxResults": 50, "fields": ["assignee", "summary"]},
+        json={"jql": jql, "maxResults": 100, "fields": ["assignee", "summary"]},
     )
     resp.raise_for_status()
-    return {
-        issue["fields"]["assignee"]["accountId"]
-        for issue in resp.json().get("issues", [])
-        if issue["fields"]["summary"].startswith("Review docs:")
-    }
+    return resp.json().get("issues", [])
 
 
 def find_active_sprint_id(client: JIRA) -> "int | None":
@@ -114,7 +108,14 @@ def main():
     client = JIRA(server=JIRA_URL, basic_auth=(email, token))
     assignee_ids = resolve_account_ids(client, assignee_emails)
     sprint_id = find_active_sprint_id(client)
-    busy_ids = assignees_with_open_task(client, assignee_ids)
+
+    open_issues = open_docs_tasks(client)
+    busy_ids = {
+        issue["fields"]["assignee"]["accountId"]
+        for issue in open_issues
+        if issue["fields"]["assignee"]
+    }
+    existing_by_summary = {issue["fields"]["summary"]: issue["key"] for issue in open_issues}
 
     print("\n### Tasks")
     for i, doc in enumerate(batch):
@@ -127,16 +128,10 @@ def main():
             continue
 
         summary = f"Review docs: {doc['title']}"
-        jql = f'project = "{JIRA_PROJECT}" AND summary = "{summary}" AND statusCategory != Done'
-        resp = client._session.post(
-            f"{JIRA_URL}/rest/api/3/search/jql",
-            json={"jql": jql, "maxResults": 1, "fields": ["summary"]},
-        )
-        resp.raise_for_status()
-        existing = resp.json().get("issues", [])
-        if existing:
-            print(f"- Skipped [{doc['title']}]({doc['url']}) — {existing[0]['key']} already open")
-            results.append({"title": doc["title"], "url": doc["url"], "assignee": assignee_email, "status": "skipped_duplicate", "existing_key": existing[0]["key"]})
+        existing_key = existing_by_summary.get(summary)
+        if existing_key:
+            print(f"- Skipped [{doc['title']}]({doc['url']}) — {existing_key} already open")
+            results.append({"title": doc["title"], "url": doc["url"], "assignee": assignee_email, "status": "skipped_duplicate", "existing_key": existing_key})
             continue
 
         issue = client.create_issue(fields={
