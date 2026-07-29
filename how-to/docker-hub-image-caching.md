@@ -1,6 +1,6 @@
 ---
 title: Docker Hub Image Caching
-nav_order: 8
+nav_order: 9
 parent: How to...
 domain: public
 layout: last-reviewed

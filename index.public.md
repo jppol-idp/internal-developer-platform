@@ -21,7 +21,6 @@ DNS, databases, and more - so your team can focus on building products.
 - Get access - reach out to the IDP team on Slack
 - [From code to deploy in 30 minutes](/onboarding/from-code-to-deploy-in-30-minutes.html) - deploy your first container
 - [Technology overview](/onboarding/technology-overview.html) - what the platform is built on
-- [Q&A](/onboarding/qaa.html) - common questions answered
 
 ## How-to guides
 

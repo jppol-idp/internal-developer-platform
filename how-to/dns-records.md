@@ -1,6 +1,6 @@
 ---
 title: DNS records and custom domains
-nav_order: 7
+nav_order: 8
 parent: How to...
 domain: public
 layout: last-reviewed

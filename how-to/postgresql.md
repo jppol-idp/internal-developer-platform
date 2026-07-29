@@ -1,6 +1,6 @@
 ---
 title: Working with PostgreSQL
-nav_order: 24
+nav_order: 25
 parent: How to...
 domain: public
 layout: last-reviewed

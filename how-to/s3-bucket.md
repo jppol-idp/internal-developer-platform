@@ -1,6 +1,6 @@
 ---
 title: Working with S3 Buckets
-nav_order: 26
+nav_order: 27
 parent: How to...
 domain: public
 layout: last-reviewed

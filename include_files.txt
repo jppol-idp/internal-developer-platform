@@ -166,7 +166,6 @@
 ./index.public.md
 ./onboarding/technology-overview.md
 ./onboarding/from-code-to-deploy-in-30-minutes.md
-./onboarding/qaa.md
 ./onboarding/index.md
 ./how-to/prometheus-blackbox-exporter.md
 ./how-to/redis.md
@@ -185,6 +184,7 @@
 ./how-to/ingress-access-logs.md
 ./how-to/aurora-rds-proxy.md
 ./how-to/kubernetes-namespace-access.md
+./how-to/app-configuration.md
 ./how-to/values-yaml-ide-schema.md
 ./how-to/oidc-middleware.md
 ./how-to/postgresql.md
