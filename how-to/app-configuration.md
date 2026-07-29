@@ -1,5 +1,5 @@
 ---
-title: Configuring your app
+title: Configuring your app with environment variables
 nav_order: 6
 parent: How to...
 domain: public
@@ -8,7 +8,7 @@ last_reviewed_on: 2026-07-28
 review_in: 6 months
 ---
 
-# Configuring your app
+# Configuring your app with environment variables
 
 We recommend passing configuration to your app as environment variables, defined in the `env` block of your `values.yaml`.
 
