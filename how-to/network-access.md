@@ -38,7 +38,7 @@ ingress:
 ```
 
 - `public.enabled` — reachable from the internet
-- `private.enabled` — reachable from internal JPPol networks (on-prem systems, VPN clients, or workloads in other Kubernetes clusters or AWS accounts) that are routed in via the internal Transit Gateway. **This is not for calling another app in the same namespace** — for that, call the app's service directly instead of going through ingress.
+- `private.enabled` — reachable from internal JPPol networks (on-prem systems, VPN clients, or workloads in other Kubernetes namespaces, clusters or AWS accounts) that are routed in via the internal Transit Gateway. **This is not for calling another app in the same namespace** — for that, call the app's service directly instead of going through ingress.
 
 If your app should be reachable from those internal networks but not from the public internet, set `public.enabled: false` and keep `private.enabled: true` — no further configuration is needed.
 
