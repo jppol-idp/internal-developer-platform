@@ -50,7 +50,7 @@ Use this alongside your own team-specific alerts (built with [`idp-grafana-alarm
 | `oomkilled` | warning | A container in your namespace terminates with `OOMKilled` (event-based, fires immediately) | enabled, severity |
 | `containerRestartLoop` | warning | A container restarts ≥ N times within 5 minutes (excludes OOMKilled, which has its own alert) | enabled, severity, `restartThreshold` |
 | `podPendingWarning` | warning | A pod is stuck in `Pending` longer than the configured duration (default 5 min) | enabled, severity, `durationSeconds` |
-| `podPendingMajor` | major | A pod is stuck in `Pending` longer than the configured duration (default 15 min). Disabled by default | enabled, severity, `durationSeconds` |
+| `podPendingMajor` | major | A pod is stuck in `Pending` longer than the configured duration (default 15 min). **Disabled by default** | enabled, severity, `durationSeconds` |
 | `podTerminatingWarning` | warning | A pod is stuck in `Terminating` longer than the configured duration (default 5 min) | enabled, severity, `durationSeconds` |
 | `podTerminatingMajor` | major | A pod is stuck in `Terminating` longer than the configured duration (default 15 min) | enabled, severity, `durationSeconds` |
 | `pvcUsage` | warning / critical | PVC disk usage crosses `warningPercent` (default 80%) or `criticalPercent` (default 90%) | enabled, thresholds |
