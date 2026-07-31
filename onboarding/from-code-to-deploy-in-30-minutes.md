@@ -22,26 +22,17 @@ review_in: 3 months
 - You are ready to use IDP in your daily work
 
 ---
-
-> 🚨 The examples use `Politiken`-specific domains and variables.  
-> Make sure to **replace all values** with values relevant to your own organization.
-> 
-> Example: `https://github.com/Politiken` → `https://github.com/jppol-idp`
-
----
-
-
 ## ⏱️ Prerequisites
 
 Before you begin, make sure you have the following in place:
 
 - [ ] Access to your IDP onboarding channel on Slack `#idp-TEAM-onboarding` and `#idp-announcements`
-- [ ] Access to your IDP deployment repository, e.g., [https://github.com/jppol-idp/apps-pol](https://github.com/jppol-idp/apps-pol) ([access management](https://github.com/orgs/jppol-idp/teams/apps-pol/members))
-- [ ] Access to your IDP tools, e.g., [https://argocd.pol-test.idp.jppol.dk](https://argocd.pol-test.idp.jppol.dk), [https://grafana.pol-test.idp.jppol.dk](https://grafana.pol-test.idp.jppol.dk)
-- [ ] Access to your own code repository, e.g., [https://github.com/Politiken](https://github.com/Politiken)
+- [ ] Access to your IDP deployment repository `https://github.com/jppol-idp/apps-TEAM` [https://github.com/jppol-idp/](https://github.com/jppol-idp/)
+- [ ] Access to your IDP tools, e.g., [https://argocd.idp-shared-test.idp.jppol.dk/](https://argocd.idp-shared-test.idp.jppol.dk/), [https://grafana.idp-shared-test.idp.jppol.dk/](https://grafana.idp-shared-test.idp.jppol.dk/)
+- [ ] Access to your own code repository, e.g., `https://github.com/TEAM` [https://github.com/enterprises/jp-politikens-hus/organizations/](https://github.com/enterprises/jp-politikens-hus/organizations/)
 - [ ] Docker or similar installed
 
-Note: To get access to IDP make a request in your `#idp-TEAM-onboarding channel`.
+Note: To get access to IDP make a request in your `#idp-TEAM-onboarding` channel.
 
 ---
 
@@ -104,7 +95,7 @@ This feature is enabled in `application.yaml` with a set of annotations. Enablin
 ---
 ### 4. Create deployment configuration
 
-Prepare a Helm chart in the deploy repo: [https://github.com/jppol-idp/apps-pol](https://github.com/jppol-idp/apps-pol)
+Prepare a Helm chart in the deploy repo: `https://github.com/jppol-idp/apps-TEAM`
 
 ```bash
 git clone https://github.com/jppol-idp/apps-pol.git
@@ -147,7 +138,7 @@ After committing your application.yaml and values.yaml files to your "apps-pol" 
 
 Check in Argo CD if your app has been synchronised and deployed and a certificate been issued.  
 
-Go to Argo CD for deployment [https://argocd.pol-test.idp.jppol.dk](https://argocd.pol-test.idp.jppol.dk)
+Go to Argo CD for deployment [https://argocd.idp-shared-test.idp.jppol.dk/](https://argocd.idp-shared-test.idp.jppol.dk/)
 
 ---
 
@@ -155,7 +146,7 @@ Go to Argo CD for deployment [https://argocd.pol-test.idp.jppol.dk](https://argo
 Metrics are automatically exposed with Prometheus and Loki and are visible in Grafana.
 
 Go to Grafana for monitoring
-[https://grafana.pol-test.idp.jppol.dk](https://grafana.pol-test.idp.jppol.dk)
+[https://grafana.idp-shared-test.idp.jppol.dk/](https://grafana.idp-shared-test.idp.jppol.dk/)
 
 Go to drilldown to see your Prometheus stats
 ![image](https://public.docs.idp.jppol.dk/assets/onboarding-grafana-drilldown-metrics.png)
