@@ -15,9 +15,8 @@ review_in: 3 months
 ---
 **By the end of this session, you will have:**
 
-- Access to IDP
 - Your code packaged as a container
-- Deployed via GitOps with visibility in ArgoCD
+- Deployed via GitOps with visibility in Argo CD
 - Monitoring via Prometheus, logging via Loki, and visualization in Grafana
 - You comply with the platform’s security requirements
 - You are ready to use IDP in your daily work
@@ -36,11 +35,13 @@ review_in: 3 months
 
 Before you begin, make sure you have the following in place:
 
-- [ ] Access to your code repository, e.g., [https://github.com/Politiken](https://github.com/Politiken)
+- [ ] Access to your IDP onboarding channel on Slack `#idp-TEAM-onboarding` and `#idp-announcements`
 - [ ] Access to your IDP deployment repository, e.g., [https://github.com/jppol-idp/apps-pol](https://github.com/jppol-idp/apps-pol) ([access management](https://github.com/orgs/jppol-idp/teams/apps-pol/members))
-- [ ] Access to your onboarding channel on Slack `#idp-TEAM-onboarding` and `#idp-announcements`
-- [ ] Access to IDP tools, e.g., [https://argocd.pol-test.idp.jppol.dk](https://argocd.pol-test.idp.jppol.dk), [https://grafana.pol-test.idp.jppol.dk](https://grafana.pol-test.idp.jppol.dk)
+- [ ] Access to your IDP tools, e.g., [https://argocd.pol-test.idp.jppol.dk](https://argocd.pol-test.idp.jppol.dk), [https://grafana.pol-test.idp.jppol.dk](https://grafana.pol-test.idp.jppol.dk)
+- [ ] Access to your own code repository, e.g., [https://github.com/Politiken](https://github.com/Politiken)
 - [ ] Docker or similar installed
+
+Note: To get access to IDP make a request in your `#idp-TEAM-onboarding channel`.
 
 ---
 
@@ -141,12 +142,12 @@ image:
 
 ---
 
-### 5. 📦 Commit and push to your GitOps repo and see deployment in ArgoCD
+### 5. 📦 Commit and push to your GitOps repo and see deployment in Argo CD
 After committing your application.yaml and values.yaml files to your "apps-pol" github repository deployment will start.
 
-Check in ArgoCD if your app has been synchronised and deployed and a certificate been issued.  
+Check in Argo CD if your app has been synchronised and deployed and a certificate been issued.  
 
-Go to ArgoCD for deployment [https://argocd.pol-test.idp.jppol.dk](https://argocd.pol-test.idp.jppol.dk)
+Go to Argo CD for deployment [https://argocd.pol-test.idp.jppol.dk](https://argocd.pol-test.idp.jppol.dk)
 
 ---
 
