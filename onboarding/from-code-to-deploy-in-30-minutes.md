@@ -79,14 +79,6 @@ The ECR repository allows GitHub Actions from your organization to upload images
 
 For an example on how to use it, view the [generic-service](https://github.com/jppol-idp/generic-service).
 
-__Automatic deployment__
-
-The ECR repository uses immutable tags, meaning you can't use `latest` as a tag for your images.
-
-But, the IDP cluster can update to the latest version of the images built, optionally limiting to tags matching certain SemVer or Regex patterns.
-
-This feature is enabled in `application.yaml` with a set of annotations. Enabling this feature will limit the need to modify the deploy repository, as you only need to modify it in case of entirely new deployments or when tweaking the configuration. [Read more about auto updating images.](https://public.docs.idp.jppol.dk/how-to/auto-updates.html)
-
 ---
 ### 4. Create deployment configuration
 
@@ -126,10 +118,18 @@ image:
 
 > You can go here and [find a list of all configurable variables](https://github.com/jppol-idp/helm-idp/blob/main/charts/idp-advanced/README.md) or find the [generic service in apps-demo](https://github.com/jppol-idp/apps-demo/tree/main/apps/demo-dev/generic-service) for a more complete example that covers most common needs.
 
+__Automatic deployment__
+
+The ECR repository uses immutable tags, meaning you can't use `latest` as a tag for your images.
+
+But, the IDP cluster can update to the latest version of the images built, optionally limiting to tags matching certain SemVer or Regex patterns.
+
+This feature is enabled in `application.yaml` with a set of annotations. Enabling this feature will limit the need to modify the deploy repository, as you only need to modify it in case of entirely new deployments or when tweaking the configuration. [Read more about auto updating images.](https://public.docs.idp.jppol.dk/how-to/auto-updates.html)
+
 ---
 
 ### 5. 📦 Commit and push to your GitOps repo and see deployment in Argo CD
-After committing your application.yaml and values.yaml files to your `https://github.com/jppol-idp/apps-TEAM` github repository deployment will start.
+After committing your application.yaml and values.yaml files to your `/jppol-idp/apps-TEAM` github repository deployment will start.
 
 Check in Argo CD if your app has been synchronised and deployed and a certificate been issued.  
 
