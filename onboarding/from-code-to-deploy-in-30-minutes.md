@@ -116,7 +116,7 @@ image:
   tag: "0.1.0"
 ```
 
-> You can go here and [find a list of all configurable variables](https://github.com/jppol-idp/helm-idp/blob/main/charts/idp-advanced/README.md) or find the [generic service in apps-demo](https://github.com/jppol-idp/apps-demo/tree/main/apps/demo-dev/generic-service) for a more complete example that covers most common needs.
+> [Find a list of all configurable variables](https://github.com/jppol-idp/helm-idp/blob/main/charts/idp-advanced/README.md) or [see examples within our generic service](https://github.com/jppol-idp/apps-demo/tree/main/apps/demo-dev/generic-service) that covers most common needs.
 
 __Automatic deployment__
 
@@ -133,14 +133,15 @@ After committing your application.yaml and values.yaml files to your `/jppol-idp
 
 Check in Argo CD if your app has been synchronised and deployed and a certificate been issued.  
 
-Go to Argo CD for deployment.  Check your link at `https://github.com/jppol-idp/apps-TEAM/tree/main/apps/TEAM-dev`
+Go to Argo CD for deployment.
+Check your link at `https://github.com/jppol-idp/apps-TEAM/tree/main/apps/TEAM-dev`
 
 ---
 
 ### 6. Confirm log output in Grafana
 Metrics are automatically exposed with Prometheus and Loki and are visible in Grafana.
 
-Go to Grafana for monitoring
+Go to Grafana for monitoring.
 Check your link at `https://github.com/jppol-idp/apps-TEAM/tree/main/apps/TEAM-dev`
 
 Go to drilldown to see your Prometheus stats
