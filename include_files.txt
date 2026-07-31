@@ -162,6 +162,7 @@
 ./assets/alert-step3.png
 ./assets/jira-renovate-example.png
 ./assets/alert-step1.png
+./assets/mimir-datasource-dropdown.png
 ./assets/karthago_transparent.png
 ./index.public.md
 ./onboarding/technology-overview.md
