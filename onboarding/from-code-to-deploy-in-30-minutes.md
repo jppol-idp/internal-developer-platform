@@ -28,7 +28,7 @@ Before you begin, make sure you have the following in place:
 
 - [ ] Access to your IDP onboarding channel on Slack `#idp-TEAM-onboarding` and `#idp-announcements`
 - [ ] Access to your IDP deployment repository `https://github.com/jppol-idp/apps-TEAM`
-- [ ] Access to your IDP tools, Argo CD and Grafana. Links available at `https://github.com/jppol-idp/apps-TEAM/tree/main/apps/dev`
+- [ ] Access to your IDP tools, Argo CD and Grafana. Check your links at `https://github.com/jppol-idp/apps-TEAM/tree/main/apps/dev`
 - [ ] Access to your own code repository, e.g., `https://github.com/TEAM`
 - [ ] Docker or similar installed
 
@@ -92,7 +92,7 @@ The ECR repository uses immutable tags, meaning you can't use `latest` as a tag 
 
 But, the IDP cluster can update to the latest version of the images built, optionally limiting to tags matching certain SemVer or Regex patterns.
 
-This feature is enabled in `application.yaml` with a set of annotations. Enabling this feature will limit the need to modify the deploy repository, as you only need to modify it in case of entirely new deployments or when tweaking the configuration. [You can read more about auto updating images here.](https://public.docs.idp.jppol.dk/how-to/auto-updates.html)
+This feature is enabled in `application.yaml` with a set of annotations. Enabling this feature will limit the need to modify the deploy repository, as you only need to modify it in case of entirely new deployments or when tweaking the configuration. [Read more about auto updating images.](https://public.docs.idp.jppol.dk/how-to/auto-updates.html)
 
 ---
 ### 4. Create deployment configuration
@@ -136,11 +136,11 @@ image:
 ---
 
 ### 5. 📦 Commit and push to your GitOps repo and see deployment in Argo CD
-After committing your application.yaml and values.yaml files to your "apps-pol" github repository deployment will start.
+After committing your application.yaml and values.yaml files to your `https://github.com/jppol-idp/apps-TEAM` github repository deployment will start.
 
 Check in Argo CD if your app has been synchronised and deployed and a certificate been issued.  
 
-Go to Argo CD for deployment. Link available at `https://github.com/jppol-idp/apps-TEAM/tree/main/apps/dev`
+Go to Argo CD for deployment.  Check your link at `https://github.com/jppol-idp/apps-TEAM/tree/main/apps/dev`
 
 ---
 
@@ -148,7 +148,7 @@ Go to Argo CD for deployment. Link available at `https://github.com/jppol-idp/ap
 Metrics are automatically exposed with Prometheus and Loki and are visible in Grafana.
 
 Go to Grafana for monitoring
-Link available at `https://github.com/jppol-idp/apps-TEAM/tree/main/apps/dev`
+Check your link at `https://github.com/jppol-idp/apps-TEAM/tree/main/apps/dev`
 
 Go to drilldown to see your Prometheus stats
 ![image](https://public.docs.idp.jppol.dk/assets/onboarding-grafana-drilldown-metrics.png)
