@@ -10,7 +10,7 @@ review_in: 3 months
 
 
 # From code to deploy in 30 minutes 🚀
-> This playbook helps you quickly deploy your first application to the developer platform.
+> This guide helps you quickly deploy your first application to the developer platform.
 
 ---
 **By the end of this session, you will have:**
@@ -79,6 +79,9 @@ The ECR repository allows GitHub Actions from your organization to upload images
 
 For an example on how to use it, view the [generic-service](https://github.com/jppol-idp/generic-service).
 
+To both build an image and to tag and push it you can use this GitHub Action.
+[https://github.com/jppol-idp/build-and-push-ecr](https://github.com/jppol-idp/build-and-push-ecr)
+
 ---
 ### 4. Create deployment configuration
 
@@ -116,7 +119,7 @@ image:
   tag: "0.1.0"
 ```
 
-> [Find a list of all configurable variables](https://github.com/jppol-idp/helm-idp/blob/main/charts/idp-advanced/README.md) or [see examples within our generic service](https://github.com/jppol-idp/apps-demo/tree/main/apps/demo-dev/generic-service) that covers most common needs.
+> [Find a list of all configurable variables](https://github.com/jppol-idp/helm-idp/blob/main/charts/idp-advanced/README.md) or [see examples in our generic service](https://github.com/jppol-idp/apps-demo/tree/main/apps/demo-dev/generic-service) that covers most common needs.
 
 __Automatic deployment__
 
