@@ -27,7 +27,7 @@ review_in: 3 months
 Before you begin, make sure you have the following in place:
 
 - [ ] Access to your IDP onboarding channel on Slack `#idp-TEAM-onboarding` and `#idp-announcements`
-- [ ] Access to your IDP deployment repository `https://github.com/jppol-idp/apps-TEAM`
+- [ ] Access to your IDP deployment repository on GitHub `https://github.com/jppol-idp/apps-TEAM`
 - [ ] Access to your IDP tools, Argo CD and Grafana. Check your links at `https://github.com/jppol-idp/apps-TEAM/tree/main/apps/dev`
 - [ ] Access to your own code repository, e.g., `https://github.com/TEAM`
 - [ ] Docker or similar installed
@@ -38,7 +38,7 @@ Note: To get access to IDP make a request in your `#idp-TEAM-onboarding` channel
 
 ## 🪛 Step-by-Step: Deploy Your First Workload
 
-### 1. 📁 Create an app in your code repository 
+### 1. 📁 Create an app in your own code repository 
 See example [https://github.com/jppol-idp/generic-service](https://github.com/jppol-idp/generic-service)
 
 Tip: Name the app after yourself to make it easy to identify.
@@ -75,16 +75,9 @@ docker run app-name.py:0.1.0
 This GitHub Action tags and pushes your image to ECR in our idp-shared account: 354918371398
 [https://github.com/jppol-idp/tag-and-push-ecr/blob/main/action.yaml](https://github.com/jppol-idp/tag-and-push-ecr/blob/main/action.yaml)
 
-
-```yaml
-uses: jppol-idp/tag-and-push-ecr@836010204ce0af876873b46acb7f4cd452d4e2eb
-namespace: pol
-image_tags: ${{ github.run_number }}
-```
-
 The ECR repository allows GitHub Actions from your organization to upload images to a namespaced registry. For instance, Actions from Politiken's organization is allowed to push images to: `arn:aws:ecr:eu-west-1:354918371398:repository/pol/*`.
 
-For an example on how to use it, view the [generic-service source repository](https://github.com/jppol-idp/generic-service).
+For an example on how to use it, view the [generic-service](https://github.com/jppol-idp/generic-service).
 
 __Automatic deployment__
 
