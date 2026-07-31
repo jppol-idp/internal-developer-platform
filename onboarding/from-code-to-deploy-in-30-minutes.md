@@ -27,9 +27,9 @@ review_in: 3 months
 Before you begin, make sure you have the following in place:
 
 - [ ] Access to your IDP onboarding channel on Slack `#idp-TEAM-onboarding` and `#idp-announcements`
-- [ ] Access to your IDP deployment repository `https://github.com/jppol-idp/apps-TEAM` [https://github.com/jppol-idp/](https://github.com/jppol-idp/)
-- [ ] Access to your IDP tools, e.g., [https://argocd.idp-shared-test.idp.jppol.dk/](https://argocd.idp-shared-test.idp.jppol.dk/), [https://grafana.idp-shared-test.idp.jppol.dk/](https://grafana.idp-shared-test.idp.jppol.dk/)
-- [ ] Access to your own code repository, e.g., `https://github.com/TEAM` [https://github.com/enterprises/jp-politikens-hus/organizations/](https://github.com/enterprises/jp-politikens-hus/organizations/)
+- [ ] Access to your IDP deployment repository `https://github.com/jppol-idp/apps-TEAM`
+- [ ] Access to your IDP tools, Argo CD and Grafana. Links available at `https://github.com/jppol-idp/apps-TEAM/tree/main/apps/dev`
+- [ ] Access to your own code repository, e.g., `https://github.com/TEAM`
 - [ ] Docker or similar installed
 
 Note: To get access to IDP make a request in your `#idp-TEAM-onboarding` channel.
@@ -38,7 +38,9 @@ Note: To get access to IDP make a request in your `#idp-TEAM-onboarding` channel
 
 ## 🪛 Step-by-Step: Deploy Your First Workload
 
-### 1. 📁 Create an app in your code repository (see example [https://github.com/jppol-idp/generic-service](https://github.com/jppol-idp/generic-service))
+### 1. 📁 Create an app in your code repository 
+See example [https://github.com/jppol-idp/generic-service](https://github.com/jppol-idp/generic-service)
+
 Tip: Name the app after yourself to make it easy to identify.
 
 ```bash
@@ -138,7 +140,7 @@ After committing your application.yaml and values.yaml files to your "apps-pol" 
 
 Check in Argo CD if your app has been synchronised and deployed and a certificate been issued.  
 
-Go to Argo CD for deployment [https://argocd.idp-shared-test.idp.jppol.dk/](https://argocd.idp-shared-test.idp.jppol.dk/)
+Go to Argo CD for deployment. Link available at `https://github.com/jppol-idp/apps-TEAM/tree/main/apps/dev`
 
 ---
 
@@ -146,7 +148,7 @@ Go to Argo CD for deployment [https://argocd.idp-shared-test.idp.jppol.dk/](http
 Metrics are automatically exposed with Prometheus and Loki and are visible in Grafana.
 
 Go to Grafana for monitoring
-[https://grafana.idp-shared-test.idp.jppol.dk/](https://grafana.idp-shared-test.idp.jppol.dk/)
+Link available at `https://github.com/jppol-idp/apps-TEAM/tree/main/apps/dev`
 
 Go to drilldown to see your Prometheus stats
 ![image](https://public.docs.idp.jppol.dk/assets/onboarding-grafana-drilldown-metrics.png)
