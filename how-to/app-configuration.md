@@ -15,7 +15,6 @@ We recommend passing configuration to your app as environment variables, defined
 ## Table of contents
 
 - [Plain values](#plain-values)
-- [Values from Kubernetes secrets or pod fields](#values-from-kubernetes-secrets-or-pod-fields)
 - [Larger configuration blocks](#larger-configuration-blocks)
 - [Where to go next](#where-to-go-next)
 
@@ -35,25 +34,6 @@ env:
 
 Nested configuration keys (as used by ASP.NET Core's `IConfiguration`, for example) are expressed with a double underscore, as in `MyDependencyService__apiBasePath` above.
 
-## Values from Kubernetes secrets or pod fields
-
-Instead of a literal `value`, an entry can use `valueFrom` to pull the value from somewhere else at pod start:
-
-```yaml
-env:
-  - name: DATABASE_PASSWORD
-    valueFrom:
-      secretKeyRef:
-        name: my-db-secret
-        key: password
-  - name: POD_NAME
-    valueFrom:
-      fieldRef:
-        fieldPath: metadata.name
-```
-
-- `secretKeyRef` reads a key from an existing Kubernetes Secret. If the secret should come from AWS Secrets Manager, see [Working with Secrets](./secrets) for how those secrets get synced into the cluster first.
-- `fieldRef` reads a field from the pod's own metadata (name, namespace, IP, etc.) — useful for values that should reflect the running pod rather than being hardcoded.
 
 ## Larger configuration blocks
 
