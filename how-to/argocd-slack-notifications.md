@@ -1,6 +1,6 @@
 ---
 title: ArgoCD Slack Notifications
-nav_order: 3
+nav_order: 4
 parent: How to...
 domain: public
 permalink: /argocd-slack-notifications

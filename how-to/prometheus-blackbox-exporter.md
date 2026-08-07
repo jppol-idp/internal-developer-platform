@@ -1,6 +1,6 @@
 ---
 title: Prometheus Blackbox Exporter Probes
-nav_order: 20
+nav_order: 21
 parent: How to...
 domain: public
 layout: last-reviewed

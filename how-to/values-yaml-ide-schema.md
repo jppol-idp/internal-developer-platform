@@ -1,6 +1,6 @@
 ---
 title: IDE autocomplete and validation for values.yaml
-nav_order: 12
+nav_order: 13
 parent: How to...
 domain: public
 layout: last-reviewed

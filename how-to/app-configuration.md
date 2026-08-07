@@ -1,6 +1,6 @@
 ---
 title: Configuring your app with environment variables
-nav_order: 6
+nav_order: 7
 parent: How to...
 domain: public
 layout: last-reviewed

@@ -149,7 +149,9 @@
 ./assets/idp-managed-alerts-argocd-example.png
 ./assets/idp-managed-alerts-pod-pending-example.png
 ./assets/idp_light.png
+./assets/application-logs-dashboard.png
 ./assets/alert-step2.png
+./assets/application-logs-json-fields.png
 ./assets/oidc-middleware-argocd-tree.png
 ./assets/shipit.png
 ./assets/metrics.png
@@ -189,6 +191,7 @@
 ./how-to/app-configuration.md
 ./how-to/values-yaml-ide-schema.md
 ./how-to/oidc-middleware.md
+./how-to/application-logs.md
 ./how-to/postgresql.md
 ./how-to/prod-settings.md
 ./how-to/argocd-slack-notifications.md
