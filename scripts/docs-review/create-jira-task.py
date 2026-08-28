@@ -10,7 +10,7 @@ from jira import JIRA
 
 
 JIRA_URL = os.environ.get("JIRA_URL", "https://jira-jppol.atlassian.net")
-JIRA_PROJECT = os.environ.get("JIRA_PROJECT", "IDP")
+JIRA_PROJECT = os.environ.get("JIRA_PROJECT", "IDP2")
 
 
 def build_description(doc: dict) -> str:
@@ -51,7 +51,8 @@ def find_active_sprint_id(client: JIRA) -> "int | None":
     if not boards:
         print(f"Warning: no board found for project '{JIRA_PROJECT}', skipping sprint assignment", file=sys.stderr)
         return None
-    sprints = client.sprints(boards[0].id, state="active")
+    board = next((b for b in boards if getattr(b, "type", None) == "scrum"), boards[0])
+    sprints = client.sprints(board.id, state="active")
     if not sprints:
         print("Warning: no active sprint found, skipping sprint assignment", file=sys.stderr)
         return None

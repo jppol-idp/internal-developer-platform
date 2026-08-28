@@ -39,6 +39,7 @@ jobs:
         env:
           JIRA_EMAIL: "alni@jppol.dk"
           JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }} # alni's personal API token, expires 2027-06-22
+          JIRA_PROJECT: "IDP2"
           JIRA_ASSIGNEES: "alni@jppol.dk, kasper.kn.nielsen@jppol.dk, morten.faester@jppol.dk" # comma-separated, assigned round-robin
         run: |
           python scripts/docs-review/create-jira-task.py overdue.json \
