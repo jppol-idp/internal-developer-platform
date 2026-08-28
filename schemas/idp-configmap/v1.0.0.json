@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "idp-configmap values",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "configMaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "data"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "annotations": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "data": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "description": "ConfigMaps rendered by the chart. Each entry creates a ConfigMap named exactly `name`, with no release prefix, so other applications can reference it. Mount it from `idp-advanced` with a `volumes` entry using a `configMap` source."
+    },
+    "global": {
+      "type": "object",
+      "description": "Included to allow the chart to be used as a subchart, as Helm injects .global from the top chart."
+    },
+    "idp_aws_account": {
+      "type": [
+        "string",
+        "number"
+      ],
+      "description": "This value is set automatically by ArgoCD, but can be overridden here for local testing."
+    },
+    "idp_oidc_provider_url": {
+      "type": "string",
+      "description": "This value is set automatically by ArgoCD, but can be overridden here for local testing."
+    }
+  }
+}

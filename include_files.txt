@@ -83,6 +83,8 @@
 ./schemas/idp-node-recovery-agent/v0.6.2.json
 ./schemas/idp-node-recovery-agent/latest.json
 ./schemas/idp-node-recovery-agent/v0.6.1.json
+./schemas/idp-configmap/latest.json
+./schemas/idp-configmap/v1.0.0.json
 ./schemas/idp-rds-proxy/latest.json
 ./schemas/idp-rds-proxy/v1.1.2.json
 ./schemas/idp-rds-proxy/v1.1.4.json
