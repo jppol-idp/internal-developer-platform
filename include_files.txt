@@ -184,6 +184,7 @@
 ./how-to/redis.md
 ./how-to/argocd-add-application-labels.md
 ./how-to/index.md
+./how-to/shared-configuration.md
 ./how-to/app-configuration.md
 ./how-to/network-access.md
 ./how-to/ingress-access-logs.md

@@ -1,6 +1,6 @@
 ---
 title: Working with DynamoDB
-nav_order: 25
+nav_order: 26
 parent: How to...
 domain: public
 layout: last-reviewed

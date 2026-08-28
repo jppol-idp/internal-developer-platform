@@ -4,7 +4,7 @@ nav_order: 7
 parent: How to...
 domain: public
 layout: last-reviewed
-last_reviewed_on: 2026-07-28
+last_reviewed_on: 2026-08-28
 review_in: 6 months
 ---
 
@@ -65,6 +65,7 @@ volumeMounts:
 ## Where to go next
 
 - [Working with Secrets](./secrets) — for anything that shouldn't be a plain-text value, such as passwords or API keys.
+- [Sharing configuration between apps](./shared-configuration): when the same configuration file is read by more than one of your apps.
 - [IDE autocomplete and validation for values.yaml](./values-yaml-ide-schema) — set up inline validation so your editor flags invalid `env` and `configMaps` entries as you type.
 - The full set of `env` and `configMaps` options is documented in the [idp-advanced schema reference](https://public.docs.idp.jppol.dk/schemas/idp-advanced/latest.json).
 
