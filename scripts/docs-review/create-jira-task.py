@@ -120,20 +120,32 @@ def main():
 
     print("\n### Tasks")
     for i, doc in enumerate(batch):
-        assignee_id = assignee_ids[i % len(assignee_ids)]
-        assignee_email = assignee_emails[i % len(assignee_emails)]
-
-        if assignee_id in busy_ids:
-            print(f"- Skipped [{doc['title']}]({doc['url']}) — {assignee_email} already has an open review task")
-            results.append({"title": doc["title"], "url": doc["url"], "assignee": assignee_email, "status": "skipped_busy"})
-            continue
-
         summary = f"Review docs: {doc['title']}"
         existing_key = existing_by_summary.get(summary)
         if existing_key:
             print(f"- Skipped [{doc['title']}]({doc['url']}) — {existing_key} already open")
-            results.append({"title": doc["title"], "url": doc["url"], "assignee": assignee_email, "status": "skipped_duplicate", "existing_key": existing_key})
+            results.append({"title": doc["title"], "url": doc["url"], "assignee": None, "status": "skipped_duplicate", "existing_key": existing_key})
             continue
+
+        # Start at the round-robin position for this doc, then walk forward to the
+        # next assignee who isn't already holding an open review task. Only skip the
+        # doc if everyone is busy — don't let one stale task starve a doc every run.
+        start = i % len(assignee_ids)
+        pick = next(
+            (offset for offset in range(len(assignee_ids))
+             if assignee_ids[(start + offset) % len(assignee_ids)] not in busy_ids),
+            None,
+        )
+        if pick is None:
+            print(f"- Skipped [{doc['title']}]({doc['url']}) — all assignees already have an open review task")
+            results.append({"title": doc["title"], "url": doc["url"], "assignee": None, "status": "skipped_busy"})
+            continue
+
+        idx = (start + pick) % len(assignee_ids)
+        assignee_id = assignee_ids[idx]
+        assignee_email = assignee_emails[idx]
+        # Mark them busy so a later doc in this same batch rotates to someone else.
+        busy_ids.add(assignee_id)
 
         issue = client.create_issue(fields={
             "project": {"key": JIRA_PROJECT},

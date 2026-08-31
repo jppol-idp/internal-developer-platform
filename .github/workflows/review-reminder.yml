@@ -76,21 +76,22 @@ jobs:
           MD_STATUS = {
               "created":           lambda r: f"[{r['jira_key']}](https://jira-jppol.atlassian.net/browse/{r['jira_key']})",
               "would_create":      lambda r: "would create",
-              "skipped_busy":      lambda r: "skipped — already has open task",
+              "skipped_busy":      lambda r: "skipped — all assignees already have an open task",
               "skipped_duplicate": lambda r: f"skipped — [{r['existing_key']}](https://jira-jppol.atlassian.net/browse/{r['existing_key']}) already open",
           }
           SLACK_STATUS = {
               "created":           lambda r: f"created <https://jira-jppol.atlassian.net/browse/{r['jira_key']}|{r['jira_key']}>",
               "would_create":      lambda r: "would create",
-              "skipped_busy":      lambda r: "skipped — already has open task",
+              "skipped_busy":      lambda r: "skipped — all assignees already have an open task",
               "skipped_duplicate": lambda r: f"skipped — <https://jira-jppol.atlassian.net/browse/{r['existing_key']}|{r['existing_key']}> already open",
           }
 
           md_lines = ["---", "## Run summary", f"**{selected} of {total} overdue documents selected** · {label}", ""]
           slack_lines = []
           for r in results:
-              md_lines.append(f"- [{r['title']}]({r['url']}) → {r['assignee']} · {MD_STATUS.get(r['status'], lambda r: r['status'])(r)}")
-              slack_lines.append(f"- <{r['url']}|{r['title']}> → {r['assignee']} · {SLACK_STATUS.get(r['status'], lambda r: r['status'])(r)}")
+              who = f" → {r['assignee']}" if r.get("assignee") else ""
+              md_lines.append(f"- [{r['title']}]({r['url']}){who} · {MD_STATUS.get(r['status'], lambda r: r['status'])(r)}")
+              slack_lines.append(f"- <{r['url']}|{r['title']}>{who} · {SLACK_STATUS.get(r['status'], lambda r: r['status'])(r)}")
 
           summary_path.open("a").write("\n".join(md_lines) + "\n")
 
