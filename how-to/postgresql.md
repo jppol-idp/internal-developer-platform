@@ -4,16 +4,16 @@ nav_order: 27
 parent: How to...
 domain: public
 layout: last-reviewed
-last_reviewed_on: 2026-06-29
+last_reviewed_on: 2026-09-01
 review_in: 3 months
 ---
 # Working with Postgres
 
 ## Introduction
 
-This guide shows how to add a PostgreSQL database to your application using the [idp-postgresql chart](https://github.com/jppol-idp/helm-idp/tree/main/charts/idp-postgresql). Databases are provisioned inside an IDP-managed Aurora Serverless v2 cluster and can be connected to your application through Kubernetes secrets. If you want to learn more about what Aurora is and how it works, please refer to [the official documentation](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-serverless-v2.how-it-works.html).
+This guide shows how to add a PostgreSQL database to your application using the [idp-postgresql chart](https://github.com/jppol-idp/helm-idp/tree/main/charts/idp-postgresql). Databases run on an IDP-managed [Aurora Serverless v2](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-serverless-v2.how-it-works.html) cluster and are connected to your application through Kubernetes secrets.
 
-One Aurora Serverless v2 cluster is provisioned per Kubernetes cluster. Each Aurora cluster will therefore contain multiple tenants. To ensure a level of separation between tenants, databases are prefixed with the tenants' Kubernetes namespace, and the roles provisioned with each database are only granted privileges to the database they belong to.
+Each database is named after your namespace (`[namespace]-[database]`), and its roles can only access that one database.
 
 ---
 
@@ -90,14 +90,11 @@ In addition to the database, multiple other resources are created. Namely 3 diff
 
 The `admin` role is the owner of the public schema and is able to create more schemas in the database. However, when creating schemas besides public, the read and write users are not automatically granted privileges to the schemas.
 
-The `read` role is granted read privileges (SELECT) on all tables created by the admin user in the public schema.
+The `read` role is granted `USAGE` on the `public` schema and read privileges (SELECT) on all tables and other objects the admin user creates in that schema.
 
-The `write` role is granted write privileges (SELECT, INSERT, UPDATE, DELETE, TRUNCATE) on all tables created by the admin user in the public schema.
+The `write` role is granted `USAGE` on the `public` schema and write privileges (SELECT, INSERT, UPDATE, DELETE, TRUNCATE) on all tables and other objects the admin user creates in that schema.
 
 The credentials for the roles are stored as AWS secrets along with the connection details. The secrets are stored as `customer/[namespace]/[role]`.
-
-{: .note }
-> After a new database is provisioned, the read and write users require a one-time `USAGE` grant on the `public` schema before they can access any tables. See [permission denied for schema public](#permission-denied-for-schema-public) for how to apply it.
 
 ## Connect to Postgres
 
@@ -220,15 +217,9 @@ pgAdmin is likely not a suitable tool for restoring large databases. The restore
 
 ### Protected database removed from apps repo
 
-*Automatic re-import of protected databases is being worked on. Until it is available, the process below requires manual intervention from the IDP team.*
+If a protected database is removed from the apps repo, the database, its data, and its stored credentials are all preserved. Only the Kubernetes connection secrets in your namespace are removed.
 
-When a protected database is removed from the apps repo — accidentally or temporarily — the following is **preserved**: the database itself, all data, and the credentials stored in AWS. What is lost is the connection between the platform and the database, meaning the Kubernetes secrets in your namespace will be gone and the platform will stop managing the database.
-
-Re-adding the database definition to the apps repo does not automatically restore this connection.
-
-**What to do:** Contact the IDP team in your onboarding Slack channel with the database name and namespace.
-
-The easiest path is a credential rotation — the IDP team resets the database passwords and writes new credentials to AWS and your Kubernetes secrets. There is no data loss, but **the passwords will change**. Restart your application pods once the IDP team confirms the fix is complete to pick up the new credentials.
+To restore it, re-add the database definition to the apps repo. The platform re-adopts the existing database automatically and rotates the role passwords while doing so, so restart your application pods once the database is healthy to pick up the new credentials.
 
 ## SSL configuration
 
@@ -253,43 +244,6 @@ If you have an existing PostgreSQL database outside the IDP platform and want to
 KOA has documented their migration experience in a playbook that is a useful reference: [Postgres DB IDP Migration Playbook](https://jira-jppol.atlassian.net/wiki/spaces/KOA/pages/4238114819/Postgres+DB+IDP+Migration+Playbook).
 
 ## Common errors
-
-### permission denied for schema public
-
-If the read or write user gets:
-
-```
-permission denied for schema public
-```
-
-This is a known limitation: when a new database is provisioned, the read and write users are not automatically granted `USAGE` on the `public` schema. This is a one-time step you need to perform yourself using the admin user.
-
-Connect to the database as the admin user, then apply the grant using either pgAdmin or SQL.
-
-**Via pgAdmin:**
-
-1. In the browser tree, expand your database and navigate to *Schemas* → *public*.
-2. Right-click *public* and select *Properties*.
-3. Go to the *Security* tab.
-4. Add a row for `[namespace]-[database]-read` with the `USAGE` privilege.
-5. Add a row for `[namespace]-[database]-write` with the `USAGE` privilege.
-6. Click *Save*.
-
-**Via SQL** (using [pgAdmin](#connect-via-pgadmin) or a [local database tool](#connect-via-local-development-environment-or-database-tool)):
-
-```sql
-GRANT USAGE ON SCHEMA public TO "[namespace]-[database]-read";
-GRANT USAGE ON SCHEMA public TO "[namespace]-[database]-write";
-```
-
-For example, for `my-db` in the `team-dev` namespace:
-
-```sql
-GRANT USAGE ON SCHEMA public TO "team-dev-my-db-read";
-GRANT USAGE ON SCHEMA public TO "team-dev-my-db-write";
-```
-
-This only needs to be done once per database.
 
 ### no pg_hba.conf entry for host
 
