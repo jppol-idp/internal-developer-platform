@@ -4,7 +4,7 @@ nav_order: 27
 parent: How to...
 domain: public
 layout: last-reviewed
-last_reviewed_on: 2026-09-01
+last_reviewed_on: 2026-09-03
 review_in: 3 months
 ---
 # Working with Postgres
@@ -98,7 +98,17 @@ The credentials for the roles are stored as AWS secrets along with the connectio
 
 ## Connect to Postgres
 
-You can connect to Postgres either via your application in the Kubernetes cluster, a managed pgAdmin instance, or by proxying through RDS proxy.
+You can connect to Postgres in several ways: directly from your application in the Kubernetes cluster, through a managed pgAdmin instance, by proxying through RDS proxy from your local machine, or through a read-only Grafana datasource for dashboards.
+
+Which one to use depends on what you are doing:
+
+| You want to... | Use |
+| --- | --- |
+| Run the database from your deployed application | [Your application](#connect-your-application) |
+| Build dashboards, or run aggregated and filtered queries, over data your application accumulates in Postgres over time - application logs, request or event history, usage and metering records | [Grafana read-only datasource](#query-via-grafana) |
+| Explore ad-hoc, scan whole tables, pull large or unbounded result sets, export CSV, or pull a full extract to hand off or analyse elsewhere | [RDS proxy](#connect-via-local-development-environment-or-database-tool) with DataGrip, DBeaver, or psql, or [pgAdmin](#connect-via-pgadmin) |
+
+Grafana loads the full result of a query into memory before it can render it, so it is built for bounded dashboard queries, not bulk data extraction. Large or unfiltered queries are truncated at the row limit or fail to render.
 
 ### Connect your Application
 
@@ -148,12 +158,33 @@ env:
 
 You can use the shared [pgAdmin](https://public.docs.idp.jppol.dk/how-to-pgadmin) deployment if you prefer a web-based interface.
 
+### Query via Grafana
+
+The IDP team can add your database to your cluster's Grafana as a read-only datasource. Once it is added, it appears in the datasource picker when you build panels and in **Explore**. It connects as the `[namespace]-[database]-read` role, so it is `SELECT`-only and limited to that one database.
+
+**What it is for.** Building dashboards and running bounded queries over data your application accumulates in Postgres over time - application logs, request or event history, usage and metering records. Think aggregates, filtered lookups, and time-series panels, not table dumps. For large result sets or full extracts, use [RDS proxy or pgAdmin](#connect-via-local-development-environment-or-database-tool).
+
+**Limits that apply:**
+
+- Results are capped at **200,000 rows**. A query that would return more is silently truncated to the first 200,000 rows, so filter and aggregate in SQL rather than relying on the cap.
+- Grafana holds the whole result set in memory while it renders, and your browser then has to load all of it. A wide table, or one with large text columns such as a logs table, becomes unusable well before the row cap. Do not run `SELECT *` against a large table.
+
+**How to request it:**
+
+1. Contact the IDP team in your onboarding Slack channel.
+2. Tell them the **cluster**, the **database name**, and that you want a **read-only Grafana datasource** for dashboards and exploration.
+3. The IDP team adds a datasource named `Postgres [database]` to that cluster's Grafana.
+4. It is then available to everyone with access to that Grafana instance.
+
+To change or remove the datasource, contact the IDP team.
+
 ### Connect via local development environment or database tool
 
 The IDP platform provides a shared RDS proxy that allows you to connect to your database from your local machine. This is useful for:
 
 - Running your application locally against a real database
 - Using database tools like pgAdmin, DBeaver, or DataGrip
+- Pulling large result sets or exporting whole tables, for example ad-hoc data extraction for an audit - work that is too big for the Grafana datasource
 
 Start by following [this guide](https://public.docs.idp.jppol.dk/kubernetes-namespace-access) to get kubectl access. Then port-forward the rds-proxy to your local machine:
 
@@ -172,9 +203,13 @@ Connect your local application or database tool using:
 - **Database:** NAMESPACE-DATABASE (e.g., `idp-dev-my-db`)
 - **Username/Password:** from the secret above
 
+To export a large table or query result, run `\copy <table> TO 'out.csv' CSV HEADER` from psql, or use pgAdmin's *Query Tool -> Download as CSV*.
+
 ## Monitoring
 
 [Prometheus Postgres Exporter](https://grafana.com/oss/prometheus/exporters/postgres-exporter/) collects Postgres specific metrics, while CloudWatch metrics provide health and performance metrics from the shared Aurora serverless v2 cluster. Metrics from both sources can be viewed in Grafana. For an example on how to use the metrics, see the `PostgreSQL database example` dashboard.
+
+To query the data in your database itself (rather than its metrics) from Grafana, see [Query via Grafana](#query-via-grafana).
 
 ## Backup and Restore
 
