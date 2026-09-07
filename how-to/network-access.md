@@ -4,23 +4,25 @@ nav_order: 8
 parent: How to...
 domain: public
 layout: last-reviewed
-last_reviewed_on: 2026-07-28
+last_reviewed_on: 2026-09-07
 review_in: 6 months
 ---
 
 # Controlling network access to your app
 
-When you deploy an app through IDP, you'll often need to control traffic in two directions:
+When you deploy an app through IDP, you'll often need to control who can talk to it and what it can reach:
 
-- **Inbound (ingress)** — restricting who is allowed to reach your app's own API endpoints from the internet.
-- **Outbound (egress)** — letting your app reach a managed service outside the IDP clusters, e.g. an external database or third-party API that only accepts connections from allowlisted IPs.
+- **Inbound (ingress)**: restricting who is allowed to reach your app's own API endpoints from the internet.
+- **Outbound (egress)**: letting your app reach a managed service outside the IDP clusters, e.g. an external database or third-party API that only accepts connections from allowlisted IPs.
+- **Between namespaces**: which other team namespaces on the cluster can reach your app, and how to ask for an exception.
 
-This guide covers both.
+This guide covers all three.
 
 ## Table of contents
 
 - [Restricting external access to your API endpoints](#restricting-external-access-to-your-api-endpoints)
 - [Giving your app access to an external managed service](#giving-your-app-access-to-an-external-managed-service)
+- [Traffic between namespaces](#traffic-between-namespaces)
 
 ## Restricting external access to your API endpoints
 
@@ -37,10 +39,10 @@ ingress:
     enabled: false
 ```
 
-- `public.enabled` — reachable from the internet
-- `private.enabled` — reachable from internal JPPol networks (on-prem systems, VPN clients, or workloads in other Kubernetes namespaces, clusters or AWS accounts) that are routed in via the internal Transit Gateway. **This is not for calling another app in the same namespace** — for that, call the app's service directly instead of going through ingress.
+- `public.enabled`: reachable from the internet
+- `private.enabled`: reachable from internal JPPol networks (on-prem systems, VPN clients, or workloads in other Kubernetes namespaces, clusters or AWS accounts) that are routed in via the internal Transit Gateway. **This is not for calling another app in the same namespace.** For that, call the app's service directly instead of going through ingress.
 
-If your app should be reachable from those internal networks but not from the public internet, set `public.enabled: false` and keep `private.enabled: true` — no further configuration is needed.
+If your app should be reachable from those internal networks but not from the public internet, set `public.enabled: false` and keep `private.enabled: true`. No further configuration is needed.
 
 If your app needs to be public but reachable only from specific IP addresses (e.g. only from the office or VPN), add an `ipAllowList` under `public`:
 
@@ -63,7 +65,7 @@ For the full set of available `ingress` options (annotations, additional middlew
 
 ## Giving your app access to an external managed service
 
-If your app needs to reach a managed service outside of IDP — for example a database or third-party API that only accepts traffic from a fixed set of IP addresses — you need to allowlist the IP(s) your traffic will appear to come from on the other end.
+If your app needs to reach a managed service outside of IDP, for example a database or third-party API that only accepts traffic from a fixed set of IP addresses, you need to allowlist the IP(s) your traffic will appear to come from on the other end.
 
 Which IP(s) apply depends on how the service is reached:
 
@@ -73,3 +75,34 @@ Which IP(s) apply depends on how the service is reached:
 > **Note:** These are specific addresses, not a range. When the external service asks for a CIDR, add each address as its own `/32` (e.g. `54.220.9.41/32`).
 
 If you can't find your namespace's IPs in the README, contact the IDP team on Slack.
+
+## Traffic between namespaces
+
+Every team namespace is closed to other team namespaces by default. You do not configure this and there is nothing to enable: IDP applies it to your namespace for you.
+
+What it means in practice:
+
+- **Inside your own namespace, nothing changes.** Your app can call any other app or database in the same namespace, on any port, as it always could.
+- **Another team's namespace cannot reach you**, and you cannot reach theirs, until an exception is created. This applies between your own namespaces too, so `myteam-test` cannot call `myteam-dev` by default.
+- **The platform still reaches your pods.** Ingress, metrics scraping, log collection and the rest of the IDP components work exactly as before, and you do not need to allow them.
+- **Your outgoing traffic is not filtered.** Calls from your namespace to the internet or to a managed service are unaffected. A call to another team's namespace is stopped at the receiving end, not on the way out, so it fails in both directions.
+- **It applies everywhere.** The same rule is in force in every namespace on every cluster, dev, test and production alike.
+- **Calls from outside the cluster are unaffected.** A caller on another cluster, on-prem or on the VPN reaches you through your ingress, and that path is unchanged. This section is only about pods on the same cluster calling each other directly.
+
+### Asking for an exception
+
+If your app genuinely needs to call an app in another namespace, ask the IDP team in your team's onboarding channel on Slack, and include:
+
+- which namespace the call comes from
+- which app it needs to reach, and in which namespace
+- which port
+
+We add the exception to the platform configuration, which opens exactly that one route. Everything else stays closed.
+
+Before you ask, it is worth checking whether the call is needed at all. Two namespaces usually mean two environments or two teams, and a dependency between them is often unintentional: a test environment reaching into a dev environment, or a copied configuration that still points at where it was copied from. If the call turns out to be a leftover, fixing the configuration is better than opening a route for it.
+
+### How a blocked call looks
+
+Blocked traffic is dropped, not rejected. The calling app sees the connection hang and then time out, rather than getting a "connection refused" or an HTTP error. A call that used to work and now times out for no visible reason, with nothing in the receiving app's logs, is worth checking against this.
+
+If you think a call is being blocked, contact the IDP team on Slack. We can see the blocked connections and confirm it in a couple of minutes.
