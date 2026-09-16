@@ -166,6 +166,8 @@
 ./assets/metrics.png
 ./assets/onboarding-grafana-drilldown-metrics.png
 ./assets/idp-managed-alerts-pod-pending-example.png
+./assets/slack-alert-fields.png
+./assets/alert-notification-message.png
 ./assets/application-logs-json-fields.png
 ./assets/slack-alert.png
 ./.github/workflows/publish-to-confluence.yml.disabled

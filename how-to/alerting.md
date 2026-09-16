@@ -4,7 +4,7 @@ nav_order: 25
 parent: How to...
 domain: public
 layout: last-reviewed
-last_reviewed_on: 2026-04-09
+last_reviewed_on: 2026-09-16
 review_in: 6 months
 ---
 
@@ -25,6 +25,7 @@ review_in: 6 months
   - [Step 4: Deploy via ArgoCD](#step-4-deploy-via-argocd)
   - [Deleting an Alert](#deleting-an-alert)
 - [Requesting a Slack Contact Point](#requesting-a-slack-contact-point)
+- [How Your Alert Looks in Slack](#how-your-alert-looks-in-slack)
 - [References](#references)
 
 # Main Steps When Creating a New Alert Rule
@@ -465,6 +466,54 @@ To request contact points, reach out to the IDP team on Slack with:
 The IDP team sets up the webhook, creates the `GrafanaContactPoint` in your cluster(s), and lets you know the exact receiver name (typically `"Slack - <Team> <env>"`) to use in your alert rules.
 
 The same contact point serves all three sources of alerts — [`idp-managed-customer-alerts`](/how-to/idp-managed-alerts.html) (IDP's curated standard alerts), `idp-grafana-alarm` (your own alerts-as-code), and any manual alerts you create in the Grafana UI — so all alerts routed to the contact point share the same Slack channel and message format.
+
+## How Your Alert Looks in Slack
+
+The Slack contact point decides the message layout, and it builds the message from the labels and annotations on your alert rule. The fields below make the difference between a clear alert and a bare one.
+
+<img src="../assets/slack-alert-fields.png" alt="Slack alert with title, summary, description, runbook and links" width="500" style="display: block; margin-left: 0; margin-right: auto;" />
+
+| Part of the message | Comes from | If it is missing |
+|---------------------|------------|------------------|
+| Icon in the title | Label `severity`: `critical` gives :rotating_light:, `major` gives :warning:. Any other value, including `warning`, gives :bell: | :bell: |
+| Title | The alert rule name | Always shown |
+| Bold first line | Annotation `summary` | The alert rule name is repeated |
+| Text below | Annotation `description` | Left out |
+| Runbook block | Annotation `runbook`, shown as a code block. Best for commands and steps, links in it are not clickable | Left out |
+| Dashboard link | Annotation `dashboard`, a full URL. Copy it from your browser | Left out |
+| Grafana link | Added automatically, opens the alert rule | Always shown |
+
+If the links don't show, click **Show more**. Slack folds long messages by default.
+
+When the alert resolves, a new message is sent with a check mark and "Resolved" in the title.
+
+Alerts from [IDP-managed alerts](/how-to/idp-managed-alerts.html) in the same channel also have an ArgoCD link. Your own alerts don't get that link.
+
+In the Grafana UI you set these under **Configure notification message**. `summary` and `description` have their own fields. Add `runbook` and `dashboard` with **Add custom annotation**. The built-in **Runbook URL** field and **Link dashboard and panel** are not used in the Slack message.
+
+<img src="../assets/alert-notification-message.png" alt="Configure notification message section in Grafana" width="400" style="display: block; margin-left: 0; margin-right: auto;" />
+
+In alerts as code, set the fields on each rule, next to `title`:
+
+```yaml
+rules:
+  - title: content-gateway not processing events
+    # ... query and condition from the export
+    annotations:
+      summary: "content-gateway is not processing events"
+      description: "No events processed in {{ $labels.namespace }} for 10 minutes. Check the pod logs and the Kafka consumer lag."
+      runbook: "kubectl logs -n {{ $labels.namespace }} deploy/content-gateway --tail=100"
+      dashboard: "https://grafana.<cluster>.idp.jppol.dk/d/<dashboard-uid>"
+    labels:
+      severity: critical
+```
+
+Tips:
+
+- Keep `summary` short. It is the line people read first.
+- Use `description` for what is wrong and where to look. Don't repeat the summary, since both are shown.
+- Annotations can use the labels and values from your query, for example `{{ $labels.pod }}` or `{{ $values.A.Value }}`.
+- Set `severity` to `critical` or `major` on rules that need attention, so the icon shows how urgent the alert is.
 
 ## References
 
