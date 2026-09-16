@@ -272,11 +272,17 @@ The IDP team manages all PostgreSQL engine updates on the shared Aurora cluster.
 
 If you have questions about an upcoming update, reach out in your onboarding Slack channel.
 
-## Migrating an existing database to IDP
+## Migrations
+
+### Data migration
 
 If you have an existing PostgreSQL database outside the IDP platform and want to move it onto the IDP-managed Aurora cluster, the general approach is to provision a new IDP database, migrate the data, and then update your application to point to the new connection details.
 
 KOA has documented their migration experience in a playbook that is a useful reference: [Postgres DB IDP Migration Playbook](https://jira-jppol.atlassian.net/wiki/spaces/KOA/pages/4238114819/Postgres+DB+IDP+Migration+Playbook).
+
+### Schema migration
+
+The platform does not enforce a specific tool or workflow. We recommend applying schema migrations from your application at startup rather than as a separate CI step. Make sure your migration tool supports locking, so multiple replicas starting at once don't apply migrations concurrently.
 
 ## Common errors
 
