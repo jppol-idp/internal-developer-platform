@@ -62,6 +62,7 @@
 ./schemas/idp-managed-customer-alerts/v2.3.1.json
 ./schemas/idp-configmap/latest.json
 ./schemas/idp-configmap/v1.0.0.json
+./schemas/idp-node-recovery-agent/v0.6.3.json
 ./schemas/idp-node-recovery-agent/v0.6.2.json
 ./schemas/idp-node-recovery-agent/latest.json
 ./schemas/idp-node-recovery-agent/v0.6.1.json
