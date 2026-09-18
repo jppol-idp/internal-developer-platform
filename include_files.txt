@@ -91,6 +91,7 @@
 ./schemas/idp-advanced/latest.json
 ./schemas/idp-advanced/v3.9.0.json
 ./schemas/idp-advanced/v3.8.1.json
+./schemas/idp-advanced/v3.10.1.json
 ./schemas/idp-advanced/v3.5.1.json
 ./schemas/idp-advanced/v3.5.0.json
 ./schemas/idp-advanced/v3.1.4.json
