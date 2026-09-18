@@ -481,6 +481,7 @@ The Slack contact point decides the message layout, and it builds the message fr
 | Text below | Annotation `description` | Left out |
 | Runbook block | Annotation `runbook`, shown as a code block. Best for commands and steps, links in it are not clickable | Left out |
 | Dashboard link | Annotation `dashboard`, a full URL. Copy it from your browser | Left out |
+| Logs link | Annotation `logs`, a full URL to the logs in Explore | Left out |
 | Grafana link | Added automatically, opens the alert rule | Always shown |
 
 If the links don't show, click **Show more**. Slack folds long messages by default.
@@ -489,7 +490,7 @@ When the alert resolves, a new message is sent with a check mark and "Resolved" 
 
 Alerts from [IDP-managed alerts](/how-to/idp-managed-alerts.html) in the same channel also have an ArgoCD link. Your own alerts don't get that link.
 
-In the Grafana UI you set these under **Configure notification message**. `summary` and `description` have their own fields. Add `runbook` and `dashboard` with **Add custom annotation**. The built-in **Runbook URL** field and **Link dashboard and panel** are not used in the Slack message.
+In the Grafana UI you set these under **Configure notification message**. `summary` and `description` have their own fields. Add `runbook`, `dashboard` and `logs` with **Add custom annotation**. The built-in **Runbook URL** field and **Link dashboard and panel** are not used in the Slack message.
 
 <img src="../assets/alert-notification-message.png" alt="Configure notification message section in Grafana" width="400" style="display: block; margin-left: 0; margin-right: auto;" />
 
@@ -504,6 +505,7 @@ rules:
       description: "No events processed in {{ $labels.namespace }} for 10 minutes. Check the pod logs and the Kafka consumer lag."
       runbook: "kubectl logs -n {{ $labels.namespace }} deploy/content-gateway --tail=100"
       dashboard: "https://grafana.<cluster>.idp.jppol.dk/d/<dashboard-uid>"
+      logs: "https://grafana.<cluster>.idp.jppol.dk/explore?..."
     labels:
       severity: critical
 ```
@@ -514,6 +516,7 @@ Tips:
 - Use `description` for what is wrong and where to look. Don't repeat the summary, since both are shown.
 - Annotations can use the labels and values from your query, for example `{{ $labels.pod }}` or `{{ $values.A.Value }}`.
 - Set `severity` to `critical` or `major` on rules that need attention, so the icon shows how urgent the alert is.
+- For the `logs` link, open Explore, run the log query you want and copy the URL from your browser. To make the link follow the alert, replace the fixed value in the URL with a label, for example `my-app` with `{{ $labels.container }}`. The label must be part of your alert query, for example through `sum by (namespace, container)`.
 
 ## References
 
