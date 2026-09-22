@@ -70,6 +70,7 @@
 ./schemas/argo-cronworkflow-job/v1.2.6.json
 ./schemas/argo-cronworkflow-job/v1.2.2.json
 ./schemas/argo-cronworkflow-job/v1.2.3.json
+./schemas/argo-cronworkflow-job/v1.2.7.json
 ./schemas/argo-cronworkflow-job/latest.json
 ./schemas/argo-cronworkflow-job/v1.2.4.json
 ./schemas/argo-cronworkflow-job/v1.2.0.json
