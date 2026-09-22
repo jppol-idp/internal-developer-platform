@@ -67,6 +67,7 @@
 ./schemas/idp-node-recovery-agent/latest.json
 ./schemas/idp-node-recovery-agent/v0.6.1.json
 ./schemas/argo-cronworkflow-job/v1.2.5.json
+./schemas/argo-cronworkflow-job/v1.2.6.json
 ./schemas/argo-cronworkflow-job/v1.2.2.json
 ./schemas/argo-cronworkflow-job/v1.2.3.json
 ./schemas/argo-cronworkflow-job/latest.json
