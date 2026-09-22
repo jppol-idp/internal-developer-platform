@@ -182,6 +182,7 @@
 ./onboarding/index.md
 ./how-to/secrets.md
 ./how-to/postgresql.md
+./how-to/argo-cronworkflow-job.md
 ./how-to/redis.md
 ./how-to/s3-bucket.md
 ./how-to/values-yaml-ide-schema.md
