@@ -149,7 +149,6 @@
 ./_config.public.yml
 ./assets/alert-step2.png
 ./assets/idp_light.png
-./assets/jira-renovate-example.png
 ./assets/onboarding-grafana-drilldown-logs.png
 ./assets/idp-architecture.png
 ./assets/idp-managed-alerts-argocd-example.png
