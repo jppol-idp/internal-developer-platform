@@ -86,7 +86,7 @@ Grafana's built-in alerting allows you to monitor your data and receive notifica
    - Enter a name for your alert rule.
    - Define your query and alert condition (choose your data source, write your query, and set the condition).
    - Add a folder and any relevant labels (e.g., `severity`).
-   - Set evaluation behavior (check interval, no data handling—see recommendations above).
+   - Set evaluation behavior (check interval, no data handling; see recommendations above).
    - Configure notifications by selecting your team's dedicated Slack contact point.
    - Optionally, customize the notification message.
 
@@ -263,7 +263,7 @@ The exported YAML maps directly to the chart's `values.yaml`. You only need to:
 
 1. **Remove** the wrapper lines (`apiVersion`, `groups`, `orgId`, `folder`)
 2. **Add** `folder` and `interval` at the top
-3. **Paste** the `rules` block as-is — no changes needed, including `notification_settings`
+3. **Paste** the `rules` block as-is, with no changes needed, including `notification_settings`
 
 ```yaml
 # Choose ONE of these folder options:
@@ -278,7 +278,7 @@ folder: "My Team Alerts"
 # Evaluation interval (from groups[].interval in the export)
 interval: 1m
 
-# Paste rules directly from the export — no modifications needed
+# Paste rules directly from the export, no modifications needed
 rules:
   - uid: abc123xyz
     title: High Error Rate
@@ -425,7 +425,7 @@ groups:
               type: threshold
 ```
 
-Each group becomes a separate alert rule group in Grafana with its own name and evaluation interval. You can also use `groups` alongside the top-level `rules` key — `rules` creates one group named after the Helm release, and `groups` creates additional named groups.
+Each group becomes a separate alert rule group in Grafana with its own name and evaluation interval. You can also use `groups` alongside the top-level `rules` key: `rules` creates one group named after the Helm release, and `groups` creates additional named groups.
 
 > **Tip:** When exporting multiple groups from the Grafana UI, each `groups[]` entry in the export maps directly to an entry in the `groups` list. Just copy the `name`, `interval`, and `rules` from each.
 
@@ -446,17 +446,17 @@ Each group becomes a separate alert rule group in Grafana with its own name and 
 
 2. Add the `values.yaml` you created in step 3
 
-3. Commit and push to `main` — ArgoCD will deploy the alert rules automatically
+3. Commit and push to `main`, and ArgoCD will deploy the alert rules automatically
 
 ### Deleting an Alert
 
-With the grafana-operator approach, deleting alerts is straightforward: simply remove the alert rule from your `values.yaml` (or remove the entire ArgoCD application) and push the change. The grafana-operator handles cleanup automatically via Kubernetes finalizers — no special delete manifests needed.
+With the grafana-operator approach, deleting alerts is straightforward: simply remove the alert rule from your `values.yaml` (or remove the entire ArgoCD application) and push the change. The grafana-operator handles cleanup automatically via Kubernetes finalizers, so no special delete manifests are needed.
 
 ---
 
 ## Requesting a Slack Contact Point
 
-Each team has a dedicated Slack contact point per environment that IDP provisions on your behalf. Webhooks and the Slack app are centrally governed by the IDP team — you don't need to bring your own webhook URL.
+Each team has a dedicated Slack contact point per environment that IDP provisions on your behalf. Webhooks and the Slack app are centrally governed by the IDP team, so you don't need to bring your own webhook URL.
 
 To request contact points, reach out to the IDP team on Slack with:
 
@@ -465,7 +465,7 @@ To request contact points, reach out to the IDP team on Slack with:
 
 The IDP team sets up the webhook, creates the `GrafanaContactPoint` in your cluster(s), and lets you know the exact receiver name (typically `"Slack - <Team> <env>"`) to use in your alert rules.
 
-The same contact point serves all three sources of alerts — [`idp-managed-customer-alerts`](/how-to/idp-managed-alerts.html) (IDP's curated standard alerts), `idp-grafana-alarm` (your own alerts-as-code), and any manual alerts you create in the Grafana UI — so all alerts routed to the contact point share the same Slack channel and message format.
+The same contact point serves all three sources of alerts: [`idp-managed-customer-alerts`](/how-to/idp-managed-alerts.html) (IDP's curated standard alerts), `idp-grafana-alarm` (your own alerts-as-code), and any manual alerts you create in the Grafana UI, so all alerts routed to the contact point share the same Slack channel and message format.
 
 ## How Your Alert Looks in Slack
 
@@ -483,8 +483,11 @@ The Slack contact point decides the message layout, and it builds the message fr
 | Dashboard link | Annotation `dashboard`, a full URL. Copy it from your browser | Left out |
 | Logs link | Annotation `logs`, a full URL to the logs in Explore | Left out |
 | Grafana link | Added automatically, opens the alert rule | Always shown |
+| Silence link | Added automatically while the alert is firing, opens a new silence in Grafana | Not shown on resolved messages |
 
 If the links don't show, click **Show more**. Slack folds long messages by default.
+
+The Silence link fills in the alert rule and the alert's labels, such as the pod, so the silence covers only that one alert. Remove matchers in the form if you want to silence more, then pick a duration and save. Creating a silence requires the Editor role in Grafana.
 
 When the alert resolves, a new message is sent with a check mark and "Resolved" in the title.
 
