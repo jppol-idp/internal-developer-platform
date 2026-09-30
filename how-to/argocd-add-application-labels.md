@@ -4,7 +4,7 @@ nav_order: 2
 parent: How to...
 domain: public
 layout: last-reviewed
-last_reviewed_on: 2025-09-30
+last_reviewed_on: 2026-09-30
 review_in: 6 months
 ---
 
@@ -24,6 +24,10 @@ Labels in ArgoCD follow Kubernetes label syntax constraints:
 
 For example: `team-name`, `product_category`, and `version.number` are all valid label keys.
 
+Values follow the same rules: 63 characters or less, only alphanumeric characters, dashes, underscores and dots, and they must start and end with an alphanumeric character. An empty value is also allowed.
+
+Do not use the key `image-updater`. The platform sets it on applications that use the image updater.
+
 ### Example:
 
 ```yaml
@@ -37,7 +41,7 @@ labels:
   team: frontend-team
 helm:
   chart: helm/idp-advanced
-  chartVersion: "3.6.0"
+  chartVersion: "3.12.1"
 slackChannel: my-team-slack
 ```
 
