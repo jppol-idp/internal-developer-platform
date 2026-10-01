@@ -1,0 +1,372 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://charts.example.com/idp-s3-bucket/values.schema.json",
+  "title": "idp-s3-bucket values",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "global": {
+      "type": "object",
+      "description": "Included to allow chart to be used as subchart as helm will inject .global from the top chart."
+    },
+    "idp_oidc_provider_url": {
+      "type": "string",
+      "description": "This value is set automatically by ArgoCD, but can be overridden here for local testing."
+    },
+    "idp_aws_account": {
+      "type": [
+        "string",
+        "number"
+      ],
+      "description": "This value is set automatically by ArgoCD, but can be overridden here for local testing."
+    },
+    "ingress": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Injected by ApplicationSet — not used by this chart"
+    },
+    "managementPolicies": {
+      "type": "string",
+      "enum": [
+        "Control",
+        "Observe"
+      ],
+      "description": "Controls whether Crossplane manages the full lifecycle of the resources or only observes them. Applies to S3 bucket resources, the IAM Policy and the RolePolicyAttachment."
+    },
+    "deletionPolicy": {
+      "type": "string",
+      "enum": [
+        "Orphan",
+        "Delete"
+      ],
+      "description": "Controls what happens when resources are deleted from Kubernetes. 'Delete' attempts to remove the AWS resource (S3 buckets cannot be deleted when non-empty). 'Orphan' leaves the AWS resource in place."
+    },
+    "buckets": {
+      "type": "array",
+      "description": "List of S3 buckets to manage. Each bucket can grant the namespace S3 access role (idp_ns_s3_access-<namespace>) read or write permissions via the 'access' setting and can grant namespaced deployment IRSA roles access via serviceAccountReadRoles/serviceAccountWriteRoles.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the bucket. Must be a valid Kubernetes resource name (DNS-1123 label): lowercase alphanumeric and '-', 3-63 chars.",
+            "minLength": 3,
+            "maxLength": 63,
+            "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
+          },
+          "region": {
+            "type": "string",
+            "description": "The AWS region of the bucket.",
+            "default": "eu-west-1"
+          },
+          "publicRead": {
+            "type": "boolean",
+            "description": "Expose objects publicly via BucketPolicy (GetObject on bucket/*). Requires PublicAccessBlock.blockPublicPolicy=false.",
+            "default": false
+          },
+          "access": {
+            "type": "string",
+            "enum": [
+              "none",
+              "read",
+              "write"
+            ],
+            "description": "Access level to grant the namespace S3 access role (idp_ns_s3_access-<namespace>). 'none' = no access, 'read' = s3:GetObject + s3:ListBucket, 'write' = read permissions plus s3:PutObject + s3:DeleteObject.",
+            "default": "write"
+          },
+          "githubAccess": {
+            "type": "string",
+            "enum": [
+              "none",
+              "read",
+              "write"
+            ],
+            "description": "Access level to grant the namespace GitHub Actions role (idp_ns_github_s3_access-<namespace>). The role only exists for namespaces where the platform has registered trusted GitHub repositories. 'none' = no access, 'read' = s3:GetObject + s3:ListBucket, 'write' = read permissions plus s3:PutObject + s3:DeleteObject.",
+            "default": "none"
+          },
+          "serviceAccountReadRoles": {
+            "type": "array",
+            "description": "List of deployment names whose namespaced IRSA role should receive a read policy (s3:GetObject + s3:ListBucket) for this bucket. Each value resolves to <deployment>-<namespace>. If a value already ends with -<namespace>, it is used as-is.",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true,
+            "default": []
+          },
+          "serviceAccountWriteRoles": {
+            "type": "array",
+            "description": "List of deployment names whose namespaced IRSA role should receive a read/write policy (s3:GetObject + s3:ListBucket + s3:PutObject + s3:DeleteObject) for this bucket. Each value resolves to <deployment>-<namespace>. If a value already ends with -<namespace>, it is used as-is. Write implies read on the same role.",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true,
+            "default": []
+          },
+          "tags": {
+            "type": "array",
+            "description": "Additional tags to set on the bucket",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "key": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "key",
+                "value"
+              ]
+            }
+          },
+          "versioning": {
+            "type": "string",
+            "enum": [
+              "Enabled",
+              "Suspended",
+              "Disabled"
+            ],
+            "description": "Versioning state of the bucket. Valid values: Enabled, Suspended, or Disabled. Disabled should only be used when creating or importing resources that correspond to unversioned S3 buckets."
+          },
+          "lifecycleRules": {
+            "type": "array",
+            "description": "Optional S3 lifecycle rules for this bucket. When non-empty, the chart renders an upbound provider-aws-s3 BucketLifecycleConfiguration whose spec.forProvider.rule is set to these rules verbatim; the bucket reference, region, managementPolicies and providerConfigRef are inferred from this bucket. Terraform-style single blocks (e.g. expiration, filter, transition) are expressed as one-item arrays.",
+            "default": [],
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique identifier for the rule (up to 255 characters)."
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "Enabled",
+                    "Disabled"
+                  ],
+                  "description": "Whether the rule is currently being applied."
+                },
+                "prefix": {
+                  "type": "string",
+                  "description": "Deprecated by AWS in favour of 'filter'. Object key prefix identifying objects the rule applies to."
+                },
+                "abortIncompleteMultipartUpload": {
+                  "type": "array",
+                  "description": "Days since initiation of an incomplete multipart upload before S3 removes all parts.",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "daysAfterInitiation": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                },
+                "expiration": {
+                  "type": "array",
+                  "description": "Specifies the expiration for the lifecycle of the object.",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "date": {
+                        "type": "string"
+                      },
+                      "days": {
+                        "type": "integer"
+                      },
+                      "expiredObjectDeleteMarker": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                },
+                "filter": {
+                  "type": "array",
+                  "description": "Identifies the objects a lifecycle rule applies to. An empty filter applies to all objects.",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "and": {
+                        "type": "array",
+                        "description": "Applies a logical AND to two or more predicates.",
+                        "items": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "properties": {
+                            "objectSizeGreaterThan": {
+                              "type": "integer"
+                            },
+                            "objectSizeLessThan": {
+                              "type": "integer"
+                            },
+                            "prefix": {
+                              "type": "string"
+                            },
+                            "tags": {
+                              "type": "object",
+                              "additionalProperties": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "objectSizeGreaterThan": {
+                        "type": "integer"
+                      },
+                      "objectSizeLessThan": {
+                        "type": "integer"
+                      },
+                      "prefix": {
+                        "type": "string"
+                      },
+                      "tag": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "properties": {
+                            "key": {
+                              "type": "string"
+                            },
+                            "value": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "key",
+                            "value"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                },
+                "noncurrentVersionExpiration": {
+                  "type": "array",
+                  "description": "Specifies when noncurrent object versions expire.",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "newerNoncurrentVersions": {
+                        "type": "integer"
+                      },
+                      "noncurrentDays": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                },
+                "noncurrentVersionTransition": {
+                  "type": "array",
+                  "description": "Specifies when noncurrent object versions transition to a specific storage class.",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "newerNoncurrentVersions": {
+                        "type": "integer"
+                      },
+                      "noncurrentDays": {
+                        "type": "integer"
+                      },
+                      "storageClass": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "transition": {
+                  "type": "array",
+                  "description": "Specifies when an object transitions to a specified storage class.",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "date": {
+                        "type": "string"
+                      },
+                      "days": {
+                        "type": "integer"
+                      },
+                      "storageClass": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "encryptionRules": {
+            "type": "array",
+            "description": "Optional server-side encryption rules for this bucket. When non-empty, the chart renders an upbound provider-aws-s3 BucketServerSideEncryptionConfiguration whose spec.forProvider.rule is set to these rules verbatim; the bucket reference, region, managementPolicies and providerConfigRef are inferred from this bucket. AWS supports only a single rule. Unlike the lifecycle blocks, applyServerSideEncryptionByDefault is a single object, not a one-item array.",
+            "default": [],
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "applyServerSideEncryptionByDefault": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "description": "Single object for setting server-side encryption by default.",
+                  "required": [
+                    "sseAlgorithm"
+                  ],
+                  "properties": {
+                    "sseAlgorithm": {
+                      "type": "string",
+                      "enum": [
+                        "AES256",
+                        "aws:kms",
+                        "aws:kms:dsse"
+                      ],
+                      "description": "Server-side encryption algorithm to use. AES256 = SSE-S3, aws:kms = SSE-KMS, aws:kms:dsse = dual-layer SSE-KMS."
+                    },
+                    "kmsMasterKeyId": {
+                      "type": "string",
+                      "description": "AWS KMS master key ID (or ARN) used for SSE-KMS. Only valid when sseAlgorithm is aws:kms or aws:kms:dsse. The default aws/s3 managed key is used when omitted."
+                    }
+                  }
+                },
+                "bucketKeyEnabled": {
+                  "type": "boolean",
+                  "description": "Whether to use Amazon S3 Bucket Keys for SSE-KMS, which can reduce KMS request costs."
+                },
+                "blockedEncryptionTypes": {
+                  "type": "array",
+                  "description": "Server-side encryption types to block for object uploads. SSE-C blocks uploads using customer-provided keys; NONE unblocks all encryption types.",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "SSE-C",
+                      "NONE"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "required": [
+          "name"
+        ]
+      }
+    }
+  }
+}
