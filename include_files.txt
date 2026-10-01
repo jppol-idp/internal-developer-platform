@@ -198,6 +198,7 @@
 ./how-to/argocd-slack-notifications.md
 ./how-to/aurora-rds-proxy.md
 ./how-to/kubernetes-namespace-access.md
+./how-to/event-platform-kafka.md
 ./how-to/alerting.md
 ./how-to/prometheus-blackbox-exporter.md
 ./how-to/argo-cronworkflow-job.md
