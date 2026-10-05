@@ -4,7 +4,7 @@ nav_order: 14
 parent: How to...
 domain: public
 layout: last-reviewed
-last_reviewed_on: 2026-06-30
+last_reviewed_on: 2026-10-05
 review_in: 6 months
 ---
 
@@ -35,7 +35,7 @@ review_in: 6 months
 
 # What this is
 
-IDP maintains a curated set of standard infrastructure alerts that customer teams can opt into per namespace. The alerts cover common Kubernetes-level problems that apply to any workload: OOM kills, crashing containers, pods stuck pending or terminating, PVC disk usage, ArgoCD application health, and Kubernetes workload health (Deployment/StatefulSet replicas, rollouts, Jobs, HPA, PDB). They are not application-specific: each alert is defined once by IDP and shipped to every opted-in customer via a versioned Helm chart (`idp-managed-customer-alerts`).
+IDP maintains a curated set of standard infrastructure alerts that customer teams can opt into per namespace. The alerts cover common Kubernetes-level problems that apply to any workload: OOM kills, crashing containers, pods stuck pending or terminating, PVC disk usage, ArgoCD application health, Kubernetes workload health (Deployment/StatefulSet replicas, rollouts, Jobs, HPA, PDB), and memory requests that do not match actual usage. They are not application-specific: each alert is defined once by IDP and shipped to every opted-in customer via a versioned Helm chart (`idp-managed-customer-alerts`).
 
 **What IDP owns:** the alert queries, the Slack message format, runbooks, and any future additions to the set. A chart version bump automatically improves every customer's alerts on the next sync.
 
@@ -62,6 +62,8 @@ Use this alongside your own team-specific alerts (built with [`idp-grafana-alarm
 | `kubeHpaMaxedOut` | warning | An HPA has been pinned at `maxReplicas` for longer than `forDuration` (default 15 min): the workload cannot scale further. **Disabled by default** to avoid noise from intentionally maxed-out workloads (e.g. predictors at steady state) | enabled, severity, `forDuration` |
 | `kubePdbNotEnoughHealthyPods` | warning | A PodDisruptionBudget has fewer healthy pods than desired for longer than `forDuration` (default 15 min): node drains targeting the workload are now blocked, which delays IDP cluster maintenance. **Disabled by default**: overlaps with `containerRestartLoop` / `podPendingWarning` | enabled, severity, `forDuration` |
 | `lokiLineTooLong` | warning | A container in your namespace has logged ≥ `lineCountThreshold` lines larger than 5 MB within a 10-minute window. Lines this large are dropped by the log shipper before they reach Loki, so the entries are permanently lost from Grafana | enabled, severity, `lineCountThreshold` |
+| `memoryUsageAboveRequest` | warning | A container's memory usage (1-hour average) has stayed above `ratioThreshold` times its memory request (default 1.5x) for longer than `forDuration` (default 30 min). Requests are what the scheduler reserves for you; a pod using more than it requested is the first one evicted when the node runs short of memory. The message includes a suggested request: the VPA recommendation if you have [VPA enabled](/how-to/prod-settings.html#vpa---to-see-recommendations), otherwise the 7-day peak usage plus 20% | enabled, severity, `ratioThreshold`, `forDuration` |
+| `containerWithoutMemoryRequest` | warning | A running container has no memory request at all (BestEffort) for longer than `forDuration` (default 30 min). Nothing is reserved for it on the node and it is among the first pods evicted under memory pressure. The message includes the same suggested request as `memoryUsageAboveRequest` | enabled, severity, `forDuration` |
 
 Slack messages include a title with severity emoji and alert name, a bold summary with the offending pod/PVC/app identifier, a runbook section, and links to the relevant Grafana dashboard, the alert in Grafana, and ArgoCD, plus a Silence link while the alert is firing. The pod-pending and restart-loop alerts additionally decode the container's waiting reason (e.g. `CreateContainerConfigError`, `ImagePullBackOff`) so you can triage before opening Grafana.
 
@@ -195,6 +197,12 @@ standardAlerts:
   # of >5 MB log lines you cannot eliminate. Default 1 fires on any drop.
   lokiLineTooLong:
     lineCountThreshold: 5
+
+  # Only flag containers using more than double their memory request, and give
+  # slow-warming JVMs an hour before the alert fires
+  memoryUsageAboveRequest:
+    ratioThreshold: 2
+    forDuration: 1h
 ```
 
 The PromQL itself is not exposed. If you need a query change, open a request with the IDP team.
