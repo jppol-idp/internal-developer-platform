@@ -74,6 +74,7 @@
 ./schemas/idp-redis/v0.8.1.json
 ./schemas/idp-redis/v0.8.0.json
 ./schemas/idp-redis/v0.8.3.json
+./schemas/idp-redis/v0.8.5.json
 ./schemas/idp-redis/v0.8.4.json
 ./schemas/idp-restore-ebs/latest.json
 ./schemas/idp-restore-ebs/v0.1.3.json
