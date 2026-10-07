@@ -1,6 +1,6 @@
 ---
 title: Prometheus metrics scraping
-nav_order: 22
+nav_order: 24
 parent: How to...
 domain: public
 layout: last-reviewed

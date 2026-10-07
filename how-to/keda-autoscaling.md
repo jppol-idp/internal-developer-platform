@@ -1,6 +1,6 @@
 ---
 title: KEDA Autoscaling
-nav_order: 15
+nav_order: 17
 parent: How to...
 domain: public
 layout: last-reviewed

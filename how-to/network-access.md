@@ -1,6 +1,6 @@
 ---
 title: Controlling network access to your app
-nav_order: 8
+nav_order: 9
 parent: How to...
 domain: public
 layout: last-reviewed

@@ -1,6 +1,6 @@
 ---
 title: Working with Secrets
-nav_order: 30
+nav_order: 33
 parent: How to...
 domain: public
 layout: last-reviewed

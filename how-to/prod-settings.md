@@ -1,6 +1,6 @@
 ---
 title: Production settings
-nav_order: 20
+nav_order: 22
 parent: How to...
 domain: public
 layout: last-reviewed
