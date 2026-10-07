@@ -47,7 +47,7 @@ Two GitHub Apps are involved, and it helps to know which is which:
 
 - Your apps use the `idp-advanced` chart, so each app has `image.repository` and `image.tag` in its `values.yaml`.
 - Your pipeline already pushes images to ECR under your team's prefix, for example `koa/customer-overview`.
-- You have asked the IDP team for a deploy app for your apps repo, in your team's onboarding channel on Slack. The IDP team creates the app, adds the **Update image tags** workflow to your apps repo, and hands you the app's client ID and private key through Bitwarden.
+- You have asked the IDP team for a deploy app for your apps repo, in your team's onboarding channel on Slack. The IDP team creates the app, adds the **Update image tags** workflow to your apps repo, and hands you the app's client ID and private key through a Bitwarden Send link, which works without a Bitwarden account.
 
 ## Step 1: Store the credentials
 
