@@ -92,6 +92,7 @@ The deploy workflow refuses apps that still have Image Updater settings, so this
 
 Add a job after the one that builds and pushes the image. The deploy job needs the tag the build used, so the build job exposes it as an output:
 
+{% raw %}
 ```yaml
 jobs:
   build:
@@ -119,6 +120,7 @@ jobs:
             koa/customer-overview-worker
           environments: koa-dev,koa-test
 ```
+{% endraw %}
 
 Replace the `koa` names with your own. The action lives in an internal repository and works from any repository in the company's GitHub enterprise. The step needs no `actions/checkout` and does not use the workflow's `GITHUB_TOKEN`.
 
@@ -134,7 +136,7 @@ Replace the `koa` names with your own. The action lives in an internal repositor
 | `wait` | no | Default `true`: wait for the deploy and fail if it fails. `false` returns right after starting it |
 | `timeout_minutes` | no | How long to wait, default 15 |
 
-Outputs: `updated` (number of apps that got the tag), `commit` (the commit in your apps repo, empty if nothing changed), `run_url` (the deploy run in your apps repo). Use them like `${{ steps.<id>.outputs.updated }}` in later steps.
+Outputs: `updated` (number of apps that got the tag), `commit` (the commit in your apps repo, empty if nothing changed), `run_url` (the deploy run in your apps repo). Use them like {% raw %}`${{ steps.<id>.outputs.updated }}`{% endraw %} in later steps.
 
 A complete, working example is in [jppol-idp/deploy-example](https://github.com/jppol-idp/deploy-example).
 
