@@ -6,12 +6,15 @@ on:
   workflow_dispatch:
     inputs:
       limit:
-        description: "Max overdue pages to create Jira tasks for"
-        default: "2"
+        description: "Max overdue pages to create Jira tasks for (defaults to REVIEW_LIMIT)"
+        required: false
       dry_run:
         description: "Dry run — print batch without creating Jira issue"
         type: boolean
         default: false
+
+env:
+  REVIEW_LIMIT: "2" # one task per team member
 
 jobs:
   reminder:
@@ -29,7 +32,7 @@ jobs:
       - name: Find overdue pages
         run: |
           python scripts/docs-review/check-review-dates.py \
-            --limit "${{ github.event.inputs.limit || '3' }}" \
+            --limit "${{ github.event.inputs.limit || env.REVIEW_LIMIT }}" \
             -d documentation \
             -d how-to \
             -d onboarding \
