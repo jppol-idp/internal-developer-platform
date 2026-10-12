@@ -564,7 +564,14 @@
           "items": {
             "type": "string"
           },
-          "description": "Hostnames connected to the ingress. Note that all hostnames are prepended with 'internal-' when bound to the private ingress, unless overridden by ingress.private.fqdn."
+          "description": "Hostnames connected to the ingress. Note that all hostnames are prepended with 'internal-' when bound to the private ingress, unless overridden by ingress.private.fqdn. Each entry's wildcard TLS/CDN domain is derived by stripping the leftmost label."
+        },
+        "apex_fqdn": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Fully qualified domain names that are themselves apex/root domains. Used verbatim (no label stripped) for the wildcard certificate and CDN edge-address lookup. Mixes freely with ingress.fqdn on the same Ingress."
         },
         "public": {
           "type": "object",
@@ -619,9 +626,12 @@
               },
               "description": "Hostnames for the private ingress, used instead of the 'internal-' + fqdn default. When set, these hostnames are used verbatim (no prefixing) for both the ingress rules and the TLS certificates, entirely replacing the derived list."
             },
-            "apex": {
-              "type": "boolean",
-              "description": "When true, the fqdn entries are apex domains rather than subdomains of an owned domain, so the wildcard certificate is requested for the fqdn itself instead of a derived parent domain. Only used when wildcardCertificate is true. Assumes either all entries are apex or none are."
+            "apex_fqdn": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Apex hostnames for the private ingress, used instead of the 'internal-' + ingress.apex_fqdn default. When set, these hostnames are used verbatim (no prefixing) for both the ingress rules and the TLS certificates, entirely replacing the derived list. Mixes freely with ingress.private.fqdn."
             },
             "ipAllowList": {
               "type": "array",
@@ -667,6 +677,13 @@
                 "type": "string"
               },
               "description": "Hostnames serving gRPC. Must not overlap ingress.fqdn."
+            },
+            "apex_fqdn": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Apex hostnames serving gRPC, used verbatim (no label stripped) for the wildcard certificate. Must not overlap ingress.apex_fqdn. Mixes freely with ingress.grpc.fqdn."
             },
             "public": {
               "type": "object",
