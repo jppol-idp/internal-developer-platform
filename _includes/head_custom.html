@@ -1,0 +1,42 @@
+<script>
+  /* Colour theme: "system" (default), "light" or "dark". Runs early so there is no flash of the wrong theme. Block comments only: the page is minified onto one line. */
+  (function () {
+    var KEY = 'idp-docs-theme';
+    var cssBase = '{{ "/assets/css/just-the-docs-" | relative_url }}';
+    var media = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+
+    function preference() {
+      var stored = null;
+      try { stored = localStorage.getItem(KEY); } catch (e) {}
+      return stored === 'light' || stored === 'dark' ? stored : 'system';
+    }
+    function resolve(pref) {
+      if (pref === 'system') { return media && media.matches ? 'dark' : 'light'; }
+      return pref;
+    }
+    function apply(pref) {
+      var theme = resolve(pref);
+      document.querySelector('link[rel="stylesheet"]').setAttribute('href', cssBase + theme + '.css');
+      document.documentElement.setAttribute('data-theme', theme);
+      document.documentElement.setAttribute('data-theme-preference', pref);
+    }
+
+    window.idpTheme = {
+      preference: preference,
+      set: function (pref) {
+        try {
+          if (pref === 'system') { localStorage.removeItem(KEY); } else { localStorage.setItem(KEY, pref); }
+        } catch (e) {}
+        apply(pref);
+      }
+    };
+
+    /* Follow OS changes while "system" is selected. */
+    apply(preference());
+    if (media && media.addEventListener) {
+      media.addEventListener('change', function () {
+        if (preference() === 'system') { apply('system'); }
+      });
+    }
+  })();
+</script>
