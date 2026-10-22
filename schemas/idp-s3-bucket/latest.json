@@ -75,8 +75,8 @@
               "read",
               "write"
             ],
-            "description": "Access level to grant the namespace S3 access role (idp_ns_s3_access-<namespace>). 'none' = no access, 'read' = s3:GetObject + s3:ListBucket, 'write' = read permissions plus s3:PutObject + s3:DeleteObject.",
-            "default": "write"
+            "description": "Access level to grant the namespace S3 access role (idp_ns_s3_access-<namespace>) and, via the bucket policy, the namespace AWS SSO role (permission set idp_ns_access_<namespace>). 'none' = no access, 'read' = s3:GetObject + s3:ListBucket, 'write' = read permissions plus s3:PutObject + s3:DeleteObject.",
+            "default": "none"
           },
           "githubAccess": {
             "type": "array",
