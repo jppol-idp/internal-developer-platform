@@ -37,7 +37,7 @@ A bucket is created by a bucket app in your team's apps repository, in the same 
    version: 0.1.0
    helm:
      chart: helm/idp-s3-bucket
-     chartVersion: "0.11.0"   # example version
+     chartVersion: "0.12.0"   # example version
    ```
 
    The latest chart version is listed under [releases in helm-idp](https://github.com/jppol-idp/helm-idp/releases).
@@ -65,7 +65,7 @@ buckets:
 
 Notes
 - Bucket names must be globally unique in AWS, 3-63 lowercase alphanumeric or `-`.
-- The chart always renders three Crossplane resources per bucket: `Bucket`, `BucketOwnershipControls` and `BucketPublicAccessBlock`. Depending on your values it also renders a `BucketPolicy` (`publicRead`), a `BucketLifecycleConfiguration` (`lifecycleRules`), a `BucketVersioning` (`versioning`), a `BucketServerSideEncryptionConfiguration` (`encryptionRules`), and the IAM policies that give access to the bucket.
+- The chart always renders three Crossplane resources per bucket: `Bucket`, `BucketOwnershipControls` and `BucketPublicAccessBlock`. Depending on your values it also renders a `BucketPolicy` (`publicRead`, or `access` for developers), a `BucketLifecycleConfiguration` (`lifecycleRules`), a `BucketVersioning` (`versioning`), a `BucketServerSideEncryptionConfiguration` (`encryptionRules`), and the IAM policies that give access to the bucket.
 
 ### Public read
 
@@ -134,23 +134,41 @@ serviceAccount:
 
 That role's assume-role policy trusts the cluster's OIDC provider and the workload service account, which is what allows the pod to obtain AWS credentials. The S3 chart then attaches the generated S3 policy to that existing role. If the role is missing, named differently, or its assume-role policy does not match the service account, the pod will not be able to get credentials even though the S3 attachment exists.
 
-For human/operator access to bucket contents from a workstation, see [Developer access (namespace S3 access role)](#developer-access-namespace-s3-access-role) below.
+For human/operator access to bucket contents from a workstation, see [Developer access](#developer-access) below.
 
-## Developer access (namespace S3 access role)
-Separate from workload (IRSA) access, the chart can grant developers the ability to browse and modify bucket contents from their own machine via the namespace's IAM role `idp_ns_s3_access-<namespace>`. This is intended for human operators, not for pods. For pod access, use [Workload access (IRSA)](#workload-access-irsa) instead.
+## Developer access
+Separate from workload (IRSA) access, the chart can let developers browse and modify bucket contents from their own machine. This is intended for people, not for pods. For pod access, use [Workload access (IRSA)](#workload-access-irsa) instead.
 
 ### The `access` parameter
-Each bucket entry accepts an `access` setting that controls what the namespace S3 access role may do with that bucket:
+Each bucket entry accepts an `access` setting that controls what developers in the namespace may do with that bucket:
 
 - `write`: grants `s3:GetObject`, `s3:ListBucket`, `s3:PutObject`, and `s3:DeleteObject`.
 - `read`: grants `s3:GetObject` and `s3:ListBucket`.
-- `none`: no permissions are granted on this bucket via the namespace S3 access role.
+- `none`: developers get no access to this bucket.
 
 Set `access` explicitly. A bucket without `access` is treated as `none`, so developers get no access to it.
 
 The value is schema-validated: anything other than `none`, `read`, or `write` causes `helm template`/`helm install` to fail.
 
-### Assuming the role from your machine
+`access` applies to two roles in the same way: your namespace's AWS SSO role and the namespace S3 access role `idp_ns_s3_access-<namespace>`. Use the SSO role unless you have a reason not to.
+
+### Using your namespace SSO role
+Requires chart version 0.12.0 or later, set as `chartVersion` in the `application.yaml` of your bucket app. The latest version is listed under [releases in helm-idp](https://github.com/jppol-idp/helm-idp/releases).
+
+The bucket policy gives your namespace's AWS SSO role the access set by `access`, so you can use the `idp-ns-<namespace>` profile directly. It is the same profile you use for kubectl, see [Kubernetes Namespace Access via AWS SSO](./kubernetes-namespace-access) for how to set it up with `./scripts/idp-ns-<namespace>.sh`.
+
+```bash
+aws sso login --profile idp-ns-idp-dev
+aws s3 ls s3://my-team-artifacts --profile idp-ns-idp-dev
+```
+
+The session lasts as long as your SSO session, so there is no one-hour limit as with the S3 access role below. Only the SSO role of the bucket's own namespace is let in. The SSO role of another namespace, even in the same AWS account, is denied.
+
+Always name the bucket. `aws s3 ls` without a bucket name fails, because the role is not allowed to list all buckets in the account.
+
+### Assuming the S3 access role
+The namespace S3 access role `idp_ns_s3_access-<namespace>` still works, and gets the same access from `access`. You assume it from your SSO login, which limits the session to one hour.
+
 Who may assume `idp_ns_s3_access-<namespace>` is controlled by the role's trust policy (managed outside this chart). If your AWS principal is not listed there, `aws sts assume-role` will fail with `AccessDenied`. Contact the IDP team in your team's onboarding channel on Slack to get added.
 
 Your team's apps repository ships helper scripts that call `aws sts assume-role` against the namespace S3 access role and emit the temporary credentials. There is one per namespace:
@@ -172,16 +190,15 @@ The PowerShell scripts set the `AWS_*` environment variables on the current sess
 aws s3 ls s3://my-team-artifacts
 ```
 
-Always name the bucket. `aws s3 ls` without a bucket name fails, because the role is not allowed to list all buckets in the account.
-
 ### What the chart renders
-When at least one bucket declares `access: read` or `access: write`, the chart adds the namespace developer role `idp_ns_s3_access-<namespace>` to the same aggregated role map used for workload roles. It then renders:
+When at least one bucket declares `access: read` or `access: write`, the chart renders:
 
-- A managed IAM `Policy` named `<namespace>-idp-ns-s3-access-<namespace>-<release>-idp-s3-bucket` with `S3Read` and/or `S3Write` statements for the buckets that opted the developer role in.
+- A `BucketPolicy` on each of those buckets that allows the namespace's SSO role. The SSO role's name ends in a random suffix and cannot have IAM policies attached, so the policy matches it on `aws:PrincipalArn` (`AWSReservedSSO_idp_ns_access_<namespace>_*`) and on your AWS account. If the bucket also has `publicRead`, both go into the same policy.
+- A managed IAM `Policy` named `<namespace>-idp-ns-s3-access-<namespace>-<release>-idp-s3-bucket` with `S3Read` and/or `S3Write` statements for the buckets that opted developers in.
 - A `RolePolicyAttachment` that attaches that policy to `idp_ns_s3_access-<namespace>`.
 - No observe-only Crossplane `Role` resource; the attachment references the IAM role by plain name.
 
-If no bucket opts the developer role in (all are `access: none` or have no `access`), no developer-role policy or attachment is rendered. Buckets may still create workload-role policies independently via `serviceAccountReadRoles` / `serviceAccountWriteRoles`.
+If no bucket opts developers in (all are `access: none` or have no `access`), none of this is rendered. Buckets may still create workload-role policies independently via `serviceAccountReadRoles` / `serviceAccountWriteRoles`.
 
 ## GitHub Actions access
 A workflow in one of your GitHub repositories can read from or write to a bucket without any stored AWS keys. The workflow assumes an IAM role through OpenID Connect (OIDC), and the bucket decides which repositories it lets in.
@@ -216,7 +233,7 @@ buckets:
 - `read`: grants `s3:GetObject` and `s3:ListBucket`.
 - `write`: grants the same as `read`, plus `s3:PutObject` and `s3:DeleteObject`.
 
-This `access` only applies to the repository. It is independent of the bucket's own `access` setting, which controls [developer access](#developer-access-namespace-s3-access-role).
+This `access` only applies to the repository. It is independent of the bucket's own `access` setting, which controls [developer access](#developer-access).
 
 `githubAccess` requires chart version 0.11.0 or later, set as `chartVersion` in the `application.yaml` of your bucket app. The latest version is listed under [releases in helm-idp](https://github.com/jppol-idp/helm-idp/releases). If you upgrade an existing bucket app that is on a version before 0.10.1 and uses `deletionPolicy: Delete` (the default), developer access to the buckets in that app is gone for about 10 minutes after the upgrade. It happens once and recovers by itself. Workload access and GitHub Actions access are not affected.
 
@@ -459,6 +476,7 @@ AWS does not delete a bucket that still has objects in it. Empty the bucket firs
 
 - Name the bucket: `aws s3 ls s3://my-team-artifacts`. Listing all buckets is not allowed.
 - Check that the bucket has `access: read` or `access: write`. A bucket without `access` gives developers no access.
+- With the SSO role: check that the bucket app is on chart version 0.12.0 or later, and that you use the `idp-ns-<namespace>` profile of the namespace the bucket app is in.
 
 For problems with a workflow, see [Troubleshooting GitHub Actions access](#troubleshooting-github-actions-access).
 

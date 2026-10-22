@@ -131,7 +131,7 @@ eval "$(./scripts/assume-<namespace>-irsa-role.sh <job-name>)"
 aws sts get-caller-identity
 ```
 
-`<job-name>` is `metadata.jobName` from your `values.yaml`, and the scripts live in your team's apps repository under `scripts/` - see [Assuming the role from your machine](./s3-bucket#assuming-the-role-from-your-machine) in the S3 guide for the equivalent flow against the namespace's S3 access role.
+`<job-name>` is `metadata.jobName` from your `values.yaml`, and the scripts live in your team's apps repository under `scripts/` - see [Assuming the S3 access role](./s3-bucket#assuming-the-s3-access-role) in the S3 guide for the equivalent flow against the namespace's S3 access role.
 
 ---
 
