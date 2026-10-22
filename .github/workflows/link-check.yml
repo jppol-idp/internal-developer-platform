@@ -1,0 +1,61 @@
+name: Check links
+
+# Builds the site and checks internal links and anchors in the rendered HTML,
+# so permalinks resolve the same way they do on GitHub Pages.
+
+on:
+  pull_request:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check-links:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        site: [internal, public]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+      - name: Build internal site
+        if: matrix.site == 'internal'
+        run: bundle exec jekyll build
+        env:
+          JEKYLL_ENV: production
+      - name: Check internal links
+        if: matrix.site == 'internal'
+        run: python3 scripts/check-links.py _site
+      # Mirrors the file selection in the sync_public job in gh-pages.yml
+      - name: Build public site
+        if: matrix.site == 'public'
+        run: |
+          find . -type f ! -name "*.md" \
+            ! -path "./background/meeting-minutes/*" \
+            ! -path "./one-mans-trash/*" \
+            ! -path "./.git/*" > include_files.txt
+          grep -rl 'domain: public' --include="*.md" . \
+          | grep -vE '^\.\/(background\/meeting-minutes|one-mans-trash|\.git)' >> include_files.txt
+          echo "./README.public.md" >> include_files.txt
+          rsync -a --files-from=include_files.txt ./ "$RUNNER_TEMP/public/"
+          cd "$RUNNER_TEMP/public"
+          mv _config.public.yml _config.yml
+          mv README.public.md README.md
+          bundle exec jekyll build --destination "$GITHUB_WORKSPACE/_site_public"
+        env:
+          JEKYLL_ENV: production
+          BUNDLE_GEMFILE: ${{ github.workspace }}/Gemfile
+      - name: Check public links
+        if: matrix.site == 'public'
+        run: python3 scripts/check-links.py _site_public --domain public.docs.idp.jppol.dk

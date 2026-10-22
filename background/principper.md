@@ -41,7 +41,7 @@ best-practices med henblik på let tilgængelig revision.
 
 ## 6. Vi drives af data
 
-Vi skal opsamle relevante [metrikker](metrics.md) der afspejler brug, forbrug og aktivitet på tværs af platformen. 
+Vi skal opsamle relevante metrikker der afspejler brug, forbrug og aktivitet på tværs af platformen. 
 Observability skal være indbygget i alt, altid være let tilgængeligt.
 
 ## 7. Åbenhed skaber tillid

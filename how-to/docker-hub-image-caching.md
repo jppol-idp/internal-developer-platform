@@ -136,7 +136,7 @@ This should show an ECR URL starting with `354918371398.dkr.ecr.eu-west-1.amazon
 ## Additional Information
 
 For technical details about the implementation, see:
-- [Technical Documentation](/documentation/ecr-pull-through-cache)
+- [Technical Documentation](https://docs.idp.jppol.dk/documentation/ecr-pull-through-cache)
 - [JIRA: IDP-656](https://jira-jppol.atlassian.net/browse/IDP-656)
 
 For questions or issues, contact the platform team via:

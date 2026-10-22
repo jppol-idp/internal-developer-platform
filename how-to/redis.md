@@ -387,7 +387,7 @@ READONLY You can't write against a read only replica.
 The application will keep failing until it drops the connection and reconnects. A restart/redeploy "fixes" it only because it forces fresh connections. Your client needs to handle this itself:
 
 - **Treat `READONLY` as a reconnect trigger.** On a `READONLY` error, drop the connection and reconnect so you re-resolve to the current master. In most clients this is a built-in retry option (e.g. `retry_on_error=[ReadOnlyError]` in `redis-py`, or reconnect-on-error logic in `ioredis`).
-- **Prefer a Sentinel-aware client** (see the [Sentinel example](#using-sentinel-for-automatic-failover-recommended-for-production) above). It discovers master changes proactively via Sentinel and resets connections for you, rather than waiting for the first failed write. For .NET, read the [StackExchange.Redis caveat](#stackexchangeredis-net-in-sentinel-mode) first.
+- **Prefer a Sentinel-aware client** (see the [Sentinel example](#connecting-from-your-application) above). It discovers master changes proactively via Sentinel and resets connections for you, rather than waiting for the first failed write. For .NET, read the [StackExchange.Redis caveat](#stackexchangeredis-net-in-sentinel-mode) first.
 
 This applies to **every** client, not just during node consolidation: failover is a normal part of running in replication mode, so the client must be able to recover from it.
 

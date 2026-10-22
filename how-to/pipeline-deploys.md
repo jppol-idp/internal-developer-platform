@@ -156,7 +156,7 @@ The commit in your apps repo is made by `idp-apps-writer[bot]`. Its message list
 
 ![Commit list in the apps repo showing Deploy build-helm-62 and Deploy build-helm-61 by idp-apps-writer[bot]](../assets/pipeline-deploys-commit.png)
 
-Argo CD picks the commit up within seconds and rolls the pods. A green deploy means the tag is committed, not that the new pods are healthy. To see the rollout itself, use [Argo CD notifications in Slack](./argocd-slack-notifications) or the Argo CD UI for your cluster.
+Argo CD picks the commit up within seconds and rolls the pods. A green deploy means the tag is committed, not that the new pods are healthy. To see the rollout itself, use [Argo CD notifications in Slack](/argocd-slack-notifications) or the Argo CD UI for your cluster.
 
 ## Rules worth knowing
 

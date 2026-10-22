@@ -156,7 +156,7 @@ env:
 
 ### Connect via pgAdmin
 
-You can use the shared [pgAdmin](https://public.docs.idp.jppol.dk/how-to-pgadmin) deployment if you prefer a web-based interface.
+You can use the shared [pgAdmin](/how-to/pgadmin.html) deployment if you prefer a web-based interface.
 
 ### Query via Grafana
 
@@ -186,7 +186,7 @@ The IDP platform provides a shared RDS proxy that allows you to connect to your 
 - Using database tools like pgAdmin, DBeaver, or DataGrip
 - Pulling large result sets or exporting whole tables, for example ad-hoc data extraction for an audit - work that is too big for the Grafana datasource
 
-Start by following [this guide](https://public.docs.idp.jppol.dk/kubernetes-namespace-access) to get kubectl access. Then port-forward the rds-proxy to your local machine:
+Start by following [this guide](/how-to/kubernetes-namespace-access.html) to get kubectl access. Then port-forward the rds-proxy to your local machine:
 
 ```bash
 kubectl port-forward -n rds-proxy svc/rds-proxy-idp-rds-proxy 5432:5432

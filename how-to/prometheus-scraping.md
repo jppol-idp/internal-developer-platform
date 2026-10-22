@@ -19,7 +19,6 @@ review_in: 6 months
 - [ServiceMonitor vs PodMonitor for Multi-Replica Deployments](#servicemonitor-vs-podmonitor-for-multi-replica-deployments)
 - [Validation](#validation)
 - [Troubleshooting](#troubleshooting)
-- [Framework-Specific Metrics Examples](#framework-specific-metrics-examples)
 - [Additional Resources](#additional-resources)
 
 ## Introduction
