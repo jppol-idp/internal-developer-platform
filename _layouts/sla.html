@@ -1,0 +1,12 @@
+---
+layout: last-reviewed
+---
+<style>
+  /* Fremhæv første række i tabellerne på SLA-siden */
+  table th { background-color: #e3ecf7; }
+  /* Større Normal/Lav-overskrifter. Specifik selector, så temaets tabelstil ikke vinder. */
+  .main-content table thead th { font-size: 1.2rem !important; font-weight: 700; }
+  /* Start teksten øverst i cellerne */
+  table th, table td { vertical-align: top; }
+</style>
+{{ content }}

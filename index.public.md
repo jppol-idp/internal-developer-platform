@@ -14,7 +14,7 @@ applications on Kubernetes. It provides container deployment, observability,
 DNS, databases, and more - so your team can focus on building products.
 
 - [Manifest](/background/manifest-idp.html) - what the IDP is and what it stands for
-- [Service Level Agreement](https://jira-jppol.atlassian.net/wiki/spaces/IDP/folder/3680632849?atlOrigin=eyJpIjoiNzU2YjYxNjkzZWJiNDFlMjlkZDI5YTE4OWM0YjNlM2UiLCJwIjoiYyJ9) - our SLA with your team
+- [SLA](/sla/) - our Service Level Agreement with your team
 
 ## Getting started
 
