@@ -1,0 +1,256 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "IDP Grafana Customer Resources Values",
+  "type": "object",
+  "properties": {
+    "idp_aws_account": {
+      "type": [
+        "string",
+        "number"
+      ],
+      "description": "This value is set automatically by ArgoCD, but can be overridden here for local testing."
+    },
+    "idp_oidc_provider_url": {
+      "type": "string",
+      "description": "This value is set automatically by ArgoCD, but can be overridden here for local testing."
+    },
+    "fullnameOverride": {
+      "type": "string"
+    },
+    "folder": {
+      "type": "string"
+    },
+    "folderUID": {
+      "type": "string",
+      "pattern": "^([a-zA-Z0-9_-]{1,40})?$"
+    },
+    "interval": {
+      "type": "string"
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/rule"
+      }
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "rules"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$",
+            "maxLength": 63
+          },
+          "interval": {
+            "type": "string"
+          },
+          "rules": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/definitions/rule"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "dashboards": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/dashboard"
+      }
+    },
+    "global": {
+      "type": "object",
+      "description": "Included to allow chart to be used as subchart as helm will inject .global from the top chart."
+    }
+  },
+  "definitions": {
+    "rule": {
+      "type": "object",
+      "required": [
+        "uid",
+        "title",
+        "condition",
+        "data"
+      ],
+      "properties": {
+        "uid": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "condition": {
+          "type": "string"
+        },
+        "for": {
+          "type": "string"
+        },
+        "noDataState": {
+          "type": "string",
+          "enum": [
+            "OK",
+            "Alerting",
+            "NoData"
+          ]
+        },
+        "execErrState": {
+          "type": "string",
+          "enum": [
+            "OK",
+            "Alerting",
+            "Error"
+          ]
+        },
+        "annotations": {
+          "type": "object"
+        },
+        "labels": {
+          "type": "object"
+        },
+        "isPaused": {
+          "type": "boolean"
+        },
+        "notification_settings": {
+          "type": "object",
+          "properties": {
+            "receiver": {
+              "type": "string"
+            }
+          }
+        },
+        "data": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "refId"
+            ],
+            "properties": {
+              "refId": {
+                "type": "string"
+              },
+              "relativeTimeRange": {
+                "type": "object"
+              },
+              "datasourceUid": {
+                "type": "string"
+              },
+              "model": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "dashboard": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$",
+          "maxLength": 63
+        },
+        "uid": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_-]{1,40}$"
+        },
+        "json": {
+          "type": "string",
+          "minLength": 2
+        },
+        "configMapRef": {
+          "type": "object",
+          "required": [
+            "name",
+            "key"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "key": {
+              "type": "string"
+            }
+          }
+        },
+        "grafanaCom": {
+          "type": "object",
+          "required": [
+            "id"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "revision": {
+              "type": "integer"
+            }
+          }
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "datasources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "inputName",
+              "datasourceName"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "inputName": {
+                "type": "string"
+              },
+              "datasourceName": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "json"
+          ]
+        },
+        {
+          "required": [
+            "configMapRef"
+          ]
+        },
+        {
+          "required": [
+            "grafanaCom"
+          ]
+        },
+        {
+          "required": [
+            "url"
+          ]
+        }
+      ]
+    }
+  },
+  "additionalProperties": false
+}

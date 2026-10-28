@@ -152,6 +152,8 @@
 ./schemas/idp-advanced/v3.11.0.json
 ./schemas/idp-advanced/v3.1.4.json
 ./schemas/idp-advanced/v3.12.2.json
+./schemas/idp-grafana-customer-resources/latest.json
+./schemas/idp-grafana-customer-resources/v1.0.0.json
 ./schemas/idp-blackbox-probe/latest.json
 ./schemas/idp-blackbox-probe/v1.0.0.json
 ./schemas/idp-blackbox-probe/v1.0.2.json
