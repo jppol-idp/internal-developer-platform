@@ -1,6 +1,6 @@
 ---
 title: Working with Alerting
-nav_order: 27
+nav_order: 28
 parent: How to...
 domain: public
 layout: last-reviewed
@@ -173,6 +173,8 @@ Below is an example walkthrough with screenshots illustrating the process:
 ---
 
 ## Setting Up Alerts as Code (Helm Chart)
+
+> **New setups:** use [`idp-grafana-customer-resources`](/how-to/grafana-as-code.html) instead of `idp-grafana-alarm`. It takes the same alert values, with `folderUID` instead of `folderRef`, and can also deploy dashboards. Existing `idp-grafana-alarm` releases keep working, and there is no need to migrate them.
 
 The `idp-grafana-alarm` Helm chart lets you manage Grafana alert rules as code via Kubernetes CRDs. Alerts are deployed through ArgoCD and automatically synced to Grafana via the grafana-operator.
 

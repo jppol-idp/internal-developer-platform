@@ -1,6 +1,6 @@
 ---
 title: pgAdmin Database Management
-nav_order: 21
+nav_order: 22
 parent: How to...
 domain: public
 layout: last-reviewed
