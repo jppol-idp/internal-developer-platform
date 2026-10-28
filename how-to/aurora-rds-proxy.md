@@ -4,7 +4,7 @@ nav_order: 5
 parent: How to...
 domain: public
 layout: last-reviewed
-last_reviewed_on: 2026-01-29
+last_reviewed_on: 2026-10-28
 review_in: 3 months
 ---
 # Aurora RDS Proxy – Local Access Setup Guide
@@ -16,7 +16,7 @@ review_in: 3 months
 
 Our Aurora databases live inside a private VPC and are not directly accessible from local machines. At the same time, our applications run inside a private Kubernetes namespace, which has network-level access to those databases.
 
-To securely bridge this gap for local development and troubleshooting, we use an Aurora RDS Proxy exposed inside the Kubernetes cluster. By port-forwarding to the proxy through kubectl.
+To securely bridge this gap for local development and troubleshooting, we use an Aurora RDS Proxy exposed inside the Kubernetes cluster, which you reach by port-forwarding to it with kubectl.
 
 This setup allows your local machine to securely connect to Aurora as if it were running inside the cluster, without compromising network isolation.
 
