@@ -4,7 +4,7 @@ nav_order: 14
 parent: How to...
 domain: public
 layout: last-reviewed
-last_reviewed_on: 2026-04-10
+last_reviewed_on: 2026-10-30
 review_in: 6 months
 ---
 # Grafana Externally Shared Dashboards
@@ -54,7 +54,7 @@ Sharing a dashboard externally requires **Grafana Admin** permissions. This is a
 To get a dashboard shared:
 
 1. Make sure your dashboard meets the requirements above (no template variables, etc.)
-2. Contact the IDP team on Slack with the cluster and dashboard name (or URL)
+2. Contact the IDP team on Slack with the cluster and dashboard name (or URL), and tell us if the dashboard should only be reachable from the office network (see below)
 3. The IDP team will enable external sharing and provide you with the link
 4. To revoke or pause sharing, contact the IDP team
 
@@ -71,8 +71,18 @@ Example URL format:
 https://grafana.<cluster>.idp.jppol.dk/public-dashboards/<uuid>?kiosk
 ```
 
+## Restricting a dashboard to the office network
+
+If the dashboard shows data that should not leave the house, the IDP team can restrict the shared link to the JPPol office network. This covers all JPPol locations, such as Rådhuspladsen (RHP) and Mediebyen in Aarhus. The link then only opens from devices on the office network, including office screens on the office Wi-Fi. From anywhere else, such as from home or a mobile network, it returns `403 Forbidden`.
+
+Ask for this when you request the shared dashboard. It can also be added to an existing shared dashboard.
+
+If your screen needs to be reachable from a network outside JPPol, tell us, and we can allow that network for your dashboard. Each dashboard has its own restriction, so this does not affect other teams.
+
+The restriction is tied to the specific link. If sharing is revoked and enabled again, the dashboard gets a new link, and the restriction has to be requested again.
+
 ## Security considerations
 
 - The shared link provides **read-only** access to the specific dashboard only
-- The UUID in the link is not guessable, but anyone with the link can view the dashboard
+- The UUID in the link is not guessable, but anyone with the link can view the dashboard, unless it is [restricted to the office network](#restricting-a-dashboard-to-the-office-network)
 - If a link is compromised, contact the IDP team to revoke it immediately
