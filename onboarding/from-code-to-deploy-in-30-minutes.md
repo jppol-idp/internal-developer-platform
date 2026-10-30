@@ -12,6 +12,8 @@ review_in: 3 months
 # From code to deploy in 30 minutes 🚀
 > This guide helps you quickly deploy your first application to the developer platform.
 
+> 💡 Prefer to start from a working example? Create a repository from the [IDP workshop template](https://github.com/jppol-idp/idp-workshop-template) and follow its `ASSIGNMENT.md`. It walks through the same steps as this guide, with a small service, CI workflow and deployment manifests already in place.
+
 ---
 **By the end of this session, you will have:**
 
