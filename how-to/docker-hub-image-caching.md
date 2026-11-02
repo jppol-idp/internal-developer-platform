@@ -4,7 +4,7 @@ nav_order: 12
 parent: How to...
 domain: public
 layout: last-reviewed
-last_reviewed_on: 2025-11-03
+last_reviewed_on: 2026-11-02
 review_in: 6 months
 ---
 
@@ -12,10 +12,7 @@ review_in: 6 months
 
 ## Background
 
-Docker Hub enforces rate limits on image pulls to manage their infrastructure costs and prevent abuse:
-
-- **Anonymous users**: 100 pulls per 6 hours per IP address
-- **Authenticated free users**: 200 pulls per 6 hours per account
+Docker Hub enforces [rate limits on image pulls](https://docs.docker.com/docker-hub/usage/pulls/), counted per IP address for anonymous pulls.
 
 In shared Kubernetes environments, these limits can be quickly exceeded, causing:
 - Failed pod deployments (ImagePullBackOff errors)
@@ -88,16 +85,17 @@ spec:
 
 ## Supported Images
 
-The caching works for all Docker Hub images:
+The cache works for all Docker Hub images, once the image reference points to the ECR cache path:
 
-| Image Type | Example | Automatically Cached |
-|------------|---------|---------------------|
-| Official images | `nginx:latest` | ✅ Yes |
-| Official with docker.io | `docker.io/nginx:latest` | ✅ Yes |
-| User/organization images | `grafana/grafana:latest` | ✅ Yes |
-| Explicitly prefixed | `docker.io/bitnami/nginx:latest` | ✅ Yes |
+| Image Type | Example | ECR cache path |
+|------------|---------|----------------|
+| Official images | `nginx:latest` | `docker-hub/library/nginx:latest` |
+| Official with docker.io | `docker.io/nginx:latest` | `docker-hub/library/nginx:latest` |
+| User/organization images | `grafana/grafana:latest` | `docker-hub/grafana/grafana:latest` |
+| User/organization with docker.io | `docker.io/grafana/grafana:latest` | `docker-hub/grafana/grafana:latest` |
 
-Images from **other registries are not affected**:
+Images from **other registries cannot be pulled through this cache**:
+- `public.ecr.aws/owner/image` - Amazon ECR Public
 - `gcr.io/project/image` - Google Container Registry
 - `quay.io/organization/image` - Quay.io
 - `ghcr.io/owner/image` - GitHub Container Registry
@@ -109,7 +107,6 @@ Images from **other registries are not affected**:
 - **No rate limiting**: Eliminates Docker Hub 429 errors
 - **Faster deployments**: Images are pulled from ECR in the same AWS region
 - **Improved reliability**: Reduces dependency on Docker Hub availability
-- **Zero configuration**: Works automatically without manifest changes
 - **ArgoCD compatible**: Syncs correctly with GitOps workflows
 
 ## Troubleshooting
@@ -121,7 +118,7 @@ Check the pod events to see the specific error:
 kubectl describe pod <pod-name> -n <namespace>
 ```
 
-If the error mentions ECR authentication or "not found", contact the platform team via Slack (#idp-team).
+If the error mentions ECR authentication or "not found", check that the image path follows the mapping above (official images need `/library/`). If it still fails, write to the IDP team in your team's onboarding channel on Slack.
 
 
 ### I want to verify my image is cached
@@ -135,9 +132,4 @@ This should show an ECR URL starting with `354918371398.dkr.ecr.eu-west-1.amazon
 
 ## Additional Information
 
-For technical details about the implementation, see:
-- [Technical Documentation](https://docs.idp.jppol.dk/documentation/ecr-pull-through-cache)
-- [JIRA: IDP-656](https://jira-jppol.atlassian.net/browse/IDP-656)
-
-For questions or issues, contact the platform team via:
-- **Slack**: #idp-team
+For questions or issues, write to the IDP team in your team's onboarding channel on Slack.
