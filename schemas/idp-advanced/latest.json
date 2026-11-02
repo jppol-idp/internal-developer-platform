@@ -266,7 +266,7 @@
           }
         }
       },
-      "description": "externalSecrets links AWS Secrets Manager secrets to pod environment variables. Each entry needs `env_name` (the env var name in the container) and `secretsmanager_name` (the AWS secret at `customer/<namespace>/<secretsmanager_name>`). Optionally set `property` to pluck a single key from a JSON-formatted AWS secret \u2014 this enables the consolidated pattern, where multiple env vars share one AWS secret. Naming behavior of the rendered ExternalSecret CR:  - Without `property`: CR name uses `secretsmanager_name` (matches 3.0.x \u2014 upgrades from older versions are byte-identical, no rename).  - With `property`: CR name uses `env_name` (always unique, allows entries to share `secretsmanager_name` without colliding). Migration note: switching an existing entry from the classic to the consolidated pattern (adding `property` and changing `secretsmanager_name`) renames the CR. ArgoCD will fail to sync the new ExternalSecret with \"target is owned by another ExternalSecret\" because the previous ExternalSecret still owns the target K8s Secret. Resolution: manually delete the old ExternalSecret CRs in the app namespace before/during the sync \u2014 the K8s Secret is GC'd via ownerReference and immediately recreated by the new ExternalSecret. Plain version upgrades that do not change values are unaffected."
+      "description": "externalSecrets links AWS Secrets Manager secrets to pod environment variables. Each entry needs `env_name` (the env var name in the container) and `secretsmanager_name` (the AWS secret at `customer/<namespace>/<secretsmanager_name>`). Optionally set `property` to pluck a single key from a JSON-formatted AWS secret — this enables the consolidated pattern, where multiple env vars share one AWS secret. Naming behavior of the rendered ExternalSecret CR:  - Without `property`: CR name uses `secretsmanager_name` (matches 3.0.x — upgrades from older versions are byte-identical, no rename).  - With `property`: CR name uses `env_name` (always unique, allows entries to share `secretsmanager_name` without colliding). Migration note: switching an existing entry from the classic to the consolidated pattern (adding `property` and changing `secretsmanager_name`) renames the CR. ArgoCD will fail to sync the new ExternalSecret with \"target is owned by another ExternalSecret\" because the previous ExternalSecret still owns the target K8s Secret. Resolution: manually delete the old ExternalSecret CRs in the app namespace before/during the sync — the K8s Secret is GC'd via ownerReference and immediately recreated by the new ExternalSecret. Plain version upgrades that do not change values are unaffected."
     },
     "env": {
       "type": "array",
@@ -1607,6 +1607,27 @@
         "enabled": {
           "type": "boolean",
           "description": "Enable Linkerd sidecar injection for pods"
+        }
+      }
+    },
+    "tracing": {
+      "type": "object",
+      "description": "OpenTelemetry tracing. When enabled, the container gets the OTEL_* environment variables that point the OpenTelemetry SDK at the platform's trace endpoint. The application still needs the OpenTelemetry SDK or agent. Variables set in env take precedence.",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Set the OTEL_* exporter environment variables on the container"
+        },
+        "serviceName": {
+          "type": "string",
+          "description": "Service name shown in Grafana (OTEL_SERVICE_NAME). Defaults to the app name, which is the release name without the namespace suffix."
+        },
+        "sampleRate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Share of requests to record, from 0 to 1. Below 1 the SDK samples with parentbased_traceidratio."
         }
       }
     }

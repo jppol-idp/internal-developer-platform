@@ -58,6 +58,7 @@
 ./schemas/idp-advanced/v3.9.0.json
 ./schemas/idp-advanced/v3.7.0.json
 ./schemas/idp-advanced/v3.10.0.json
+./schemas/idp-advanced/v3.14.0.json
 ./schemas/idp-advanced/v3.5.0.json
 ./schemas/idp-advanced/v3.1.2.json
 ./schemas/idp-advanced/v3.6.1.json
