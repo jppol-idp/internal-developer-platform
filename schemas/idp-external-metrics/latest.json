@@ -1,0 +1,207 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "idp-external-metrics values",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "targets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "hosts"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z0-9]([a-z0-9-]*[a-z0-9])?$",
+            "maxLength": 50,
+            "description": "Name of the target. Set as the `external_target` label and used in the ScrapeConfig names, with the exporter name appended for a preset. Must be unique in the namespace."
+          },
+          "preset": {
+            "type": "string",
+            "enum": [
+              "msk"
+            ],
+            "description": "Preset for a known managed service, which sets ports, labels and a curated metric allowlist. `msk`: Amazon MSK Open Monitoring."
+          },
+          "hosts": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "Hosts to scrape. With the msk preset: broker hostnames without port. Without a preset: host:port."
+          },
+          "path": {
+            "type": "string",
+            "pattern": "^/",
+            "description": "Metrics path for a target without a preset. Defaults to /metrics."
+          },
+          "scheme": {
+            "type": "string",
+            "enum": [
+              "http",
+              "https"
+            ],
+            "description": "Scheme for a target without a preset. Defaults to http."
+          },
+          "keepMetrics": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "metric"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "metric": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Regular expression for the full metric name."
+                },
+                "labels": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "description": "Regular expressions for label values the series must have, for example `name` on JMX metrics. Labels not listed match any value."
+                }
+              }
+            },
+            "description": "Metrics to keep. Required without a preset, where nothing else is kept. With a preset they are added to the preset allowlist, including their per-topic and per-partition series."
+          },
+          "scrapeInterval": {
+            "type": "string",
+            "pattern": "^[0-9]+(s|m)$",
+            "description": "Overrides the default scrape interval."
+          },
+          "scrapeTimeout": {
+            "type": "string",
+            "pattern": "^[0-9]+(s|m)$",
+            "description": "Overrides the default scrape timeout."
+          },
+          "sampleLimit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20000,
+            "description": "Overrides the default sample limit."
+          },
+          "exporters": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "boolean"
+            },
+            "description": "Turns exporters of a preset on or off, by name. All are on by default. The msk preset has `jmx` and `node`."
+          },
+          "labels": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "propertyNames": {
+              "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$",
+              "not": {
+                "enum": [
+                  "namespace",
+                  "external_target",
+                  "job",
+                  "instance"
+                ]
+              }
+            },
+            "description": "Static labels added to every series from this target, for example an environment. `namespace`, `external_target`, `job` and `instance` are reserved."
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "preset"
+              ],
+              "properties": {
+                "preset": {
+                  "const": "msk"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "hosts": {
+                  "items": {
+                    "pattern": "^b-[0-9]+\\.[a-z0-9.-]+$"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "preset"
+              ]
+            },
+            "then": {
+              "properties": {
+                "path": false,
+                "scheme": false
+              }
+            },
+            "else": {
+              "required": [
+                "keepMetrics"
+              ],
+              "properties": {
+                "hosts": {
+                  "items": {
+                    "pattern": "^[a-zA-Z0-9.-]+:[0-9]+$"
+                  }
+                },
+                "keepMetrics": {
+                  "minItems": 1
+                },
+                "exporters": false
+              }
+            }
+          }
+        ]
+      },
+      "description": "Endpoints to scrape. Each entry renders one ScrapeConfig, or one per exporter for a preset."
+    },
+    "scrapeInterval": {
+      "type": "string",
+      "pattern": "^[0-9]+(s|m)$",
+      "description": "How often each host is scraped. Can be set per target."
+    },
+    "scrapeTimeout": {
+      "type": "string",
+      "pattern": "^[0-9]+(s|m)$",
+      "description": "Scrape timeout. Can be set per target."
+    },
+    "sampleLimit": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 20000,
+      "description": "Maximum number of series kept per host after filtering. Can be set per target."
+    },
+    "global": {
+      "type": "object",
+      "description": "Included to allow the chart to be used as a subchart, as Helm injects .global from the top chart."
+    },
+    "idp_aws_account": {
+      "type": [
+        "string",
+        "number"
+      ],
+      "description": "This value is set automatically by ArgoCD, but can be overridden here for local testing."
+    },
+    "idp_oidc_provider_url": {
+      "type": "string",
+      "description": "This value is set automatically by ArgoCD, but can be overridden here for local testing."
+    }
+  }
+}

@@ -122,6 +122,8 @@
 ./schemas/idp-dynamodb/v2.1.8.json
 ./schemas/idp-dynamodb/v2.1.10.json
 ./schemas/idp-dynamodb/v2.1.11.json
+./schemas/idp-external-metrics/latest.json
+./schemas/idp-external-metrics/v1.0.0.json
 ./schemas/idp-redis/v0.8.0.json
 ./schemas/idp-redis/latest.json
 ./schemas/idp-redis/v0.8.4.json
