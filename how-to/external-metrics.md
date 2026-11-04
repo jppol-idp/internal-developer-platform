@@ -45,7 +45,7 @@ description: Metrics from our MSK cluster
 version: 0.1.0
 helm:
   chart: helm/idp-external-metrics
-  chartVersion: "1.0.0"  # check latest at github.com/jppol-idp/helm-idp/releases
+  chartVersion: "1.0.1"  # check latest at github.com/jppol-idp/helm-idp/releases
 ```
 
 ```yaml
