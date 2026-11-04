@@ -34,7 +34,7 @@
               "type": "string",
               "minLength": 1
             },
-            "description": "Hosts to scrape. With the msk preset: broker hostnames without port. Without a preset: host:port."
+            "description": "Hosts to scrape. With the msk preset: broker hostnames without port. Without a preset: host:port, where host is a lowercase public DNS name ending in com, net, org, io, dk, eu, se, no, de, cloud, dev, app or ai. IP addresses and in-cluster names are rejected."
           },
           "path": {
             "type": "string",
@@ -133,7 +133,7 @@
               "properties": {
                 "hosts": {
                   "items": {
-                    "pattern": "^b-[0-9]+\\.[a-z0-9.-]+$"
+                    "pattern": "^b-[0-9]+\\.[a-z0-9.-]+\\.kafka\\.[a-z0-9-]+\\.amazonaws\\.com$"
                   }
                 }
               }
@@ -158,7 +158,7 @@
               "properties": {
                 "hosts": {
                   "items": {
-                    "pattern": "^[a-zA-Z0-9.-]+:[0-9]+$"
+                    "pattern": "^([a-z0-9]([a-z0-9-]*[a-z0-9])?\\.)+(com|net|org|io|dk|eu|se|no|de|cloud|dev|app|ai):[0-9]+$"
                   }
                 },
                 "keepMetrics": {
