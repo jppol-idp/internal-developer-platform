@@ -1,6 +1,6 @@
 ---
 title: Connecting to the Event Platform (Kafka)
-nav_order: 8
+nav_order: 9
 parent: How to...
 domain: public
 layout: last-reviewed

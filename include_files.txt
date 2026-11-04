@@ -239,6 +239,7 @@
 ./how-to/secrets.md
 ./how-to/alerting.md
 ./how-to/network-access.md
+./how-to/external-metrics.md
 ./how-to/grafana-as-code.md
 ./how-to/tracing.md
 ./how-to/dynamo-db.md

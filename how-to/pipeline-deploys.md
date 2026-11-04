@@ -1,6 +1,6 @@
 ---
 title: Deploying from your own pipeline
-nav_order: 10
+nav_order: 11
 parent: How to...
 domain: public
 layout: last-reviewed

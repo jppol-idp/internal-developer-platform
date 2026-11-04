@@ -1,6 +1,6 @@
 ---
 title: Kubernetes Namespace Access via AWS SSO
-nav_order: 20
+nav_order: 21
 parent: How to...
 domain: public
 layout: last-reviewed

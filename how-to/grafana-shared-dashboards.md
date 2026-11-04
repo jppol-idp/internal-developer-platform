@@ -1,6 +1,6 @@
 ---
 title: Grafana externally shared dashboards
-nav_order: 15
+nav_order: 16
 parent: How to...
 domain: public
 layout: last-reviewed
