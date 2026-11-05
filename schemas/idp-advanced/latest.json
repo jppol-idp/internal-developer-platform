@@ -38,9 +38,11 @@
                 "integer"
               ]
             }
-          }
+          },
+          "additionalProperties": false
         }
-      }
+      },
+      "additionalProperties": false
     },
     "managementPolicies": {
       "type": "string",
@@ -87,7 +89,8 @@
         "repository",
         "pullPolicy",
         "tag"
-      ]
+      ],
+      "additionalProperties": false
     },
     "nameOverride": {
       "type": "string",
@@ -199,9 +202,11 @@
               "type": "integer",
               "description": "Number of GPUs to request"
             }
-          }
+          },
+          "additionalProperties": false
         }
-      }
+      },
+      "additionalProperties": false
     },
     "serviceAccount": {
       "type": "object",
@@ -241,9 +246,26 @@
               },
               "description": "Specifies the IAM policy to attach to the service account"
             }
+          },
+          "additionalProperties": false
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the service account to use. Defaults to the release fullname when create is true, otherwise 'default'."
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Annotations to add to the service account.",
+          "additionalProperties": {
+            "type": "string"
           }
+        },
+        "automount": {
+          "type": "boolean",
+          "description": "Sets automountServiceAccountToken on the created service account."
         }
-      }
+      },
+      "additionalProperties": false
     },
     "external_secrets": {
       "type": "array",
@@ -407,7 +429,8 @@
               "description": "Name for the metrics port (defaults to \"metrics\")"
             }
           },
-          "description": "Optional metrics port configuration"
+          "description": "Optional metrics port configuration",
+          "additionalProperties": false
         },
         "extraPorts": {
           "type": "array",
@@ -444,7 +467,8 @@
           }
         }
       },
-      "description": "Servicetype and port for the service"
+      "description": "Servicetype and port for the service",
+      "additionalProperties": false
     },
     "serviceMonitor": {
       "type": "object",
@@ -497,7 +521,8 @@
           "type": "object"
         }
       },
-      "description": "ServiceMonitor configuration for Prometheus Operator"
+      "description": "ServiceMonitor configuration for Prometheus Operator",
+      "additionalProperties": false
     },
     "podMonitor": {
       "type": "object",
@@ -550,7 +575,8 @@
           "type": "object"
         }
       },
-      "description": "PodMonitor configuration for Prometheus Operator"
+      "description": "PodMonitor configuration for Prometheus Operator",
+      "additionalProperties": false
     },
     "ingress": {
       "type": "object",
@@ -606,7 +632,8 @@
               "description": "Additional middleware references. Format: namespace-name@kubernetescrd"
             }
           },
-          "description": "Public ingress configuration"
+          "description": "Public ingress configuration",
+          "additionalProperties": false
         },
         "private": {
           "type": "object",
@@ -655,7 +682,8 @@
               "description": "Additional middleware references. Format: namespace-name@kubernetescrd"
             }
           },
-          "description": "Private ingress configuration"
+          "description": "Private ingress configuration",
+          "additionalProperties": false
         },
         "grpc": {
           "type": "object",
@@ -762,7 +790,8 @@
           "description": "gRPC ingress configuration. Rendered as separate Ingress objects because the backend port and the h2c backend scheme apply per Ingress."
         }
       },
-      "description": "Ingress configuration (traefik-only) @default -- Ingress configuration"
+      "description": "Ingress configuration (traefik-only) @default -- Ingress configuration",
+      "additionalProperties": false
     },
     "vpa": {
       "type": "object",
@@ -781,7 +810,8 @@
           "description": "VPA update policy. Valid options are 'Auto', 'Initial', and 'Off'. Default is 'Off'"
         }
       },
-      "description": "vertical pod autoscaler"
+      "description": "vertical pod autoscaler",
+      "additionalProperties": false
     },
     "storage": {
       "type": "object",
@@ -1449,9 +1479,14 @@
         "targetCPUUtilizationPercentage": {
           "type": "integer",
           "description": "Target CPU utilization percentage. Only relevant if autoscaling is enabled"
+        },
+        "targetMemoryUtilizationPercentage": {
+          "type": "integer",
+          "description": "Target average memory utilization in percent. Adds a memory metric to the HPA when set."
         }
       },
-      "description": "Autoscaling configuration"
+      "description": "Autoscaling configuration",
+      "additionalProperties": false
     },
     "podDisruptionBudget": {
       "type": "object",
@@ -1486,7 +1521,8 @@
           ],
           "description": "Policy for handling unhealthy pods during eviction (Kubernetes 1.26+)"
         }
-      }
+      },
+      "additionalProperties": false
     },
     "nodeSelector": {
       "type": "object",
@@ -1608,7 +1644,8 @@
           "type": "boolean",
           "description": "Enable Linkerd sidecar injection for pods"
         }
-      }
+      },
+      "additionalProperties": false
     },
     "tracing": {
       "type": "object",
