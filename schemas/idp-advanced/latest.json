@@ -1,6 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Helm values schema",
+  "description": "Values for idp-advanced. Unknown keys are rejected at the top level and in every object the chart defines itself, so a misspelt or misindented key fails the render instead of being ignored.",
   "type": "object",
   "additionalProperties": false,
   "properties": {
