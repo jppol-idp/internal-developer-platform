@@ -10,7 +10,7 @@ review_in: 12 months
 
 # Access to Individual Kubernetes Namespaces via AWS SSO
 
-In each cluster account, the AWS access portal shows Permission Sets that grant access to specific Kubernetes namespaces. Access is generally mapped to the "argo-write" group from the same account, so if you already have that group you already have the relevant access.
+In each cluster account, the AWS access portal shows Permission Sets that grant access to specific Kubernetes namespaces. Access is granted through your team's `NamespaceEditor` AD group for the environment.
 
 These permissions are primarily meant for obtaining kubectl access (viewing pods and logs and port-forwarding to services) rather than for signing in to the AWS Console.
 
@@ -47,6 +47,13 @@ Within your own namespace you get read access and port-forwarding, but no write 
 | Read Secret objects (`kubectl get secret`, see [Secrets](#secrets) below) | No |
 | Access another team's namespace | No |
 | Nodes or other cluster-scoped resources | No |
+
+{: .note }
+AI only: members of the `AccountOperator` group also see the `idp_customer_access` role in the AWS access portal. It gives full kubectl access, including `exec` and Secrets, in all AI namespaces on the cluster. The `idp-ns-<namespace>` context from the login script stays read-only, so set up a separate AWS profile with that role (for example with `aws configure sso`) and add a context for it:
+
+```
+aws eks update-kubeconfig --name <cluster> --profile <profile> --alias <cluster> --region eu-west-1
+```
 
 Validate what you have with `kubectl auth can-i`:
 ```
