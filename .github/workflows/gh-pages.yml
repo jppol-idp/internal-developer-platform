@@ -28,7 +28,7 @@ concurrency:
 jobs:
   # Build job
   build_private:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     defaults:
       run:
         working-directory: .
@@ -61,7 +61,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     needs: build_private
     steps:
       - name: Deploy to GitHub Pages
@@ -70,7 +70,7 @@ jobs:
 
   # sync and push to public repos if required
   sync_public:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     if: github.repository == 'jppol-idp/docs'
     steps:
       - name: Checkout Private Repo

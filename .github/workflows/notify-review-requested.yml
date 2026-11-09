@@ -8,7 +8,7 @@ permissions: {}
 
 jobs:
   notify:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     if: github.event.pull_request.user.type != 'Bot'
     steps:
       - name: Post to Slack
