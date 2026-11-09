@@ -91,6 +91,7 @@
 ./schemas/idp-managed-customer-alerts/v2.10.4.json
 ./schemas/idp-managed-customer-alerts/v2.0.0.json
 ./schemas/idp-managed-customer-alerts/v1.0.0.json
+./schemas/idp-managed-customer-alerts/v2.13.0.json
 ./schemas/idp-managed-customer-alerts/v2.6.0.json
 ./schemas/idp-managed-customer-alerts/v2.5.0.json
 ./schemas/idp-managed-customer-alerts/v2.2.0.json

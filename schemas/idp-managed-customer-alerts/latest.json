@@ -151,6 +151,9 @@
         "kubeJobFailed": {
           "$ref": "#/definitions/enableSeverity"
         },
+        "podEvicted": {
+          "$ref": "#/definitions/enableSeverity"
+        },
         "kubeHpaMaxedOut": {
           "$ref": "#/definitions/enableSeverity"
         },
