@@ -82,6 +82,7 @@
 ./schemas/idp-managed-customer-alerts/v2.10.1.json
 ./schemas/idp-managed-customer-alerts/v2.2.1.json
 ./schemas/idp-managed-customer-alerts/v2.10.2.json
+./schemas/idp-managed-customer-alerts/v2.13.1.json
 ./schemas/idp-managed-customer-alerts/v2.10.3.json
 ./schemas/idp-managed-customer-alerts/v2.9.0.json
 ./schemas/idp-managed-customer-alerts/latest.json
