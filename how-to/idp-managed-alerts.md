@@ -4,7 +4,7 @@ nav_order: 19
 parent: How to...
 domain: public
 layout: last-reviewed
-last_reviewed_on: 2026-10-05
+last_reviewed_on: 2026-11-09
 review_in: 6 months
 ---
 
@@ -53,6 +53,7 @@ Use this alongside your own team-specific alerts (built with [`idp-grafana-alarm
 | `podPendingMajor` | major | A pod is stuck in `Pending` longer than the configured duration (default 15 min). **Disabled by default** | enabled, severity, `durationSeconds` |
 | `podTerminatingWarning` | warning | A pod is stuck in `Terminating` longer than the configured duration (default 5 min) | enabled, severity, `durationSeconds` |
 | `podTerminatingMajor` | major | A pod is stuck in `Terminating` longer than the configured duration (default 15 min) | enabled, severity, `durationSeconds` |
+| `podEvicted` | warning | A pod owned by a Deployment, StatefulSet or DaemonSet was evicted or failed within the last 72 hours. The usual cause is that the node ran short of memory while the pod used more than its memory request (see `memoryUsageAboveRequest`); node shutdowns are another. A replacement pod is started automatically, so this is rarely an outage, but it repeats until the request matches real usage. Fires immediately and resolves by itself 72 hours after the last failure. Failed pods are deleted by the platform after 2 hours, so they may be gone when you look; the alert still shows how many there were | enabled, severity |
 | `pvcUsage` | warning / critical | PVC disk usage crosses `warningPercent` (default 80%) or `criticalPercent` (default 90%) | enabled, thresholds |
 | `argocdAppUnhealthy` | warning | Any ArgoCD `Application` targeting your namespace is `OutOfSync`, `Degraded`, `Missing`, or `Unknown` for longer than `forDuration` (default 15 min) | enabled, severity, `forDuration` |
 | `kubeDeploymentReplicasMismatch` | warning | A Deployment has fewer available replicas than its spec for longer than `forDuration` (default 15 min). Typical causes: failing `readinessProbe`, image pull error, app crashing on startup. **Disabled by default**: overlaps with `containerRestartLoop` / `podPendingWarning` | enabled, severity, `forDuration` |
@@ -111,7 +112,7 @@ description: IDP-managed standard alerts for <namespace>
 version: 0.1.0
 helm:
   chart: helm/idp-managed-customer-alerts
-  chartVersion: "2.10.1"  # see latest at https://github.com/jppol-idp/helm-idp/releases
+  chartVersion: "2.13.0"  # see latest at https://github.com/jppol-idp/helm-idp/releases
 ```
 
 **`values.yaml`:**
