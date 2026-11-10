@@ -4,7 +4,7 @@ nav_order: 14
 parent: How to...
 domain: public
 layout: last-reviewed
-last_reviewed_on: 2026-11-02
+last_reviewed_on: 2026-11-10
 review_in: 6 months
 ---
 
@@ -24,7 +24,7 @@ To prevent these issues, we've implemented an automatic caching solution that st
 
 ## How It Works
 
-To use the ECR cache for your Docker Hub images, you need to update your deployment manifests to point to the cache:
+To use the ECR cache for your Docker Hub images, you need to update your deployment manifests or Dockerfiles to point to the cache:
 
 1. **Update your image reference** to use the ECR cache URL
 2. **Deploy the updated manifest** to your cluster
@@ -83,6 +83,64 @@ spec:
           image: 354918371398.dkr.ecr.eu-west-1.amazonaws.com/docker-hub/grafana/grafana:latest
 ```
 
+## Using the Cache in Docker Builds
+
+Base images in your Dockerfile can also be pulled through the cache when you build in GitHub Actions. Update the `FROM` line the same way as an image reference:
+
+```dockerfile
+# Original
+FROM node:22
+
+# ECR cache path
+FROM 354918371398.dkr.ecr.eu-west-1.amazonaws.com/docker-hub/library/node:22
+```
+
+### With build-and-push-ecr
+
+[build-and-push-ecr](https://github.com/jppol-idp/build-and-push-ecr) logs in to ECR before it builds, so no extra steps are needed:
+
+```yaml
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jppol-idp/build-and-push-ecr@main
+        with:
+          namespace: <your-namespace>
+          image_name: my-app
+          image_tag: ${{ github.sha }}
+```
+
+### If you build the image yourself
+
+If you run `docker build` in your own step (e.g. with [tag-and-push-ecr](https://github.com/jppol-idp/tag-and-push-ecr), or `build-and-push-ecr` with `run_build: false`), log in to ECR before the build:
+
+```yaml
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: arn:aws:iam::354918371398:role/github-access-<your-namespace>
+          aws-region: eu-west-1
+      - uses: aws-actions/amazon-ecr-login@v2
+        with:
+          registries: "354918371398"
+      - run: docker build . -t local-build
+      - uses: jppol-idp/tag-and-push-ecr@main
+        with:
+          source_tag: local-build
+          namespace: <your-namespace>
+          image_name: my-app
+          image_tags: ${{ github.sha }}
+```
+
+{: .note }
+The job needs `id-token: write` permission to assume the role.
+
 ## Supported Images
 
 The cache works for all Docker Hub images, once the image reference points to the ECR cache path:
@@ -119,6 +177,10 @@ kubectl describe pod <pod-name> -n <namespace>
 ```
 
 If the error mentions ECR authentication or "not found", check that the image path follows the mapping above (official images need `/library/`). If it still fails, write to the IDP team in your team's onboarding channel on Slack.
+
+### My build fails pulling the base image
+
+If `docker build` fails with "no basic auth credentials" or "denied", the runner is not logged in to ECR when the build starts. Use `build-and-push-ecr`, or add the login steps from [If you build the image yourself](#if-you-build-the-image-yourself) before your build. If it still fails, write to the IDP team in your team's onboarding channel on Slack.
 
 
 ### I want to verify my image is cached
