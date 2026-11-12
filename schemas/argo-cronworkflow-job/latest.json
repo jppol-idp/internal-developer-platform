@@ -157,6 +157,14 @@
           "default": false,
           "description": "If true, do not run scheduled workflows."
         },
+        "timezone": {
+          "type": "string",
+          "minLength": 1,
+          "description": "IANA timezone the schedules are evaluated in, e.g. \"Europe/Copenhagen\" (DST is handled). If unset, schedules run in UTC.",
+          "examples": [
+            "Europe/Copenhagen"
+          ]
+        },
         "workflowSpec": {
           "type": "object",
           "description": "Argo Workflow spec used by the CronWorkflow.",
@@ -207,7 +215,24 @@
                         }
                       },
                       "resources": {
-                        "type": "object"
+                        "type": "object",
+                        "description": "CPU and memory requests/limits for this step's container, same format as a Kubernetes container (and idp-advanced).",
+                        "properties": {
+                          "requests": {
+                            "type": "object",
+                            "properties": {
+                              "cpu": { "type": ["string", "number"] },
+                              "memory": { "type": "string" }
+                            }
+                          },
+                          "limits": {
+                            "type": "object",
+                            "properties": {
+                              "cpu": { "type": ["string", "number"] },
+                              "memory": { "type": "string" }
+                            }
+                          }
+                        }
                       }
                     }
                   }
