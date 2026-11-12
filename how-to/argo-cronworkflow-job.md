@@ -4,7 +4,7 @@ nav_order: 35
 parent: How to...
 domain: public
 layout: last-reviewed
-last_reviewed_on: 2026-09-22
+last_reviewed_on: 2026-11-12
 review_in: 6 months
 ---
 # Working with Scheduled Jobs
@@ -45,7 +45,7 @@ description: my-cron-job
 version: 0.1.0
 helm:
   chart: helm/argo-cronworkflow-job
-  chartVersion: "1.2.5" # Check https://github.com/jppol-idp/helm-idp/tree/main/charts/argo-cronworkflow-job for the latest version
+  chartVersion: "1.3.0" # Example version. Check https://github.com/jppol-idp/helm-idp/tree/main/charts/argo-cronworkflow-job for the latest version
 ```
 
 `values.yaml` defines the schedule and the container that runs on it - this is the minimum needed for a working job:
@@ -67,7 +67,7 @@ spec:
           args: ["runJob.js"]
 ```
 
-Once committed, ArgoCD deploys a `CronWorkflow` that runs your container on the given schedule. Everything else - concurrency behavior, history limits, autoscaling - has a sensible chart default; add it only if you need something other than the default. See the reference table below.
+Once committed, ArgoCD deploys a `CronWorkflow` that runs your container on the given schedule. Everything else - concurrency behavior, history limits, timezone - has a sensible chart default; add it only if you need something other than the default. See the reference table below.
 
 ### Configuration reference
 
@@ -79,9 +79,30 @@ Once committed, ArgoCD deploys a `CronWorkflow` that runs your container on the 
 | `spec.successfulJobsHistoryLimit` / `spec.failedJobsHistoryLimit` | `5` | How many past runs of each outcome to keep for inspection. |
 | `spec.startingDeadlineSeconds` | `30` | How much of a delay is tolerated before a missed schedule is abandoned rather than started late. |
 | `spec.suspend` | `false` | Set to `true` to pause the schedule without removing the job. |
-| `vpa.enabled` | - | Enables a VerticalPodAutoscaler for the job's containers. Not required, but set on every job we've seen in practice - recommended. |
+| `spec.timezone` | unset (UTC) | [IANA timezone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) the schedules run in, e.g. `Europe/Copenhagen`. Daylight saving time is handled, so `0 6 * * *` runs at 06:00 Danish time all year. |
 
 `env` sets environment variables shared by every container template in the job - see [Configuring your app with environment variables](./app-configuration) for the general pattern.
+
+### CPU and memory
+
+Set `resources` on the container in each template, in the same format as a Kubernetes container (and idp-advanced):
+
+```yaml
+spec:
+  workflowSpec:
+    templates:
+      - name: my-cron-job
+        container:
+          image: 354918371398.dkr.ecr.eu-west-1.amazonaws.com/my-team/my-cron-job:latest
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              memory: 1Gi
+```
+
+In a [multi-step job](#advanced-multi-step-jobs-dag), each step has its own `resources`.
 
 ### Secrets
 
@@ -94,6 +115,18 @@ external_secrets:
 ```
 
 `env_name` is the environment variable name inside the container. `secretsmanager_name` is the secret's name under `customer/<namespace>/` in Secrets Manager - the namespace and path prefix are added automatically. Add `property` if the secret holds a JSON object and you only want one key from it.
+
+Several entries can read different keys from the same secret, e.g. the credentials secret created for an idp-postgresql database. This requires chart version `1.3.0` or later:
+
+```yaml
+external_secrets:
+  - env_name: DB_USER
+    secretsmanager_name: my-db-write
+    property: username
+  - env_name: DB_PASSWORD
+    secretsmanager_name: my-db-write
+    property: password
+```
 
 ---
 
@@ -183,6 +216,14 @@ Everything else on this page - secrets, IRSA, auto-updating - applies the same w
 
 ---
 
+## Running a job manually
+
+To start a run right away without changing the schedule, use the Argo Workflows UI at `https://argo-workflows.<cluster>.idp.jppol.dk`, where `<cluster>` is the cluster your namespace runs on. Log in with SSO, go to **Cron Workflows**, pick your namespace and job, and click **Submit**. To rerun an earlier run, open it under **Workflows** and click **Resubmit**.
+
+Access uses the same Argo group that gives you access to your team's applications in ArgoCD.
+
+---
+
 ## Monitoring & troubleshooting
 
 Each run shows up as a Kubernetes `Job`/`Workflow` in the namespace, and its logs are collected the same way as any other workload - see [Application logs](./application-logs). To get notified when a run fails, see [Alerting](./alerting).
@@ -194,6 +235,7 @@ Each run shows up as a Kubernetes `Job`/`Workflow` in the namespace, and its log
 - **A scheduled run never starts at all.** If the workflow controller was down or delayed past `spec.startingDeadlineSeconds` when a schedule fired, that run is skipped rather than started late. Raise `startingDeadlineSeconds` if late-but-still-useful runs matter for your job.
 - **`AccessDenied` calling AWS APIs from inside the job.** Check `serviceAccount.irsa.enabled` is `true` and that `iamPolicyStatements` actually covers the action and resource being called - see [IAM permissions with IRSA](#iam-permissions-with-irsa).
 - **`AccessDenied` on `sts:AssumeRole` when assuming the job's role from your own machine.** Requires chart version `1.2.6` or later - earlier versions only trust the running pod's identity, not a human session.
+- **`secret "<job>-env-<name>" not found` when the job starts.** If several `external_secrets` entries share the same `secretsmanager_name`, chart versions before `1.3.0` give them the same name, so only the last one is created. Upgrade to `1.3.0` or later - see [Secrets](#secrets).
 - **A DAG template fails validation, or a step runs with the wrong container.** Requires chart version `1.2.6` or later for [multi-step jobs](#advanced-multi-step-jobs-dag) - earlier versions could inject a stray container into DAG parent templates.
 
 If something here doesn't cover your case, ask in your onboarding Slack channel - the IDP team is happy to help.
