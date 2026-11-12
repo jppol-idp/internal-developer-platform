@@ -23,6 +23,7 @@ This guide covers how to send traces, how to keep a trace connected across servi
 **[Sending traces from your application](#sending-traces-from-your-application)**
 - [Configure the exporter](#configure-the-exporter)
 - [Instrument your application](#instrument-your-application)
+- [Leave out health checks and other noise](#leave-out-health-checks-and-other-noise)
 
 **[Keeping a trace connected](#keeping-a-trace-connected)**
 
@@ -125,6 +126,18 @@ The language guides on [opentelemetry.io](https://opentelemetry.io/docs/language
 Once automatic instrumentation works, add your own spans around the work that matters to your service, for example "calculate price" or "render page", and give them attributes that help you find a trace later, such as an order ID.
 
 A pod that sends spans within its first second or two may get them without the Kubernetes attributes, because the platform has not seen the pod yet. Long-running services are not affected. For short-lived jobs, avoid sending spans before the job has started its real work.
+
+## Leave out health checks and other noise
+
+Automatic instrumentation traces every incoming request, including health checks and metrics scraping. Those requests arrive every few seconds, tell you nothing in a trace, and count towards the shared limit, so leave them out in your instrumentation:
+
+| Stack | How to leave out a path such as `/healthz` |
+|---|---|
+| Java | The Java agent has no setting for it. Use the `rule_based_routing` sampler from `opentelemetry-java-contrib` with a `DROP` rule on `url.path`. |
+| .NET | Set `Filter` on the ASP.NET Core instrumentation, for example `options.Filter = ctx => !ctx.Request.Path.StartsWithSegments("/healthz");`. Automatic instrumentation has no environment variable for it. |
+| Node.js | Set `ignoreIncomingRequestHook` on the HTTP instrumentation. |
+| Python | Set `OTEL_PYTHON_EXCLUDED_URLS`, for example `healthz,metrics`. |
+| Go | Pass `otelhttp.WithFilter` to the `otelhttp` handler. |
 
 # Keeping a trace connected
 
