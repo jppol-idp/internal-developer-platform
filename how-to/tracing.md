@@ -161,7 +161,7 @@ Write the trace ID as a field in every log line. In JSON:
 {"level":"info","msg":"order created","trace_id":"4bf92f3577b34da6a3ce929d0e0e4736","span_id":"00f067aa0ba902b7"}
 ```
 
-Grafana recognises `trace_id`, `traceId`, `traceID` and `TraceId` followed by `:` or `=` and the 32-character hexadecimal trace ID, in JSON, logfmt or plain text.
+Grafana recognises `trace_id`, `traceId`, `traceID` and `TraceId` followed by `:` or `=` and the 32-character hexadecimal trace ID, in JSON, logfmt or plain text. Write the ID in lowercase without dashes, as the OpenTelemetry SDKs format it by default; an ID in uppercase or as a GUID with dashes is not linked.
 
 | Stack | How to get the trace ID into your logs |
 |---|---|
