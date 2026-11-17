@@ -230,7 +230,7 @@ Apply changes by committing your updated `values.yaml` to git. ArgoCD will detec
 When you deploy Redis via Helm, services are automatically created with names based on your **release name** (the `folder-name` of your application in your argo-cd apps folder).
 
 **Example**: If your `folder-name` is `my-redis-deployment`, the main services will be:
-- `my-redis-deployment` (standalone)
+- `my-redis-deployment` (standalone; in replication mode it also exists but selects all pods, see below)
 - `my-redis-deployment-master` (replication mode)
 - `my-redis-deployment-replica` (replication mode)
 - `my-redis-deployment-sentinel` (replication mode)
@@ -265,18 +265,21 @@ The service you connect to depends on your deployment mode and use case:
 
 | Service | Port | Use Case |
 |---------|------|----------|
-| `<release-name>-master` | 6379 | **Write operations** and direct master access |
+| `<release-name>-sentinel` | 26379 | **Master discovery** for Sentinel-aware clients (recommended). Not for data commands |
+| `<release-name>-master` | 6379 | **Write operations** and direct master access. Has no endpoints for 1-3 minutes when the master's node is drained |
 | `<release-name>-replica` | 6379 | **Read operations** from slaves |
-| `<release-name>-sentinel` | 26379 | **Sentinel monitoring** (not for data operations!) |
+| `<release-name>` | 6379 | Selects **all** pods, master and replicas. **Do not use it for writes**: writes that hit a replica fail with `READONLY` |
 
 **For application connections**:
 ```
-<release-name>-master:6379      # For writes
-<release-name>-replica:6379     # For read-only queries
+<release-name>-sentinel:26379   # Sentinel-aware client (recommended), master name 'myMaster'
+<release-name>-master:6379      # Simple client: writes
+<release-name>-replica:6379     # Simple client: read-only queries
 ```
 
 **Important**:
-- Use `-master` for writes or when you need consistent reads
+- Prefer a Sentinel-aware client. It follows the master directly, also while `-master` has no endpoints during a node drain (see [Handling failover](#handling-failover-important))
+- Use `-master` for writes or when you need consistent reads if your client cannot use Sentinel
 - Use `-replica` for read-heavy workloads to distribute load
 - **Do not run data commands (GET/SET) directly against port 26379** - it serves Sentinel commands only. A *Sentinel-aware client* still connects to `-sentinel:26379`, but only to discover the master; it then sends data to the master on 6379. This is the recommended setup for production. See [Handling failover](#handling-failover-important).
 
@@ -304,25 +307,6 @@ import redis
 # Replace 'my-redis-deployment' with your actual release name
 r = redis.Redis(
     host='my-redis-deployment',
-    port=6379,
-    decode_responses=True
-)
-```
-
-**Replication mode**:
-```python
-import redis
-
-# For writes - connect to master
-r_write = redis.Redis(
-    host='my-redis-deployment-master',
-    port=6379,
-    decode_responses=True
-)
-
-# For reads - connect to replicas
-r_read = redis.Redis(
-    host='my-redis-deployment-replica',
     port=6379,
     decode_responses=True
 )
@@ -365,6 +349,25 @@ slave = sentinel.slave_for('myMaster', socket_timeout=0.5)
 
 The `retry_on_error=[ReadOnlyError, ...]` is the important part: after a failover the client re-asks Sentinel for the new master and retries, instead of staying stuck on a demoted replica. See [Handling failover](#handling-failover-important) for why this matters.
 
+**Replication mode without Sentinel** (simple, but writes fail for 1-3 minutes when the master's node is drained):
+```python
+import redis
+
+# For writes - connect to master
+r_write = redis.Redis(
+    host='my-redis-deployment-master',
+    port=6379,
+    decode_responses=True
+)
+
+# For reads - connect to replicas
+r_read = redis.Redis(
+    host='my-redis-deployment-replica',
+    port=6379,
+    decode_responses=True
+)
+```
+
 #### StackExchange.Redis (.NET) in Sentinel mode
 
 Sentinel hands out pod IP addresses, and StackExchange.Redis connects to those IPs directly. When Redis pods are rescheduled (for example during a node replacement) they get new IPs, but the client keeps the old ones in its endpoint list:
@@ -390,6 +393,8 @@ The application will keep failing until it drops the connection and reconnects. 
 - **Prefer a Sentinel-aware client** (see the [Sentinel example](#connecting-from-your-application) above). It discovers master changes proactively via Sentinel and resets connections for you, rather than waiting for the first failed write. For .NET, read the [StackExchange.Redis caveat](#stackexchangeredis-net-in-sentinel-mode) first.
 
 This applies to **every** client, not just during node consolidation: failover is a normal part of running in replication mode, so the client must be able to recover from it.
+
+**`-master` can have no endpoints for 1-3 minutes.** When the node running the master is drained, Sentinel moves the master role to a replica within seconds, but the `-master` service only points at the new master once the replaced pod is running again on another node. Until then, new connections to `-master` are refused. Sentinel-aware clients are not affected, because they ask Sentinel for the master instead of using the service.
 
 ## Authentication (optional)
 
@@ -522,6 +527,8 @@ Usually temporary during startup. Wait 1-2 minutes and refresh.
 ### Services show no endpoints
 
 Redis Operator is configuring pods. Wait 30-60 seconds for all pods to be Ready.
+
+In replication mode, `-master` can also have no endpoints for 1-3 minutes after the master's node is drained, while the other services are fine. See [Handling failover](#handling-failover-important).
 
 ### Sentinel not deploying (replication mode)
 
