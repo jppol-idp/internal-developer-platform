@@ -4,7 +4,7 @@ nav_order: 2
 parent: Onboarding
 domain: public
 layout: last-reviewed
-last_reviewed_on: 2026-04-05
+last_reviewed_on: 2026-11-17
 review_in: 3 months
 ---
 
@@ -45,9 +45,11 @@ See example [https://github.com/jppol-idp/generic-service](https://github.com/jp
 
 Tip: Name the app after yourself to make it easy to identify.
 
+The platform expects your container to keep running and answer HTTP requests on its service port. A script that prints a line and exits is restarted over and over.
+
 ```bash
 mkdir app-name && cd app-name
-echo 'print("Hello, IDP!")' > app-name.py
+echo 'Hello, IDP!' > index.html
 ```
 
 Add a Dockerfile:
@@ -55,8 +57,8 @@ Add a Dockerfile:
 ```Dockerfile
 FROM python:3.11-slim
 WORKDIR /app-name
-COPY app-name.py .
-CMD ["python", "app-name.py"]
+COPY index.html .
+CMD ["python", "-m", "http.server", "8080"]
 ```
 
 ---
@@ -64,9 +66,11 @@ CMD ["python", "app-name.py"]
 ### 2. 🐳 Build and optionally test your image locally
 
 ```bash
-docker build . -t app-name.py:0.1.0
-docker run app-name.py:0.1.0
+docker build . -t app-name:0.1.0
+docker run -p 8080:8080 app-name:0.1.0
 ```
+
+Open `http://localhost:8080` to see the page.
 
 ---
 
@@ -103,22 +107,25 @@ mkdir app-name
 apiVersion: v2
 name: app-name
 description: my first idp app
-version: 0.1.0    # <-- version af deployment definition
+version: 0.1.0    # <-- version of the deployment definition
 
 helm:
   chart: helm/idp-advanced
-  chartVersion: "3.6.0"    # <-- version af helm chart
+  chartVersion: "4.0.0"    # <-- example version, check latest at github.com/jppol-idp/helm-idp/releases
 ```
 
-> The chart helm/idp-advanced refers to [jppol-idp/helm-idp-advanced](https://github.com/jppol-idp/helm-idp/blob/main/charts/idp-advanced/Chart.yaml)
+> The chart helm/idp-advanced refers to [idp-advanced in jppol-idp/helm-idp](https://github.com/jppol-idp/helm-idp/blob/main/charts/idp-advanced/Chart.yaml)
 
 `values.yaml`- defines deployment-specific variables:
 
 ```yaml
 image:
-  repository: 354918371398.dkr.ecr.eu-west-1.amazonaws.com/pol/app 
+  repository: 354918371398.dkr.ecr.eu-west-1.amazonaws.com/pol/app-name    # <-- replace pol with your organization prefix (see step 3)
   pullPolicy: IfNotPresent
   tag: "0.1.0"
+
+service:
+  port: 8080    # <-- the port your app listens on. Health checks call / on this port
 ```
 
 > [Find a list of all configurable variables](https://github.com/jppol-idp/helm-idp/blob/main/charts/idp-advanced/README.md) or [see examples in our generic service](https://github.com/jppol-idp/apps-demo/tree/main/apps/demo-dev/generic-service) that covers most common needs.
@@ -136,7 +143,9 @@ This feature is enabled in `application.yaml` with a set of annotations. Enablin
 ### 5. 📦 Commit and push to your GitOps repo and see deployment in Argo CD
 After committing your application.yaml and values.yaml files to your `/jppol-idp/apps-TEAM` github repository deployment will start.
 
-Check in Argo CD if your app has been synchronised and deployed and a certificate been issued.  
+Check in Argo CD that your app has been synchronised and is healthy.
+
+Your app is not reachable from outside the cluster yet. To give it a URL with a certificate, enable `ingress` in `values.yaml` (see the chart's README).
 
 Go to Argo CD for deployment.
 Check your link at `https://github.com/jppol-idp/apps-TEAM/tree/main/apps/TEAM-dev`
@@ -144,7 +153,7 @@ Check your link at `https://github.com/jppol-idp/apps-TEAM/tree/main/apps/TEAM-d
 ---
 
 ### 6. Confirm log output in Grafana
-Metrics are automatically exposed with Prometheus and Loki and are visible in Grafana.
+Logs from your app are collected automatically in Loki, and CPU and memory metrics in Prometheus. Both are visible in Grafana. To get your app's own metrics, expose a `/metrics` endpoint and enable `serviceMonitor` in `values.yaml`.
 
 Go to Grafana for monitoring.
 Check your link at `https://github.com/jppol-idp/apps-TEAM/tree/main/apps/TEAM-dev`
