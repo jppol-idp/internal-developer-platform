@@ -224,6 +224,29 @@ Access uses the same Argo group that gives you access to your team's application
 
 ---
 
+## Cleaning up old runs
+
+Old runs are cleaned up automatically. Only the latest runs of each job are kept, set by `spec.successfulJobsHistoryLimit` and `spec.failedJobsHistoryLimit` (default `5` each, see the [Configuration reference](#configuration-reference)).
+
+To keep fewer runs, lower the limits in your `values.yaml`. You can also have failed runs removed after a while with a [`ttlStrategy`](https://argo-workflows.readthedocs.io/en/latest/fields/#ttlstrategy) on the workflow:
+
+```yaml
+spec:
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  workflowSpec:
+    ttlStrategy:
+      secondsAfterFailure: 86400 # remove failed runs after 24 hours
+```
+
+The `ttlStrategy` also removes the runs the history limits would otherwise keep, so leave it out if a failed run should stay around until someone has looked at it.
+
+To delete runs by hand, open the Argo Workflows UI on the cluster your namespace runs on (see [Running a job manually](#running-a-job-manually)), go to **Workflows**, pick your namespace, select the runs and click **Delete**. You can also delete a run from your job's application in ArgoCD.
+
+If the same job keeps failing, deleting its runs only hides the problem - set up [Alerting](./alerting) to get notified when a run fails instead.
+
+---
+
 ## Monitoring & troubleshooting
 
 Each run shows up as a Kubernetes `Job`/`Workflow` in the namespace, and its logs are collected the same way as any other workload - see [Application logs](./application-logs). To get notified when a run fails, see [Alerting](./alerting).
