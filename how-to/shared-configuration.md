@@ -1,6 +1,6 @@
 ---
 title: Sharing configuration between apps
-nav_order: 29
+nav_order: 30
 parent: How to...
 domain: public
 layout: last-reviewed
