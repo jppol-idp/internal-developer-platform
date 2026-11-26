@@ -15,6 +15,12 @@ IDP can run GitHub Actions runners for your team inside the IDP cluster your tea
 
 IDP runs and maintains the runners. Your team decides which repositories may use them and guards production jobs on the GitHub side.
 
+## Table of contents
+{: .no_toc }
+
+- TOC
+{:toc}
+
 ## What this first version supports
 
 This is the first version of self-hosted runners on IDP. It covers one need well: **a workflow step that needs network access to something only reachable from inside the IDP cluster.**
@@ -35,12 +41,6 @@ Not supported yet:
 More may come in later versions, based on what teams need. If your use case is not covered, tell the IDP team in your team's onboarding channel on Slack; that is what decides what comes next.
 
 If a job only needs the internet (building, testing, pushing images, calling public APIs), keep it on GitHub-hosted runners. They start faster, come with more tools preinstalled and can run Docker. Most workflows combine the two: build on GitHub-hosted runners, and run only the step that needs network access on a self-hosted runner. See [Step 4](#step-4-use-the-runners-in-a-workflow).
-
-## Table of contents
-{: .no_toc }
-
-- TOC
-{:toc}
 
 ## What you get
 
