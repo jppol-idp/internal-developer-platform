@@ -117,6 +117,31 @@ needs to be adjusted to the specific workload.
 As an alternative to autoscaling, it is possible to use [KEDA](./keda-autoscaling) (Kubernetes Event-Driven Autoscaling), which reacts to certain Kubernetes 
 events.
 
+## Shut down gracefully
+> *If callers see `502` responses during deployments or scale-downs, your pods are stopping before traffic stops reaching them.*
+
+When Kubernetes stops a pod, it sends `SIGTERM` to the container and removes the pod from the service endpoints at the same time.
+It takes a few seconds before the ingress and other services calling your app notice the removal. Requests sent in that window hit a container that is already shutting down.
+
+Add a `preStop` hook that waits before the container receives `SIGTERM`, so routing is updated while the pod still serves requests:
+
+```
+lifecycle:
+  preStop:
+    sleep:
+      seconds: 10
+terminationGracePeriodSeconds: 40
+```
+
+Both keys go at the top level of your `values.yaml`, next to `image` and `resources`.
+
+Use the built-in `sleep` action rather than `exec` with a `sleep` command. It does not need a `sleep` binary in the image, which distroless and scratch images do not have.
+
+`terminationGracePeriodSeconds` covers both the `preStop` hook and your app's own shutdown. With the values above, the app has 30 seconds to finish in-flight requests after the sleep before it is killed. The Kubernetes default is 30 seconds, which is enough if your app shuts down quickly.
+
+Your app should still handle `SIGTERM` by finishing in-flight requests before it exits.
+
+See [Pod termination](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-termination) in the Kubernetes documentation for details.
 
 ## VPA - to see recommendations
 VPA (Vertical Pod Autoscaler) makes it possible to have Kubernetes record memory and cpu consumption for the running pods. 
